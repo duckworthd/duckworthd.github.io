@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Bayesian World]]></title>
+  <link href="http://duckworthd.github.com/atom.xml" rel="self"/>
+  <link href="http://duckworthd.github.com/"/>
+  <updated>2012-05-10T19:19:26-07:00</updated>
+  <id>http://duckworthd.github.com/</id>
+  <author>
+    <name><![CDATA[duckworthd]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Sparse Features and L2 Regularization]]></title>
+    <link href="http://duckworthd.github.com/blog/2012/05/10/sparse-features-and-l2-regularization/"/>
+    <updated>2012-05-10T17:21:00-07:00</updated>
+    <id>http://duckworthd.github.com/blog/2012/05/10/sparse-features-and-l2-regularization</id>
+    <content type="html"><![CDATA[<p>Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter <script type="math/tex">w</script> is simply the sum of the losses of each sample <script type="math/tex">i</script>, i.e.,</p>
+
+<script type="math/tex; mode=display">
+  L(w) = \sum_{i} l(x_i, y_i, w)
+</script>
+
+<p>Basically any loss function you can think of in the i.i.d sample regime can be composed this way.  Since we assumed that your dataset was huge, there’s no way you’re going to be able to load it all into memory for BFGS, so you choose to use <a href="http://en.wikipedia.org/wiki/Stochastic_gradient_descent">Stochastic Gradient Descent</a>.  The update for sample <script type="math/tex">i</script> with step size <script type="math/tex">\eta_t</script> would then be,</p>
+
+<script type="math/tex; mode=display">
+  w_{t+1} = w_t - \eta_t \nabla_w l(x_i, y_i, w_t)
+</script>
+
+<p>So far, so good.  If <script type="math/tex">\nabla_w l(x_i, y_i, w)</script> is sparse, then you only need to change a handful of <script type="math/tex">w</script>’s components.  Of course, being the astute Machine Learning expert that you are, you know that you’re going to need some regularization.  Let’s redefine the total loss and take a look at our new update equation,</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  L(w) & = \sum_{i} l(x_i, y_i, w) + \frac{\lambda}{2}||w||_2^2  \\
+  w_{t+1} & = w_t - \eta_t \left( \nabla_w l(x_i, y_i, w_t) + \lambda w_t \right)
+\end{align}
+</script>
+
+<p>Uh oh.  Now that <script type="math/tex">w</script> appears in our Stochastic Gradient Descent update equation, you’re going to have change <em>every</em> non-zero element of <script type="math/tex">w</script> at each iteration, even if <script type="math/tex">\nabla_w l(x_i, y_i, w)</script> is sparse!  Whatever shall you do?</p>
+
+<p>The answer isn’t as scary as you might think.  Let’s do some algebraic manipulation from <script type="math/tex">t=0</script>,</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  w_{1} 
+  & = w_0 - \eta_0 \left( \nabla_w l(x_i, y_i, w_0) + \lambda w_0 \right) \\
+  & = w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) - \eta_0 \lambda w_0 \\
+  & = (1 - \eta_0 \lambda ) w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) \\
+  & = (1 - \eta_0 \lambda ) \left(
+      w_0 - \frac{\eta_0}{1-\eta_0 \lambda } \nabla_w l(x_i, y_i, w_0)
+    \right) \\
+\end{align}
+</script>
+
+<p>Do you see it now?  <script type="math/tex">L_2</script> regularization is really just a <em>rescaling</em> of <script type="math/tex">w_t</script> at <em>every</em> iteration.  Thus instead of keeping <script type="math/tex">w_t</script>, let’s keep track of,</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  c & = \prod_{\tau=0}^t (1-\eta_{\tau} \lambda )  \\
+  \bar{w}_t & = \frac{w_t}{c}
+\end{align}
+</script>
+
+<p>where you update <script type="math/tex">\bar{w}_t</script> and <script type="math/tex">c_t</script> by,</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  \bar{w}_{t+1} 
+  & = \bar{w}_t - \frac{\eta_t}{(1 - \eta_t) c_t} \nabla_w l(x_i, w_i, c_t \bar{w}_t) \\
+  c_{t+1} 
+  & = (1 - \eta_t \lambda) c_t
+\end{align}
+</script>
+
+<p>And that’s it!  As a final note, depending what value you choose for <script type="math/tex">\lambda</script>, <script type="math/tex">c_t</script> is going to get really big or really small pretty fast.  The usual “take the log” tricks aren’t going to fly, either, as <script type="math/tex">c_t</script> need not be positive.  The only way around it I’ve found is to check every iteration if <script type="math/tex">c_t</script> is getting out of hand, then transform <script type="math/tex">\bar{w}_{t} \leftarrow \bar{w}_t c_t</script> and <script type="math/tex">c_t \leftarrow 1</script> if it is.</p>
+
+<p>Finally, credit should be given where credit is due.  This is a slightly more detailed explanation of <a href="http://blog.smola.org/post/940672544/fast-quadratic-regularization-for-online-learnin">Alex Smola’s Blog Post</a> from about a year ago, which in turn is accredited to Leon Bottou.</p>
+]]></content>
+  </entry>
+  
+</feed>
