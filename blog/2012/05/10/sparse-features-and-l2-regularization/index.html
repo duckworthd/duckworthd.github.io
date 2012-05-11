@@ -114,7 +114,7 @@
 \end{align}
 </script>
 
-<p>Uh oh.  Now that <script type="math/tex">w</script> appears in our Stochastic Gradient Descent update equation, you’re going to have change <em>every</em> non-zero element of <script type="math/tex">w</script> at each iteration, even if <script type="math/tex">\nabla_w l(x_i, y_i, w)</script> is sparse!  Whatever shall you do?</p>
+<p>Uh oh.  Now that <script type="math/tex">w</script> appears in our Stochastic Gradient Descent update equation, you’re going to have change <em>every</em> non-zero element of <script type="math/tex">w</script> at <em>every</em> iteration, even if <script type="math/tex">\nabla_w l(x_i, y_i, w)</script> is sparse!  Whatever shall you do?</p>
 
 <p>The answer isn’t as scary as you might think.  Let’s do some algebraic manipulation from <script type="math/tex">t=0</script>,</p>
 
@@ -134,8 +134,8 @@
 
 <script type="math/tex; mode=display">
 \begin{align}
-  c & = \prod_{\tau=0}^t (1-\eta_{\tau} \lambda )  \\
-  \bar{w}_t & = \frac{w_t}{c}
+  c_t & = \prod_{\tau=0}^t (1-\eta_{\tau} \lambda )  \\
+  \bar{w}_t & = \frac{w_t}{c_t}
 \end{align}
 </script>
 
