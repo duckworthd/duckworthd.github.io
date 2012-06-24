@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: optimization | Bayesian World]]></title>
+  <link href="http://duckworthd.github.com/blog/categories/optimization/atom.xml" rel="self"/>
+  <link href="http://duckworthd.github.com/"/>
+  <updated>2012-06-24T15:17:30-07:00</updated>
+  <id>http://duckworthd.github.com/</id>
+  <author>
+    <name><![CDATA[duckworthd]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ADMM: Alternating Direction Method of Multipliers]]></title>
+    <link href="http://duckworthd.github.com/blog/2012/06/24/admm-alternating-direction-method-of-multipliers/"/>
+    <updated>2012-06-24T18:00:00-07:00</updated>
+    <id>http://duckworthd.github.com/blog/2012/06/24/admm-alternating-direction-method-of-multipliers</id>
+    <content type="html"><![CDATA[<p>In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing “separable” functions (that is, functions that are purely sums of other functions) in a large, distributed environment.  However, Stochastic Gradient Descent is not the only algorithm out there.</p>
+
+<p>So why consider anything else?  First of all, we have to choose step sizes <script type="math/tex">\alpha_{t,i}</script>.  While there are theoretical constraints on how it must behave (e.g. <script type="math/tex">\alpha_t = \frac{1}{t^k}</script> for <script type="math/tex">k \in (0.5, 1]</script> is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful.  It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.</p>
+
+<p>Secondly, Stochastic Gradient Descent is naturally <em>sequential</em>.  You have to update <script type="math/tex">w_{t,i}</script> before you can update <script type="math/tex">w_{t, i+1}</script> (well, note quite.  See <a href="http://arxiv.org/abs/1106.5730">HOGWILD!</a>).  This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn’t of much help in MapReduce-style frameworks.</p>
+
+<p><a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">Alternating Direction Method of Multipliers</a> (ADMM) is an entirely different method of distributed optimization that is far better oriented for MapReduce and which only requires a single parameter to specify the learning rate.  However, using it requires quite a bit more mathematical preparation.</p>
+
+<p>The basic idea is that if we have an optimization problem specified as follows,</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  & \min_{x,z} f(x) + g(z)  \\
+  & \text{s.t. } A x + B z = c
+\end{align}
+</script>
+
+<p>Then we can derive the Lagrangian and add a quadratic penalty for violating the constraint,</p>
+
+<script type="math/tex; mode=display">
+  L_{\rho}(x,z,y) = f(x) + g(z) + y^T (Ax + Bz -c) + \frac{\rho}{2} || Ax + Bz - c ||_2^2
+</script>
+
+<p>Finally we apply the following algorithm</p>
+
+<ol>
+  <li>Optimize over the first primal variable,</li>
+</ol>
+
+<script type="math/tex; mode=display">
+  x_{t+1} = \text{argmin}_x L_{\rho}(x,z_t, y_t)
+</script>
+
+<ol>
+  <li>Optimize over the second primal variable,</li>
+</ol>
+
+<script type="math/tex; mode=display">
+  z_{t+1} = \text{argmin}_x L_{\rho}(x_{t+1},z, y_t)
+</script>
+
+<ol>
+  <li>Take a gradient step for the dual variable</li>
+</ol>
+
+<script type="math/tex; mode=display">
+  y_{t+1} = y_t + \rho (A x_{t+1} + B z_{t+1} - c)
+</script>
+
+<p>Notice the choice of step size for updating <script type="math/tex">y_t</script> and the addition of a quadratic term to the Lagrangian; these are the critical addition of ADMM.</p>
+
+<p>The question now becomes, how can we apply this seemingly restricted method to make a distributed algorithm?  Suppose we want to minimize our usual separable function</p>
+
+<script type="math/tex; mode=display">
+  \min_x \sum_i f_i(x)
+</script>
+
+<p>We can reformulate this problem by giving each <script type="math/tex">f_i</script> its own <script type="math/tex">x_i</script>, and requiring that <script type="math/tex">x_i = z</script> at the very end.</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  & \min_{x_i, z} \sum_i f_i(x_i)   \\
+  & \text{s.t.} \quad \forall i \quad x_i = z
+\end{align}
+</script>
+
+<p>This means that we can optimize each <script type="math/tex">x_i</script> independently, then aggregate their solutions to update <script type="math/tex">z</script> (the one true <script type="math/tex">x</script>), and finally use both of those to update <script type="math/tex">y</script>.  Let’s see how this works out exactly.  The augmented Lagrangian would be,</p>
+
+<script type="math/tex; mode=display">
+  L_{\rho}(x,z,y) = \sum_{i} \left( 
+    f_i(x_i) + y^T (x_i - z) + \frac{\rho}{2} || x_i - z ||_2^2
+  \right)
+</script>
+
+<ol>
+  <li>For each machine <script type="math/tex">i</script> in parallel, optimize the local variable <script type="math/tex">x_i</script></li>
+</ol>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  x_{t+1, i} & = \text{argmin}_x f_i(x) 
+    + y_{t,i}^T (x - z_t) 
+    + \frac{\rho}{2} (x-z)^T (x-z) \\
+\end{align}
+</script>
+
+<ol>
+  <li>Aggregate the resulting <script type="math/tex">x_{t+1, i}</script> and optimize the global variable <script type="math/tex">z</script>,</li>
+</ol>
+
+<script type="math/tex; mode=display"> 
+\begin{align}
+  z_{t+1} &= \text{argmin}_z y_{t,i}^T (x_{t+1, i} - z) 
+    + \frac{\rho}{2} (x_{t+1, i} - z)^T (x_{t+1, i} - z)  \\
+  &= \frac{1}{N} \sum_{i=1}^{N} \left( 
+    x_{t+1, i} + \frac{1}{\rho} y_{t, i}
+  \right)
+\end{align}
+</script>
+
+<ol>
+  <li>Update the dual variables <script type="math/tex">y_{t,i}</script></li>
+</ol>
+
+<script type="math/tex; mode=display">
+  y_{t+1, i} = y_{t, i} + \rho ( x_{t+1,i} - z_{t+1} )
+</script>
+
+<p>This is already pretty cool, but there’s even more.  It ends up that ADMM works splendidly even when we add a regularization penalty to the primal problem, such as the <script type="math/tex">L_2</script> or <script type="math/tex">L_1</script> norm.  You can find out all of these cool things and more in the Stephen Boyd’s <a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">paper</a> and <a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">lecture</a>.</p>
+
+<p>On a final note, the proofs on convergence for ADMM are currently not as complete as those for other methods like Stochastic Gradient Descent.  While it is known that the dual variable <script type="math/tex">y_t</script> will converge as long as <script type="math/tex">f</script> and <script type="math/tex">g</script> are convex and a solution exists, we can only prove convergence of the primal variables <script type="math/tex">x_t</script> and <script type="math/tex">z_t</script> if they are <a href="http://arxiv.org/pdf/1112.2295.pdf">constrained to lie in a polyhedron</a> at this point in time. </p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf"> Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers </a></li>
+  <li><a href="http://arxiv.org/pdf/1112.2295.pdf"> A Proof of Convergence For the Alternating Direction Method of Multipliers Applied to Polyhedral-Constrained Functions </a></li>
+  <li><a href="http://arxiv.org/abs/1106.5730">HOGWILD!: A Lock-Free Approach to Parallelizing Stochastic Gradient Descent</a></li>
+  <li><a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">Alternating Direction Method of Multipliers</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

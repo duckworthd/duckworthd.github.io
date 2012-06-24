@@ -9,7 +9,7 @@
   <meta name="author" content="duckworthd">
 
   
-  <meta name="description" content="So you’re a smart guy or gal. You have Bayesian Networks down. Belief Propagation? “Please, I build Junction Trees in my sleep”. What’s that, a &hellip;">
+  <meta name="description" content="In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing “separable” functions (that is, functions that are &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,263 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/24/admm-alternating-direction-method-of-multipliers/">ADMM: Alternating Direction Method of Multipliers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-24T18:00:00-07:00" pubdate data-updated="true">Jun 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing “separable” functions (that is, functions that are purely sums of other functions) in a large, distributed environment.  However, Stochastic Gradient Descent is not the only algorithm out there.</p>
+
+<p>So why consider anything else?  First of all, we have to choose step sizes <script type="math/tex">\alpha_{t,i}</script>.  While there are theoretical constraints on how it must behave (e.g. <script type="math/tex">\alpha_t = \frac{1}{t^k}</script> for <script type="math/tex">k \in (0.5, 1]</script> is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful.  It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.</p>
+
+<p>Secondly, Stochastic Gradient Descent is naturally <em>sequential</em>.  You have to update <script type="math/tex">w_{t,i}</script> before you can update <script type="math/tex">w_{t, i+1}</script> (well, note quite.  See <a href="http://arxiv.org/abs/1106.5730">HOGWILD!</a>).  This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn’t of much help in MapReduce-style frameworks.</p>
+
+<p><a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">Alternating Direction Method of Multipliers</a> (ADMM) is an entirely different method of distributed optimization that is far better oriented for MapReduce and which only requires a single parameter to specify the learning rate.  However, using it requires quite a bit more mathematical preparation.</p>
+
+<p>The basic idea is that if we have an optimization problem specified as follows,</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  & \min_{x,z} f(x) + g(z)  \\
+  & \text{s.t. } A x + B z = c
+\end{align}
+</script>
+
+<p>Then we can derive the Lagrangian and add a quadratic penalty for violating the constraint,</p>
+
+<script type="math/tex; mode=display">
+  L_{\rho}(x,z,y) = f(x) + g(z) + y^T (Ax + Bz -c) + \frac{\rho}{2} || Ax + Bz - c ||_2^2
+</script>
+
+<p>Finally we apply the following algorithm</p>
+
+<ol>
+  <li>Optimize over the first primal variable,</li>
+</ol>
+
+<script type="math/tex; mode=display">
+  x_{t+1} = \text{argmin}_x L_{\rho}(x,z_t, y_t)
+</script>
+
+<ol>
+  <li>Optimize over the second primal variable,</li>
+</ol>
+
+<script type="math/tex; mode=display">
+  z_{t+1} = \text{argmin}_x L_{\rho}(x_{t+1},z, y_t)
+</script>
+
+<ol>
+  <li>Take a gradient step for the dual variable</li>
+</ol>
+
+<script type="math/tex; mode=display">
+  y_{t+1} = y_t + \rho (A x_{t+1} + B z_{t+1} - c)
+</script>
+
+<p>Notice the choice of step size for updating <script type="math/tex">y_t</script> and the addition of a quadratic term to the Lagrangian; these are the critical addition of ADMM.</p>
+
+<p>The question now becomes, how can we apply this seemingly restricted method to make a distributed algorithm?  Suppose we want to minimize our usual separable function</p>
+
+<script type="math/tex; mode=display">
+  \min_x \sum_i f_i(x)
+</script>
+
+<p>We can reformulate this problem by giving each <script type="math/tex">f_i</script> its own <script type="math/tex">x_i</script>, and requiring that <script type="math/tex">x_i = z</script> at the very end.</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  & \min_{x_i, z} \sum_i f_i(x_i)   \\
+  & \text{s.t.} \quad \forall i \quad x_i = z
+\end{align}
+</script>
+
+<p>This means that we can optimize each <script type="math/tex">x_i</script> independently, then aggregate their solutions to update <script type="math/tex">z</script> (the one true <script type="math/tex">x</script>), and finally use both of those to update <script type="math/tex">y</script>.  Let’s see how this works out exactly.  The augmented Lagrangian would be,</p>
+
+<script type="math/tex; mode=display">
+  L_{\rho}(x,z,y) = \sum_{i} \left( 
+    f_i(x_i) + y^T (x_i - z) + \frac{\rho}{2} || x_i - z ||_2^2
+  \right)
+</script>
+
+<ol>
+  <li>For each machine <script type="math/tex">i</script> in parallel, optimize the local variable <script type="math/tex">x_i</script></li>
+</ol>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  x_{t+1, i} & = \text{argmin}_x f_i(x) 
+    + y_{t,i}^T (x - z_t) 
+    + \frac{\rho}{2} (x-z)^T (x-z) \\
+\end{align}
+</script>
+
+<ol>
+  <li>Aggregate the resulting <script type="math/tex">x_{t+1, i}</script> and optimize the global variable <script type="math/tex">z</script>,</li>
+</ol>
+
+<script type="math/tex; mode=display"> 
+\begin{align}
+  z_{t+1} &= \text{argmin}_z y_{t,i}^T (x_{t+1, i} - z) 
+    + \frac{\rho}{2} (x_{t+1, i} - z)^T (x_{t+1, i} - z)  \\
+  &= \frac{1}{N} \sum_{i=1}^{N} \left( 
+    x_{t+1, i} + \frac{1}{\rho} y_{t, i}
+  \right)
+\end{align}
+</script>
+
+<ol>
+  <li>Update the dual variables <script type="math/tex">y_{t,i}</script></li>
+</ol>
+
+<script type="math/tex; mode=display">
+  y_{t+1, i} = y_{t, i} + \rho ( x_{t+1,i} - z_{t+1} )
+</script>
+
+<p>This is already pretty cool, but there’s even more.  It ends up that ADMM works splendidly even when we add a regularization penalty to the primal problem, such as the <script type="math/tex">L_2</script> or <script type="math/tex">L_1</script> norm.  You can find out all of these cool things and more in the Stephen Boyd’s <a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">paper</a> and <a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">lecture</a>.</p>
+
+<p>On a final note, the proofs on convergence for ADMM are currently not as complete as those for other methods like Stochastic Gradient Descent.  While it is known that the dual variable <script type="math/tex">y_t</script> will converge as long as <script type="math/tex">f</script> and <script type="math/tex">g</script> are convex and a solution exists, we can only prove convergence of the primal variables <script type="math/tex">x_t</script> and <script type="math/tex">z_t</script> if they are <a href="http://arxiv.org/pdf/1112.2295.pdf">constrained to lie in a polyhedron</a> at this point in time. </p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf"> Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers </a></li>
+  <li><a href="http://arxiv.org/pdf/1112.2295.pdf"> A Proof of Convergence For the Alternating Direction Method of Multipliers Applied to Polyhedral-Constrained Functions </a></li>
+  <li><a href="http://arxiv.org/abs/1106.5730">HOGWILD!: A Lock-Free Approach to Parallelizing Stochastic Gradient Descent</a></li>
+  <li><a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">Alternating Direction Method of Multipliers</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/24/logistic-regression-and-stochastic-gradient-descent/">Logistic Regression and Stochastic Gradient Descent</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-24T13:48:00-07:00" pubdate data-updated="true">Jun 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It seems that the <em>de facto</em> standard for large scale optimization these days is Stochastic Gradient Descent, and there’s a good reason why.  Stochatic Gradient Descent is extremely easy to implement and parallelizes directly for “separable” functions (that is, when your objective is the sum of a bunch of other functions).</p>
+
+<p>Let’s look at an example. Suppose you are trying to create a spam classifier.  Your boss has handed you a set of training samples <script type="math/tex"> \{ x_i, y_i \}</script> pairs where <script type="math/tex">x_i</script> is a feature vector describing the <script type="math/tex">i</script>th labeled email and <script type="math/tex">y_i</script> is its corresponding label, <script type="math/tex">1</script> for “ham” and <script type="math/tex">0</script> for “spam”.  In logistic regression, we want to learn a weight vector <script type="math/tex">w</script> such that <script type="math/tex">f(x,w) = \frac{1}{1 + \exp(- w^{T} x)}</script> is close to <script type="math/tex">1</script> if <script type="math/tex">x</script>’s label is <script type="math/tex">1</script> and close to <script type="math/tex">0</script> if its label is <script type="math/tex">0</script> for all training samples.  Since <script type="math/tex">f(x,w) \in [0,1]</script>, we can interpret our prediction as the <em>probability</em> that x belongs is ham (the probability it is spam is simply one minus that).  With this in mind, we will try to make our training data as likely as possible; that is,</p>
+
+<script type="math/tex; mode=display">
+  \max_{w} f(w) = \prod_{i} f(x_i, w)^{y_i} (1 - f(x_i, w))^{1 - y_i}
+</script>
+
+<p>Exponentiating <script type="math/tex">f(x_i, w)</script> by <script type="math/tex">y_i</script> is simply a trick for saying “if <script type="math/tex">y_i</script> is 1, choose this, and if it’s 0, choose that”.  It is customary to take the log of such loss functions, as doing so will give us a sum rather than a product,</p>
+
+<script type="math/tex; mode=display">
+  \max_{w} \log f(w) = \sum_{i} y_i \log f(x_i, w)  + (1 - y_i) \log (1 - f(x_i, w))
+</script>
+
+<p>It’s now clear that our objective function is “separable”, so let’s first derive a normal Gradient Ascent algorithm.  First, we compute the gradient of <script type="math/tex">f(w)</script>,</p>
+
+<script type="math/tex; mode=display">
+\begin{align}
+  \nabla_w \log f(w) 
+  &= \nabla_w \sum_{i} y_i \log f(x_i, w)  + (1 - y_i) \log (1 - f(x_i, w)) \\
+  &= \nabla_w \sum_{i} y_i \log \frac{ f(x_i, w)}{ 1 - f(x_i, w)}  + \log (1 - f(x_i, w)) \\
+  &= \nabla_w \sum_{i} y_i w^T x_i  + \log (1 - f(x_i, w)) \\
+  &= \nabla_w \sum_{i} y_i w^T x_i  - \log (1 + \exp w^T x_i ) \\
+  &= \sum_{i} \nabla_w \left( y_i w^T x_i  - \log (1 + \exp w^T x_i ) \right) \\
+  &= \sum_{i} y_i x_i  - \frac{1}{1 + \exp (w^T x_i)} \exp(w^T x_i) x_i  \\
+  &= \sum_{i} y_i x_i  - \frac{1}{1 + \exp (- w^T x_i)} x_i  \\
+  &= \sum_{i} ( y_i - f(x_i, w)) x_i  \\
+\end{align}
+</script>
+
+<p>All that work for something so simple!  Armed with our newfound gradient, the Gradient Ascent algorithm (for step sizes <script type="math/tex">\alpha_t</script>) is,</p>
+
+<ol>
+  <li>Initialize <script type="math/tex">w_0</script> arbitrarily</li>
+  <li>for <script type="math/tex">t = 0, 1, \ldots</script> until convergence
+    <ol>
+      <li>Calculate gradient <script type="math/tex">\nabla \log f(w_t)</script></li>
+      <li>Set <script type="math/tex">w_{t+1} = w_{t} + \alpha_t \nabla \log f(w_t)</script></li>
+    </ol>
+  </li>
+</ol>
+
+<p>The beauty of Stocahstic Gradient Descent for separable functions is in the separability of its gradient.  See how <script type="math/tex">\nabla \log f(w)</script> is a sum?  This is a direct consequence of <script type="math/tex">\log f(w)</script> also being a sum, and it means that we can calculate each of its components <em>independently</em>.  This leads to another intuitive algorithm,</p>
+
+<ol>
+  <li>Initialize <script type="math/tex">w_0</script> arbitrarily</li>
+  <li>for <script type="math/tex">t = 0, 1, \ldots</script>
+    <ol>
+      <li>For <script type="math/tex">i = 0, 1, \ldots</script>
+        <ol>
+          <li>Calculate gradient with respect to sample <script type="math/tex">i</script>; that is, <script type="math/tex">y_i - f(x_i, w_{t,i}) x_i</script></li>
+          <li>Set <script type="math/tex">w_{t, i+1} = w_{t, i} + \alpha_{t,i} (y_i - f(x_i, w_{t,i}) x_i)</script></li>
+        </ol>
+      </li>
+      <li>Set <script type="math/tex">w_{t+1, 0}</script> to the last  <script type="math/tex">w_{t, i}</script> calculated</li>
+    </ol>
+  </li>
+</ol>
+
+<p>This is Stochastic Gradient Ascent.  The beauty of it is its simplicity – take a single training sample, calculate the gradient of the objective function with respect to it, and take a step.  Now we can begin optimizing even without seeing all of the data!</p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="http://www.stat.cmu.edu/~cshalizi/350/lectures/26/lecture-26.pdf"> Logistic Regression and Newton’s Method </a></li>
+</ul>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -230,6 +487,14 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/06/24/admm-alternating-direction-method-of-multipliers/">ADMM: Alternating Direction Method of Multipliers</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/06/24/logistic-regression-and-stochastic-gradient-descent/">Logistic Regression and Stochastic Gradient Descent</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/05/10/the-limits-of-bayesian-networks/">The Limits of Bayesian Networks</a>
