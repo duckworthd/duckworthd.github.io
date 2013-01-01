@@ -9,7 +9,7 @@
   <meta name="author" content="duckworthd">
 
   
-  <meta name="description" content="Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter is simply the sum of &hellip;">
+  <meta name="description" content="Suppose you&#8217;re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter $$w$$ is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,6 +21,7 @@
   <link rel="canonical" href="http://duckworthd.github.com/blog/2012/05/10/sparse-features-and-l2-regularization">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
@@ -31,11 +32,6 @@
 
   
 
-
-  <!-- MathJax support -->
-  <script type="text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script>
 </head>
 
 <body   >
@@ -95,66 +91,69 @@
   </header>
 
 
-<div class="entry-content"><p>Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter <script type="math/tex">w</script> is simply the sum of the losses of each sample <script type="math/tex">i</script>, i.e.,</p>
+<div class="entry-content"><p>  Suppose you&#8217;re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter $$w$$ is simply the sum of the losses of each sample $$i$$, i.e.,</p>
 
-<script type="math/tex; mode=display">
+<p>$$
   L(w) = \sum_{i} l(x_i, y_i, w)
-</script>
+$$</p>
 
-<p>Basically any loss function you can think of in the i.i.d sample regime can be composed this way.  Since we assumed that your dataset was huge, there’s no way you’re going to be able to load it all into memory for BFGS, so you choose to use <a href="http://en.wikipedia.org/wiki/Stochastic_gradient_descent">Stochastic Gradient Descent</a>.  The update for sample <script type="math/tex">i</script> with step size <script type="math/tex">\eta_t</script> would then be,</p>
+<p>  Basically any loss function you can think of in the i.i.d sample regime can be composed this way.  Since we assumed that your dataset was huge, there&#8217;s no way you&#8217;re going to be able to load it all into memory for BFGS, so you choose to use <a href="http://en.wikipedia.org/wiki/Stochastic_gradient_descent">Stochastic Gradient Descent</a>.  The update for sample $$i$$ with step size $$\eta_t$$ would then be,</p>
 
-<script type="math/tex; mode=display">
+<p>$$
   w_{t+1} = w_t - \eta_t \nabla_w l(x_i, y_i, w_t)
-</script>
+$$</p>
 
-<p>So far, so good.  If <script type="math/tex">\nabla_w l(x_i, y_i, w)</script> is sparse, then you only need to change a handful of <script type="math/tex">w</script>’s components.  Of course, being the astute Machine Learning expert that you are, you know that you’re going to need some regularization.  Let’s redefine the total loss and take a look at our new update equation,</p>
+<p>  So far, so good.  If $$\nabla_w l(x_i, y_i, w)$$ is sparse, then you only need to change a handful of $$w$$&#8217;s components.  Of course, being the astute Machine Learning expert that you are, you know that you&#8217;re going to need some regularization.  Let&#8217;s redefine the total loss and take a look at our new update equation,</p>
 
-<script type="math/tex; mode=display">
+<p>$$
 \begin{align}
-  L(w) & = \sum_{i} l(x_i, y_i, w) + \frac{\lambda}{2}||w||_2^2  \\
-  w_{t+1} & = w_t - \eta_t \left( \nabla_w l(x_i, y_i, w_t) + \lambda w_t \right)
+  L(w) &amp; = \sum<em>{i} l(x_i, y_i, w) + \frac{\lambda}{2}||w||</em>2<sup>2</sup>  \
+  w_{t+1} &amp; = w_t - \eta_t \left( \nabla_w l(x_i, y_i, w_t) + \lambda w_t \right)
 \end{align}
-</script>
+$$</p>
 
-<p>Uh oh.  Now that <script type="math/tex">w</script> appears in our Stochastic Gradient Descent update equation, you’re going to have change <em>every</em> non-zero element of <script type="math/tex">w</script> at <em>every</em> iteration, even if <script type="math/tex">\nabla_w l(x_i, y_i, w)</script> is sparse!  Whatever shall you do?</p>
+<p>  Uh oh.  Now that $$w$$ appears in our Stochastic Gradient Descent update equation, you&#8217;re going to have change <em>every</em> non-zero element of $$w$$ at <em>every</em> iteration, even if $$\nabla_w l(x_i, y_i, w)$$ is sparse!  Whatever shall you do?</p>
 
-<p>The answer isn’t as scary as you might think.  Let’s do some algebraic manipulation from <script type="math/tex">t=0</script>,</p>
+<p>  The answer isn&#8217;t as scary as you might think.  Let&#8217;s do some algebraic manipulation from $$t=0$$,</p>
 
-<script type="math/tex; mode=display">
+<p>$$
 \begin{align}
-  w_{1} 
-  & = w_0 - \eta_0 \left( \nabla_w l(x_i, y_i, w_0) + \lambda w_0 \right) \\
-  & = w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) - \eta_0 \lambda w_0 \\
-  & = (1 - \eta_0 \lambda ) w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) \\
-  & = (1 - \eta_0 \lambda ) \left(
-      w_0 - \frac{\eta_0}{1-\eta_0 \lambda } \nabla_w l(x_i, y_i, w_0)
-    \right) \\
-\end{align}
-</script>
+  w_{1}
+  &amp; = w_0 - \eta_0 \left( \nabla_w l(x_i, y_i, w_0) + \lambda w_0 \right) \
+  &amp; = w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) - \eta_0 \lambda w_0 \
+  &amp; = (1 - \eta_0 \lambda ) w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) \
+  &amp; = (1 - \eta_0 \lambda ) \left(</p>
 
-<p>Do you see it now?  <script type="math/tex">L_2</script> regularization is really just a <em>rescaling</em> of <script type="math/tex">w_t</script> at <em>every</em> iteration.  Thus instead of keeping <script type="math/tex">w_t</script>, let’s keep track of,</p>
+<pre><code>  w_0 - \frac{\eta_0}{1-\eta_0 \lambda } \nabla_w l(x_i, y_i, w_0)
+\right) \\
+</code></pre>
 
-<script type="math/tex; mode=display">
+<p>\end{align}
+$$</p>
+
+<p>  Do you see it now?  $$L_2$$ regularization is really just a <em>rescaling</em> of $$w_t$$ at <em>every</em> iteration.  Thus instead of keeping $$w_t$$, let&#8217;s keep track of,</p>
+
+<p>$$
 \begin{align}
-  c_t & = \prod_{\tau=0}^t (1-\eta_{\tau} \lambda )  \\
-  \bar{w}_t & = \frac{w_t}{c_t}
+  c_t &amp; = \prod<em>{\tau=0}^t (1-\eta</em>{\tau} \lambda )  \
+  \bar{w}_t &amp; = \frac{w_t}{c_t}
 \end{align}
-</script>
+$$</p>
 
-<p>where you update <script type="math/tex">\bar{w}_t</script> and <script type="math/tex">c_t</script> by,</p>
+<p>  where you update $$\bar{w}_t$$ and $$c_t$$ by,</p>
 
-<script type="math/tex; mode=display">
+<p>$$
 \begin{align}
-  \bar{w}_{t+1} 
-  & = \bar{w}_t - \frac{\eta_t}{(1 - \eta_t) c_t} \nabla_w l(x_i, w_i, c_t \bar{w}_t) \\
-  c_{t+1} 
-  & = (1 - \eta_t \lambda) c_t
+  \bar{w}<em>{t+1}
+  &amp; = \bar{w}</em>t - \frac{\eta_t}{(1 - \eta_t) c_t} \nabla_w l(x_i, w_i, c_t \bar{w}<em>t) \
+  c</em>{t+1}
+  &amp; = (1 - \eta_t \lambda) c_t
 \end{align}
-</script>
+$$</p>
 
-<p>And that’s it!  As a final note, depending what value you choose for <script type="math/tex">\lambda</script>, <script type="math/tex">c_t</script> is going to get really big or really small pretty fast.  The usual “take the log” tricks aren’t going to fly, either, as <script type="math/tex">c_t</script> need not be positive.  The only way around it I’ve found is to check every iteration if <script type="math/tex">c_t</script> is getting out of hand, then transform <script type="math/tex">\bar{w}_{t} \leftarrow \bar{w}_t c_t</script> and <script type="math/tex">c_t \leftarrow 1</script> if it is.</p>
+<p>  And that&#8217;s it!  As a final note, depending what value you choose for $$\lambda$$, $$c_t$$ is going to get really big or really small pretty fast.  The usual &#8220;take the log&#8221; tricks aren&#8217;t going to fly, either, as $$c_t$$ need not be positive.  The only way around it I&#8217;ve found is to check every iteration if $$c_t$$ is getting out of hand, then transform $$\bar{w}_{t} \leftarrow \bar{w}_t c_t$$ and $$c_t \leftarrow 1$$ if it is.</p>
 
-<p>Finally, credit should be given where credit is due.  This is a slightly more detailed explanation of <a href="http://blog.smola.org/post/940672544/fast-quadratic-regularization-for-online-learnin">Alex Smola’s Blog Post</a> from about a year ago, which in turn is accredited to Leon Bottou.</p>
+<p>  Finally, credit should be given where credit is due.  This is a slightly more detailed explanation of <a href="http://blog.smola.org/post/940672544/fast-quadratic-regularization-for-online-learnin">Alex Smola&#8217;s Blog Post</a> from about a year ago, which in turn is accredited to Leon Bottou.</p>
 </div>
 
 
@@ -210,11 +209,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/06/24/admm-alternating-direction-method-of-multipliers/">ADMM: Alternating Direction Method of Multipliers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/24/logistic-regression-and-stochastic-gradient-descent/">Logistic Regression and Stochastic Gradient Descent</a>
+        <a href="/blog/2012/12/31/topic-models-via-starcraft/">Topic Models via Starcraft</a>
       </li>
     
       <li class="post">
@@ -283,5 +278,21 @@
 
 
 
+
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+  </script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 </body>
 </html>

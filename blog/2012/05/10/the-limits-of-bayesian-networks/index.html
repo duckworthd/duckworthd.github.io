@@ -9,7 +9,7 @@
   <meta name="author" content="duckworthd">
 
   
-  <meta name="description" content="So you’re a smart guy or gal. You have Bayesian Networks down. Belief Propagation? “Please, I build Junction Trees in my sleep”. What’s that, a &hellip;">
+  <meta name="description" content="So you&#8217;re a smart guy or gal. You have Bayesian Networks down. Belief Propagation? &#8220;Please, I build Junction Trees in my sleep&#8221;. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,6 +21,7 @@
   <link rel="canonical" href="http://duckworthd.github.com/blog/2012/05/10/the-limits-of-bayesian-networks">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
@@ -31,11 +32,6 @@
 
   
 
-
-  <!-- MathJax support -->
-  <script type="text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script>
 </head>
 
 <body   >
@@ -95,25 +91,25 @@
   </header>
 
 
-<div class="entry-content"><p>So you’re a smart guy or gal.  You have Bayesian Networks down.  <a href="http://en.wikipedia.org/wiki/Belief_propagation">Belief Propagation</a>?  “Please, I build Junction Trees in my sleep”.  What’s that, a <a href="http://www.cs.ubc.ca/~murphyk/Papers/dbnchapter.pdf">Dynamic Bayesian Network</a>?  “I’ll have a <a href="http://en.wikipedia.org/wiki/Variational_Bayesian_methods">Variational Inference</a> algorithm done by the end of the week, and if that isn’t enough I’ll whip out my <a href="http://www.cs.ubc.ca/~arnaud/doucet_johansen_tutorialPF.pdf">Particle Filter</a>.  MCMC, EM, whatever, I got this.  Give me a Bayesian Network, and I’ll show you how to do inference”, you say.</p>
+<div class="entry-content"><p>  So you&#8217;re a smart guy or gal.  You have Bayesian Networks down.  <a href="http://en.wikipedia.org/wiki/Belief_propagation">Belief Propagation</a>?  &#8220;Please, I build Junction Trees in my sleep&#8221;.  What&#8217;s that, a <a href="http://www.cs.ubc.ca/~murphyk/Papers/dbnchapter.pdf">Dynamic Bayesian Network</a>?  &#8220;I&#8217;ll have a <a href="http://en.wikipedia.org/wiki/Variational_Bayesian_methods">Variational Inference</a> algorithm done by the end of the week, and if that isn&#8217;t enough I&#8217;ll whip out my <a href="http://www.cs.ubc.ca/~arnaud/doucet_johansen_tutorialPF.pdf">Particle Filter</a>.  MCMC, EM, whatever, I got this.  Give me a Bayesian Network, and I&#8217;ll show you how to do inference&#8221;, you say.</p>
 
-<p>But believe it or not, Bayesian Networks just aren’t enough, and even if you <em>do</em> have inference in Bayesian Networks down cold, the world is far, far bigger than that.  Let’s take a look at an example.</p>
+<p>  But believe it or not, Bayesian Networks just aren&#8217;t enough, and even if you <em>do</em> have inference in Bayesian Networks down cold, the world is far, far bigger than that.  Let&#8217;s take a look at an example.</p>
 
-<p>A storm is coming, and it’s about to hit town A.  Unfortunately, they’re completely in the dark about it and have absolutely no idea.  Still, they’re prepared as much as they always are (<script type="math/tex">P_A</script>), and when it finally comes, they sustain damage <script type="math/tex">D_A</script> based on how much they prepared and how strong the storm was (<script type="math/tex">S</script>).  The storm then turns to town <script type="math/tex">B</script>, butseeing what happened to town A, they’re more prepared (thus the edge <script type="math/tex">D_A \rightarrow P_B</script>).  The storm finally comes, and they take damage <script type="math/tex">D_B</script>.We can make a Bayesian Network for this generative model below.</p>
+<p>  A storm is coming, and it&#8217;s about to hit town A.  Unfortunately, they&#8217;re completely in the dark about it and have absolutely no idea.  Still, they&#8217;re prepared as much as they always are ($$P_A$$), and when it finally comes, they sustain damage $$D_A$$ based on how much they prepared and how strong the storm was ($$S$$).  The storm then turns to town $$B$$, butseeing what happened to town A, they&#8217;re more prepared (thus the edge $$D_A \rightarrow P_B$$).  The storm finally comes, and they take damage $$D_B$$.We can make a Bayesian Network for this generative model below.</p>
 
-<p><img class="center" src="/images/bayesian-networks-arent-enough/weather-prep-1.png" /></p>
+<p><img class="center" src="/images/bayesian-networks-arent-enough/weather-prep-1.png"></p>
 
-<p>So far so good, but what if we didn’t know which town <script type="math/tex">S</script> is going to hit first (<script type="math/tex">F</script>)?  Sure, we may think, “Well, if A was hit first, it’s the same as before, but if B is hit first, we have <script type="math/tex">D_B</script> pointing to <script type="math/tex">P_A</script>,” but look at what happens,</p>
+<p>  So far so good, but what if we didn&#8217;t know which town $$S$$ is going to hit first ($$F$$)?  Sure, we may think, &#8220;Well, if A was hit first, it&#8217;s the same as before, but if B is hit first, we have $$D_B$$ pointing to $$P_A$$,&#8221; but look at what happens,</p>
 
-<p><img class="center" src="/images/bayesian-networks-arent-enough/weather-prep-2.png" /></p>
+<p><img class="center" src="/images/bayesian-networks-arent-enough/weather-prep-2.png"></p>
 
-<p>Woah woah woah, a <em>loop</em>?  You just <em>know</em> that’s not allowed. We’re able to provide a “generative story”, so why can’t we make a Bayesian Network for it?  The issue here is one of <strong>identity uncertainty</strong> and <strong>context-specific independence</strong>.  If we knew the identity of the city to be hit first, we know that one of the edges in the center don’t matter.  Really, we can think of <script type="math/tex">F</script> as selecting one of two possible Bayesian Networks which differ only by one edge.  </p>
+<p>  Woah woah woah, a <em>loop</em>?  You just <em>know</em> that&#8217;s not allowed. We&#8217;re able to provide a &#8220;generative story&#8221;, so why can&#8217;t we make a Bayesian Network for it?  The issue here is one of <strong>identity uncertainty</strong> and <strong>context-specific independence</strong>.  If we knew the identity of the city to be hit first, we know that one of the edges in the center don&#8217;t matter.  Really, we can think of $$F$$ as selecting one of two possible Bayesian Networks which differ only by one edge.</p>
 
-<p>At the same time, this is also a case of context-specific independence.  Given the “context” <script type="math/tex">F=A</script>, we know that <script type="math/tex">P_A</script> is independent of <script type="math/tex">D_B</script>.  On the other hand, if <script type="math/tex">F=B</script>, then <script type="math/tex">P_B</script> is independent of <script type="math/tex">D_A</script>.  Identity uncertainty and context-specific independence are really two sides to the same coin.</p>
+<p>  At the same time, this is also a case of context-specific independence.  Given the &#8220;context&#8221; $$F=A$$, we know that $$P_A$$ is independent of $$D_B$$.  On the other hand, if $$F=B$$, then $$P_B$$ is independent of $$D_A$$.  Identity uncertainty and context-specific independence are really two sides to the same coin.</p>
 
-<p>So how can we do inference?  Monte Carlo algorithms luckily seem to “just work” (see Brian Milch’s Thesis), but we don’t know a whole lot about exact or Variational Methods.  </p>
+<p>  So how can we do inference?  Monte Carlo algorithms luckily seem to &#8220;just work&#8221; (see Brian Milch&#8217;s Thesis), but we don&#8217;t know a whole lot about exact or Variational Methods.</p>
 
-<p>There have been a number of projects over the last decade to make a “language” broader than Bayesian Networks to define generative models, including <a href="http://projects.csail.mit.edu/church/wiki/Church">MIT-Church</a>,  <a href="http://alchemy.cs.washington.edu/">Markov Logic Networks</a>, <a href="http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.29.1299">IBAL</a>, and <a href="http://people.csail.mit.edu/milch/blog/index.html">BLOG</a>.  With any luck, we’ll be teaching students how to use one of these in our undergraduate AI classes in a few years.</p>
+<p>  There have been a number of projects over the last decade to make a &#8220;language&#8221; broader than Bayesian Networks to define generative models, including <a href="http://projects.csail.mit.edu/church/wiki/Church">MIT-Church</a>,  <a href="http://alchemy.cs.washington.edu/">Markov Logic Networks</a>, <a href="http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.29.1299">IBAL</a>, and <a href="http://people.csail.mit.edu/milch/blog/index.html">BLOG</a>.  With any luck, we&#8217;ll be teaching students how to use one of these in our undergraduate AI classes in a few years.</p>
 </div>
 
 
@@ -156,7 +152,7 @@
         <a class="basic-alignment left" href="/blog/2012/05/10/sparse-features-and-l2-regularization/" title="Previous Post: Sparse Features and L2 Regularization">&laquo; Sparse Features and L2 Regularization</a>
       
       
-        <a class="basic-alignment right" href="/blog/2012/06/24/logistic-regression-and-stochastic-gradient-descent/" title="Next Post: Logistic Regression and Stochastic Gradient Descent">Logistic Regression and Stochastic Gradient Descent &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2012/12/31/topic-models-via-starcraft/" title="Next Post: Topic Models via Starcraft">Topic Models via Starcraft &raquo;</a>
       
     </p>
   </footer>
@@ -171,11 +167,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/06/24/admm-alternating-direction-method-of-multipliers/">ADMM: Alternating Direction Method of Multipliers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/24/logistic-regression-and-stochastic-gradient-descent/">Logistic Regression and Stochastic Gradient Descent</a>
+        <a href="/blog/2012/12/31/topic-models-via-starcraft/">Topic Models via Starcraft</a>
       </li>
     
       <li class="post">
@@ -244,5 +236,21 @@
 
 
 
+
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+  </script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 </body>
 </html>

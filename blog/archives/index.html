@@ -9,8 +9,10 @@
   <meta name="author" content="duckworthd">
 
   
-  <meta name="description" content="Blog Archive 2012 ADMM: Alternating Direction Method of Multipliers
-Jun 24 2012 posted in optimization Logistic Regression and Stochastic Gradient &hellip;">
+  <meta name="description" content="Blog Archive 2012 Topic Models via Starcraft
+Dec 31 2012 The Limits of Bayesian Networks
+May 10 2012 Sparse Features and L2 Regularization
+May 10 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,6 +24,7 @@ Jun 24 2012 posted in optimization Logistic Regression and Stochastic Gradient &
   <link rel="canonical" href="http://duckworthd.github.com/blog/archives">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
@@ -32,11 +35,6 @@ Jun 24 2012 posted in optimization Logistic Regression and Stochastic Gradient &
 
   
 
-
-  <!-- MathJax support -->
-  <script type="text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script>
 </head>
 
 <body   >
@@ -85,22 +83,8 @@ Jun 24 2012 posted in optimization Logistic Regression and Stochastic Gradient &
 
 <article>
   
-<h1><a href="/blog/2012/06/24/admm-alternating-direction-method-of-multipliers/">ADMM: Alternating Direction Method of Multipliers</a></h1>
-<time datetime="2012-06-24T18:00:00-07:00" pubdate><span class='month'>Jun</span> <span class='day'>24</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/optimization/'>optimization</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/06/24/logistic-regression-and-stochastic-gradient-descent/">Logistic Regression and Stochastic Gradient Descent</a></h1>
-<time datetime="2012-06-24T13:48:00-07:00" pubdate><span class='month'>Jun</span> <span class='day'>24</span> <span class='year'>2012</span></time>
+<h1><a href="/blog/2012/12/31/topic-models-via-starcraft/">Topic Models via Starcraft</a></h1>
+<time datetime="2012-12-31T20:33:00-08:00" pubdate><span class='month'>Dec</span> <span class='day'>31</span> <span class='year'>2012</span></time>
 
 
 </article>
@@ -139,11 +123,7 @@ Jun 24 2012 posted in optimization Logistic Regression and Stochastic Gradient &
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/06/24/admm-alternating-direction-method-of-multipliers/">ADMM: Alternating Direction Method of Multipliers</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/24/logistic-regression-and-stochastic-gradient-descent/">Logistic Regression and Stochastic Gradient Descent</a>
+        <a href="/blog/2012/12/31/topic-models-via-starcraft/">Topic Models via Starcraft</a>
       </li>
     
       <li class="post">
@@ -212,5 +192,21 @@ Jun 24 2012 posted in optimization Logistic Regression and Stochastic Gradient &
 
 
 
+
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+  </script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 </body>
 </html>

@@ -21,6 +21,7 @@
   <link rel="canonical" href="http://duckworthd.github.com/about.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
   <script src="/javascripts/modernizr-2.0.js"></script>
   <script src="/javascripts/ender.js"></script>
   <script src="/javascripts/octopress.js" type="text/javascript"></script>
@@ -31,11 +32,6 @@
 
   
 
-
-  <!-- MathJax support -->
-  <script type="text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-  </script>
 </head>
 
 <body   >
@@ -67,9 +63,9 @@
 </nav>
   <div id="main">
     <div id="content">
-      <p><img class="right" src="/images/portrait.jpg" /></p>
+      <p><img class="right" src="/images/portrait.jpg"></p>
 
-<p>My name is <strong>Daniel Duckworth</strong>, and I am a student at U. Mass. Amherst researching Artificial Intelligence.  My primary theoretical tools are Bayesian Inference and Probabilistic Models, and my favorite programming tools are Python (IPython + Numpy + Scipy + Matplotlib) and Scala.  In my free time, I try to practice my Japanese and go to concerts by the likes of <a href="http://rxbandits.com/">Rx Bandits</a>, <a href="http://www.doomtree.net/">Doomtree</a>, <a href="http://astronautalis.com/">Astronautalis</a> and more.  I couldn&rsquo;t design a pretty webpage if my life depended on it.</p>
+<p>My name is <strong>Daniel Duckworth</strong>, and I am a student at U. Mass. Amherst researching Artificial Intelligence.  My primary theoretical tools are Bayesian Inference and Probabilistic Models, and my favorite programming tools are Python (IPython + Numpy + Scipy + Matplotlib) and Scala.  In my free time, I try to practice my Japanese and go to concerts by the likes of <a href="http://rxbandits.com/">Rx Bandits</a>, <a href="http://www.doomtree.net/">Doomtree</a>, <a href="http://astronautalis.com/">Astronautalis</a> and more.  I couldn&#8217;t design a pretty webpage if my life depended on it.</p>
 
     </div>
   </div>
@@ -101,5 +97,21 @@
 
 
 
+
+  <!-- mathjax config similar to math.stackexchange -->
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+  </script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
 </body>
 </html>
