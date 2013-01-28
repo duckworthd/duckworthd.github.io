@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ADMM: parallelizing convex optimization</title>
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="span10 offset1 nav-div">
+        <a class="brand logo" href="#">
+          <img src="/assets/img/transmogrifier2.png"></img>
+        </a>
+        <ul class="nav">
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/projects.html">Projects</a></li>
+          <li><a href="/blog.html">Blog</a></li>
+          <li><a href="/feed.xml">
+            <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+          </a></li>
+        </ul>
+        <form class="navbar-search pull-right" method="get" action="http://google.com/search">
+          <p>
+            <input type="hidden" name="q" value="site:http://www.transmogrifier.com" />
+            <input type="text" class="search-query" name="q" />
+            <button class="btn btn-mini" type="submit"><i class="icon-search"></i></button>
+          </p>
+        </form>
+      </div> <!-- span10 offset1 -->
+    </div> <!-- /container -->
+  </div> <!-- /navbar-inner -->
+</div> <!-- /navbar -->
+
+    <div class="container">
+
+<div class="row-fluid">
+  <div class="span10 offset1 post box-shadow">
+    <header>
+      <h1 class="header-title">ADMM: parallelizing convex optimization</h1>
+      <p class="header-subtext">by Daniel Duckworth on Jun 24, 2012</p>
+    </header>
+    <article>
+      <p>In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing “separable” functions (that is, functions that are purely sums of other functions) in a large, distributed environment. However, Stochastic Gradient Descent is not the only algorithm out there.</p>
+<p>So why consider anything else? First of all, we have to choose step sizes <span class="math">\(\alpha_{t,i}\)</span>. While there are theoretical constraints on how it must behave (e.g. <span class="math">\(\alpha_t = \frac{1}{t^k}\)</span> is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful. It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.</p>
+<p>Secondly, Stochastic Gradient Descent is naturally <em>sequential</em>. You have to update <span class="math">\(w_{t,i}\)</span> before you can update <span class="math">\(w_{t,i+1}\)</span> (well, not quite. See <a href="http://arxiv.org/abs/1106.5730">HOGWILD!</a>). This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn’t of much help in MapReduce-style frameworks.</p>
+<p>Alternating Direction Method of Multipliers (ADMM) is an entirely different method of distributed optimization that is far better oriented for MapReduce and which only requires a single parameter to specify the learning rate. However, using it requires quite a bit more mathematical preparation.</p>
+<p>The basic idea is that if we have an optimization problem specified as follows,</p>
+<p><span class="math">\[
+\begin{align}
+  &amp; \min_{x,z} f(x) + g(z)  \\
+  &amp; \text{s.t. } A x + B z = c
+\end{align}
+\]</span></p>
+<p>Then we can derive the Lagrangian and add a quadratic penalty for violating the constraint,</p>
+<p><span class="math">\[
+L_{\rho}(x,z,y) = f(x) + g(z) + y^T (Ax + Bz -c) + \frac{\rho}{2} || Ax + Bz - c ||_2^2
+\]</span></p>
+<p>Finally we apply the following algorithm</p>
+<ol style="list-style-type: decimal">
+<li>Optimize over the first primal variable,</li>
+</ol>
+<p><span class="math">\[
+x_{t+1} = \text{argmin}_x L_{\rho}(x,z_t, y_t)
+\]</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Optimize over the second primal variable,</li>
+</ol>
+<p><span class="math">\[
+z_{t+1} = \text{argmin}_x L_{\rho}(x_{t+1},z, y_t)
+\]</span></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Take a gradient step for the dual variable</li>
+</ol>
+<p><span class="math">\[
+y_{t+1} = y_t + \rho (A x_{t+1} + B z_{t+1} - c)
+\]</span></p>
+<p>Notice the choice of step size for updating <span class="math">\(y_t\)</span> and the addition of a quadratic term to the Lagrangian; these are the critical addition of ADMM.</p>
+<p>The question now becomes, how can we apply this seemingly restricted method to make a distributed algorithm? Suppose we want to minimize our usual separable function</p>
+<p><span class="math">\[
+\min_x \sum_i f_i(x)
+\]</span></p>
+<p>We can reformulate this problem by giving each <span class="math">\(f_i\)</span> its own <span class="math">\(x_i\)</span>, and requiring that <span class="math">\(x_i = z\)</span> at the very end.</p>
+<p><span class="math">\[
+\begin{align}
+  &amp; \min_{x_i, z} \sum_i f_i(x_i)   \\
+  &amp; \text{s.t.} \quad \forall i \quad x_i = z
+\end{align}
+\]</span></p>
+<p>This means that we can optimize each <span class="math">\(x_i\)</span> independently, then aggregate their solutions to update <span class="math">\(z\)</span> (the one true <span class="math">\(x\)</span>), and finally use both of those to update <span class="math">\(y\)</span>. Let’s see how this works out exactly. The augmented Lagrangian would be,</p>
+<p><span class="math">\[
+L_{\rho}(x,z,y) = \sum_{i} \left( 
+    f_i(x_i) + y^T (x_i - z) + \frac{\rho}{2} || x_i - z ||_2^2
+  \right)
+\]</span></p>
+<ol style="list-style-type: decimal">
+<li>For each machine <span class="math">\(i\)</span> in parallel, optimize the local variable <span class="math">\(x_i\)</span></li>
+</ol>
+<p><span class="math">\[
+\begin{align}
+  x_{t+1, i} &amp; = \text{argmin}_x f_i(x) 
+    + y_{t,i}^T (x - z_t) 
+    + \frac{\rho}{2} (x-z)^T (x-z) \\
+\end{align}
+\]</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Aggregate the resulting <span class="math">\(x_{t,i+1}\)</span> and optimize the global variable <span class="math">\(z\)</span>,</li>
+</ol>
+<p><span class="math">\[
+\begin{align}
+  z_{t+1} &amp;= \text{argmin}_z y_{t,i}^T (x_{t+1, i} - z) 
+    + \frac{\rho}{2} (x_{t+1, i} - z)^T (x_{t+1, i} - z)  \\
+  &amp;= \frac{1}{N} \sum_{i=1}^{N} \left( 
+    x_{t+1, i} + \frac{1}{\rho} y_{t, i}
+  \right)
+\end{align}
+\]</span></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Update the dual variables <span class="math">\(y_{t,i}\)</span>,</li>
+</ol>
+<p><span class="math">\[
+y_{t+1, i} = y_{t, i} + \rho ( x_{t+1,i} - z_{t+1} )
+\]</span></p>
+<p>This is already pretty cool, but there’s even more. It ends up that ADMM works splendidly even when we add a regularization penalty to the primal problem, such as the <span class="math">\(L_2\)</span> or <span class="math">\(L_1\)</span> norm. You can find out all of these cool things and more in the Stephen Boyd’s <a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">paper</a> and <a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">lecture</a>.</p>
+<p>On a final note, the proofs on convergence for ADMM are currently not as complete as those for other methods like Stochastic Gradient Descent. While it is known that the dual variable <span class="math">\(y_t\)</span> will converge as long as <span class="math">\(f\)</span> and <span class="math">\(g\)</span> are convex and a solution exists, we can only prove convergence of the primal variables <span class="math">\(x_t\)</span> and <span class="math">\(z_t\)</span> if they are constrained to lie in a polyhedron at this point in time.</p>
+<p>References</p>
+<ul>
+<li><a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers</a></li>
+<li><a href="http://arxiv.org/pdf/1112.2295.pdf">A Proof of Convergence For the Alternating Direction Method of Multipliers Applied to Polyhedral-Constrained Functions</a></li>
+<li><a href="http://arxiv.org/abs/1106.5730">HOGWILD!: A Lock-Free Approach to Parallelizing Stochastic Gradient Descent</a></li>
+<li><a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">Alternating Direction Method of Multipliers</a></li>
+</ul>
+    </article>
+  </div>
+</div> <!-- row -->
+<!-- Disqus Comments -->
+<div class="row disqus">
+  <div class="span8">
+    <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'duckworthd'; // required: replace example with your forum shortname
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</div>
+
+
+
+    </div> <!-- container -->
+    <!-- jquery -->
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+<!-- MathJax -->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "all"
+      }
+    }
+  });
+</script>
+
+<!-- Bootstrap -->
+<script type="text/javascript"
+        src="/assets/js/bootstrap.min.js"></script>
+
+<!-- Lightbox -->
+<script type="text/javascript"
+        src="/assets/js/lightbox.js"></script>
+
+  </body>
+</html>
+

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Topic Models aren't hard</title>
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="span10 offset1 nav-div">
+        <a class="brand logo" href="#">
+          <img src="/assets/img/transmogrifier2.png"></img>
+        </a>
+        <ul class="nav">
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/projects.html">Projects</a></li>
+          <li><a href="/blog.html">Blog</a></li>
+          <li><a href="/feed.xml">
+            <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+          </a></li>
+        </ul>
+        <form class="navbar-search pull-right" method="get" action="http://google.com/search">
+          <p>
+            <input type="hidden" name="q" value="site:http://www.transmogrifier.com" />
+            <input type="text" class="search-query" name="q" />
+            <button class="btn btn-mini" type="submit"><i class="icon-search"></i></button>
+          </p>
+        </form>
+      </div> <!-- span10 offset1 -->
+    </div> <!-- /container -->
+  </div> <!-- /navbar-inner -->
+</div> <!-- /navbar -->
+
+    <div class="container">
+
+<div class="row-fluid">
+  <div class="span10 offset1 post box-shadow">
+    <header>
+      <h1 class="header-title">Topic Models aren't hard</h1>
+      <p class="header-subtext">by Daniel Duckworth on Jan 21, 2013</p>
+    </header>
+    <article>
+      <p>In 2002, <a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf">Latent Dirichlet Allocation</a> (LDA) was published at NIPS, one of the most highly regarded conferences for research loosely labeled as “Artificial Intelligence”. The next 5 or so years led to a flurry of incremental model extensions and alternative inference methods, though none have achieved the popularity of their namesake.</p>
+<p>Latent Dirichlet Allocation – an extremely complex name for a not-so-complex idea. In this post, I will explain what the LDA model says, what it does <em>not</em> say, and how we as researchers should look at it.</p>
+<h1 id="the-model">The Model</h1>
+<p>Let’s begin by appreciating Latent Dirichlet Allocation in its most natural form – the graphical model. I hope you like Greek letters…</p>
+<div class="img-center">
+  
+<img src="/assets/img/lda/graphical-model.png"></img>
+</div>
+
+<p>About now, you should have an ephemeral feeling of happiness and understanding beyond anything you’ve ever experienced before, as if your eyes had just opened for the first time. Do you feel it? No? Yeah, I didn’t think so.</p>
+<p>Let’s break it down a little, without the math. Take a look at the following 4 plots. Each subplot contains samples drawn from 1 of 3 clusters, and each plot contains samples from the same clusters. The difference between each subplot is that the <em>number of samples</em> from each cluster is different.</p>
+<div class="img-center">
+  
+<img src="/assets/img/lda/gaussians-nocolor.jpg"></img>
+</div>
+
+<p>Having trouble? It’s a rather difficult problem, especially with only 4 subplots. What if you had a 100,000 subplots instead? Do you think you could figure it out then? Here’s a plot of the same data with points colored according to their cluster,</p>
+<div class="img-center">
+  
+<img src="/assets/img/lda/gaussians-color.jpg"></img>
+</div>
+
+<p>Even if you don’t realize it yet, you now understand Latent Dirichlet Allocation. In fact, Latent Dirichlet Allocation is just an extension of the lowly Mixture Model. “How so?”, you ask? Well let’s look at how we might generate data from a Mixture Model.</p>
+<p>In a mixture model, each data point is sampled independently. The algorithm for generating a sample given the model’s parameters is given by the following python snippet.</p>
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">sample_mixture_model</span><span class="p">(</span><span class="n">n_data_points</span><span class="p">,</span> <span class="n">cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_data_points</span><span class="p">):</span>
+    <span class="n">cluster</span> <span class="o">=</span> <span class="n">sample_categorical</span><span class="p">(</span><span class="n">cluster_weights</span><span class="p">)</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">variance</span> <span class="o">=</span> <span class="n">cluster_parameters</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span>
+    <span class="k">yield</span> <span class="n">sample_normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">variance</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>Simple, right? First, a cluster is chosen for this data point. Each cluster has some probability of being chosen, given by <code>cluster_weights[i]</code>. Once a cluster has been chosen, the data point is generated from a Normal distribution with mean and covariance specific to the cluster. The idea is that each cluster has its own mean and covariance, so with enough samples we’ll be able to tell the clusters apart.</p>
+<p>So how does this relate to LDA? In LDA, each “document” (in our case, subplot) is nothing more than a Mixture Model. The novel part of LDA is that there isn’t just one document that we see a ton of samples from, but many documents that we only see a few samples from. Furthermore, each document has its own version of <code>cluster_weights</code> – our only boon is that all documents share the same <code>cluster_parameters</code>.</p>
+<p>To make that concrete, let’s look at how we would generate samples from LDA.</p>
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">sample_lda</span><span class="p">(</span><span class="n">n_data_points_per_document</span><span class="p">,</span> <span class="n">all_cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
+  <span class="n">n_documents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_cluster_weights</span><span class="p">)</span>  <span class="c"># number of documents</span>
+  <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_documents</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">sample_mixture_model</span><span class="p">(</span><span class="n">n_data_points_per_document</span><span class="p">,</span>
+                                       <span class="n">all_cluster_weights</span><span class="p">[</span><span class="n">d</span><span class="p">],</span>
+                                       <span class="n">cluster_parameters</span><span class="p">):</span>
+      <span class="k">yield</span> <span class="p">{</span>
+        <span class="s">&#39;document_number&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
+        <span class="s">&#39;data_point&#39;</span><span class="p">:</span> <span class="n">sample</span>
+      <span class="p">}</span>
+</code></pre></div>
+
+
+<p>Notice that here we don’t just return the data point by itself. In LDA, we know which “document” each data point comes from, which is just a little bit more information than we have in a regular old Mixture Model.</p>
+<p>Finally, I have to admit that I lied a little. What I’ve described so far isn’t <em>quite</em> LDA, but it’s pretty damn close. In the above pseudocode, I assumed that the model parameters were already given, but LDA actually assumes the parameters are unknown and defines a probability distribution over them (a <a href="http://en.wikipedia.org/wiki/Dirichlet_distribution">Dirichlet distribution</a>, in fact). Secondly, the examples above generate data points from Normal distributions where as LDA generates samples from the <a href="http://en.wikipedia.org/wiki/Multinomial_distribution">Multinomial distribution</a>. Other than that, you now understand Latent Dirichlet Allocation, the core of nearly every Topic Model in existence.</p>
+<h1 id="appendix">Appendix</h1>
+<p>Here’s the MATLAB code for generating the two plots above.</p>
+<div class="highlight"><pre><code class="matlab"><span class="c">%% parameters</span>
+<span class="n">n_samples</span> <span class="p">=</span> <span class="mi">200</span><span class="p">;</span>
+<span class="n">n_clusters</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="n">n_documents</span> <span class="p">=</span> <span class="mi">4</span><span class="p">;</span>
+
+<span class="c">%% reset ye olde random seed</span>
+<span class="n">s</span> <span class="p">=</span> <span class="n">RandStream</span><span class="p">(</span><span class="s">&#39;mcg16807&#39;</span><span class="p">,</span><span class="s">&#39;Seed&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">RandStream</span><span class="p">.</span><span class="n">setDefaultStream</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+
+<span class="c">%% generate parameters for each cluster</span>
+<span class="k">for</span> <span class="nb">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_clusters</span>
+  <span class="n">mu</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+  <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span><span class="o">&#39;</span><span class="p">;</span>
+  <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="o">/</span> <span class="mi">250</span><span class="p">;</span>
+<span class="k">end</span>
+
+<span class="n">figure</span><span class="p">;</span>
+<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="n">d</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_documents</span>
+  <span class="c">%% generate document-specific weights</span>
+  <span class="n">w</span> <span class="p">=</span> <span class="nb">rand</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">w</span> <span class="p">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">sum</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+
+  <span class="c">%% generate samples for this document</span>
+  <span class="k">for</span> <span class="nb">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="nb">rand</span><span class="p">())</span>
+    <span class="n">c</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">mnrnd</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">w</span><span class="p">);</span>
+    <span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="nb">find</span><span class="p">(</span><span class="n">c</span><span class="p">(:,</span><span class="nb">i</span><span class="p">));</span>
+    <span class="n">x</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">mvnrnd</span><span class="p">(</span><span class="n">mu</span><span class="p">(:,</span><span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)),</span> <span class="n">sigma</span><span class="p">(:,:,</span><span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)));</span>
+  <span class="k">end</span>
+
+  <span class="c">%% plotting! yay!</span>
+  <span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>
+
+  <span class="c">% without color</span>
+  <span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">,:),</span> <span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">,:));</span>
+  <span class="c">% with color</span>
+  <span class="c">% scatter(x(1,:), x(2,:), &#39;CData&#39;, c&#39;);</span>
+<span class="k">end</span>
+</code></pre></div>
+    </article>
+  </div>
+</div> <!-- row -->
+<!-- Disqus Comments -->
+<div class="row disqus">
+  <div class="span8">
+    <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'duckworthd'; // required: replace example with your forum shortname
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</div>
+
+
+
+    </div> <!-- container -->
+    <!-- jquery -->
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+<!-- MathJax -->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "all"
+      }
+    }
+  });
+</script>
+
+<!-- Bootstrap -->
+<script type="text/javascript"
+        src="/assets/js/bootstrap.min.js"></script>
+
+<!-- Lightbox -->
+<script type="text/javascript"
+        src="/assets/js/lightbox.js"></script>
+
+  </body>
+</html>
+

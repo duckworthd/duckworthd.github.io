@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Stochastic Gradient Descent and Sparse \(L_2\) regularization</title>
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="span10 offset1 nav-div">
+        <a class="brand logo" href="#">
+          <img src="/assets/img/transmogrifier2.png"></img>
+        </a>
+        <ul class="nav">
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/projects.html">Projects</a></li>
+          <li><a href="/blog.html">Blog</a></li>
+          <li><a href="/feed.xml">
+            <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+          </a></li>
+        </ul>
+        <form class="navbar-search pull-right" method="get" action="http://google.com/search">
+          <p>
+            <input type="hidden" name="q" value="site:http://www.transmogrifier.com" />
+            <input type="text" class="search-query" name="q" />
+            <button class="btn btn-mini" type="submit"><i class="icon-search"></i></button>
+          </p>
+        </form>
+      </div> <!-- span10 offset1 -->
+    </div> <!-- /container -->
+  </div> <!-- /navbar-inner -->
+</div> <!-- /navbar -->
+
+    <div class="container">
+
+<div class="row-fluid">
+  <div class="span10 offset1 post box-shadow">
+    <header>
+      <h1 class="header-title">Stochastic Gradient Descent and Sparse \(L_2\) regularization</h1>
+      <p class="header-subtext">by Daniel Duckworth on May 10, 2012</p>
+    </header>
+    <article>
+      <p>Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter <span class="math">\(w\)</span> is simply the sum of the losses of each sample <span class="math">\(i\)</span>, i.e.,</p>
+<p><span class="math">\[
+    L(w) = \sum_{i} l(x_i, y_i, w)
+\]</span></p>
+<p>Basically any loss function you can think of in the i.i.d sample regime can be composed this way. Since we assumed that your dataset was huge, there’s no way you’re going to be able to load it all into memory for BFGS, so you choose to use Stochastic Gradient Descent. The update for sample <span class="math">\(i\)</span> with step size <span class="math">\(\eta_t\)</span> would then be,</p>
+<p><span class="math">\[
+    w_{t+1} = w_t - \eta_t \nabla_w l(x_i, y_i, w_t)
+\]</span></p>
+<p>So far, so good. If <span class="math">\(\nabla_w l(x_i, y_i, w)\)</span> is sparse, then you only need to change a handful of <span class="math">\(w\)</span>’s components. Of course, being the astute Machine Learning expert that you are, you know that you’re going to need some regularization. Let’s redefine the total loss and take a look at our new update equation,</p>
+<p><span class="math">\[
+\begin{align}
+  L(w) &amp; = \sum_{i} l(x_i, y_i, w) + \frac{\lambda}{2}||w||_2^2  \\
+  w_{t+1} &amp; = w_t - \eta_t \left( \nabla_w l(x_i, y_i, w_t) + \lambda w_t \right)
+\end{align}
+\]</span></p>
+<p>Uh oh. Now that <span class="math">\(w\)</span> appears in our Stochastic Gradient Descent update equation, you’re going to have change every non-zero element of <span class="math">\(w\)</span> at every iteration, even if <span class="math">\(\nabla_w l(x_i, y_i, w)\)</span> is sparse! Whatever shall you do?</p>
+<p>The answer isn’t as scary as you might think. Let’s do some algebraic manipulation from <span class="math">\(t = 0\)</span>,</p>
+<p><span class="math">\[
+\begin{align}
+  w_{1} 
+  &amp; = w_0 - \eta_0 \left( \nabla_w l(x_i, y_i, w_0) + \lambda w_0 \right) \\
+  &amp; = w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) - \eta_0 \lambda w_0 \\
+  &amp; = (1 - \eta_0 \lambda ) w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) \\
+  &amp; = (1 - \eta_0 \lambda ) \left(
+      w_0 - \frac{\eta_0}{1-\eta_0 \lambda } \nabla_w l(x_i, y_i, w_0)
+    \right) \\
+\end{align}
+\]</span></p>
+<p>Do you see it now? <span class="math">\(L_2\)</span> regularization is really just a rescaling of <span class="math">\(w_t\)</span> at every iteration. Thus instead of keeping <span class="math">\(w_t\)</span>, let’s keep track of,</p>
+<p><span class="math">\[
+\begin{align}
+  c_t &amp; = \prod_{\tau=0}^t (1-\eta_{\tau} \lambda )  \\
+  \bar{w}_t &amp; = \frac{w_t}{c_t}
+\end{align}
+\]</span></p>
+<p>where you update <span class="math">\(\bar{w}_t\)</span> and <span class="math">\(c_t\)</span> by,</p>
+<p><span class="math">\[
+\begin{align}
+  \bar{w}_{t+1} 
+  &amp; = \bar{w}_t - \frac{\eta_t}{(1 - \eta_t) c_t} \nabla_w l(x_i, w_i, c_t \bar{w}_t) \\
+  c_{t+1} 
+  &amp; = (1 - \eta_t \lambda) c_t
+\end{align}
+\]</span></p>
+<p>And that’s it! As a final note, depending what value you choose for <span class="math">\(\lambda\)</span>, <span class="math">\(c_t\)</span> is going to get really big or really small pretty fast. The usual “take the log” tricks aren’t going to fly, either, as <span class="math">\(c_t\)</span> need not be positive. The only way around it I’ve found is to check every iteration if <span class="math">\(c_t\)</span> is getting out of hand, then transform <span class="math">\(\bar{w}_{t} \leftarrow \bar{w}_t c_t\)</span> and <span class="math">\(c_t \leftarrow 1\)</span> if it is.</p>
+<p>Finally, credit should be given where credit is due. This is a slightly more detailed explanation of <a href="http://blog.smola.org/post/940672544/fast-quadratic-regularization-for-online-learning">Alex Smola’s</a> blog post from about a year ago, which in turn is accredited to Leon Bottou.</p>
+    </article>
+  </div>
+</div> <!-- row -->
+<!-- Disqus Comments -->
+<div class="row disqus">
+  <div class="span8">
+    <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'duckworthd'; // required: replace example with your forum shortname
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</div>
+
+
+
+    </div> <!-- container -->
+    <!-- jquery -->
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+<!-- MathJax -->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "all"
+      }
+    }
+  });
+</script>
+
+<!-- Bootstrap -->
+<script type="text/javascript"
+        src="/assets/js/bootstrap.min.js"></script>
+
+<!-- Lightbox -->
+<script type="text/javascript"
+        src="/assets/js/lightbox.js"></script>
+
+  </body>
+</html>
+

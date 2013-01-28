@@ -1,526 +1,151 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Bayesian World</title>
-  <meta name="author" content="duckworthd">
-
-  
-  <meta name="description" content="Today, I&#8217;d like to explain to you how Topic Models work, and I will do so via a
-running Starcraft example. How are these two related? Well let &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://duckworthd.github.com">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/stylesheets/data-table.css" media="screen, projection" rel="stylesheet" type="text/css" />
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Bayesian World" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
-  
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Bayesian World</a></h1>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:duckworthd.github.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-  <li><a href="/about.html">About</a></li>
-  <li><a href="http://twitter.com/#!/duck">Twitter</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/31/topic-models-via-starcraft/">Topic Models via Starcraft</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-31T20:33:00-08:00" pubdate data-updated="true">Dec 31<span>st</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Today, I&#8217;d like to explain to you how Topic Models work, and I will do so via a
-running Starcraft example.  How are these two related? Well let&#8217;s find out!</p>
-
-<h2>Step 1: Mixture Models</h2>
-
-<p>Before we jump into full-on Topic Models, let&#8217;s start with the basic Mixture
-Model.  Imagine a High Templar commanding a battalion of Dark Templar (for the
-glory of Aiur!) tasked with invading an unsuspecting Terran planet.  Luckily,
-this is not the first time the Protoss have visited this planet, and Pylons are
-already in place, meaning his troops need only teleport in.  However, these
-Pylons were placed thousands of years ago, and while they are still in working
-order, attempting to teleport a unit to one results in them being placed in the
-vicinity of the Pylon, rather than right next to it.  Some Pylons are in a
-better state of repair than others, so depending on which Pylon is used, he may
-have a better chance of putting his Dark Templar where he intends.  In
-addition, some Pylons are closer to key Terran infrastructure than others, so
-simply choosing the Pylon in the best state of repair isn&#8217;t the best idea.</p>
-
-<p>The High Templar devises a plan to surprise the Terran planet by grouping his
-Dark Templar troops into squads and teleporting each squad to the same Pylon.
-Being cloaked, however, only Dark Templar at the same Pylon will be able to see
-and communicate with each other.  To make the best use of his forces, he
-divvies up his troops into squads of the appropriate size and begins the
-teleportation sequence.  After that, they are on their own.</p>
-
-<p><img class="center" src="/images/starcraft/map-1.jpg"></p>
-
-<p>Meanwhile, a traitorous Terran-friendly Archon watches silently from his ship
-orbiting the planet.  Telepathically he senses the location of each Dark
-Templar and of the re-activated Pylons, but is unable to sense which squad each
-Dark Templar belongs to or the state of each Pylon.  To best help his Terran
-allies, he must identify both.  Were he to know which squad each Dark Templar
-belongs to, he would be able to estimate the functionality of each Pylon.  On
-the other hand, if he knew how well each Pylon were working, then he would be
-better able to guess which Dark Templar came from which Pylon.</p>
-
-<p><img class="center" src="/images/starcraft/map-2.jpg"></p>
-
-<p>The problem of seeing data points (Dark Templar positions) that you <em>know</em>
-belong to individual clusters (squads) but not being able to directly observe
-which cluster (squad) each data point (unit position) belongs to is precisely
-what the Mixture Model assigns probabilities to.  Another way of putting it is
-that the High Templar selects one of his Dark Templar subordinates uniformly at
-random, chooses which Pylon to assign him to randomly with probability
-proportional to what percentage of his troops he wants to allocate there, then
-when the Dark Templar is teleported, his location is randomly sampled based on
-the strength of the Pylon he is using.  We can write the probability of the
-placement and squad assignments of all units as follows,</p>
-
-<p>$$ P(p_{1:n_{unit}}, s_{1:n_{unit}}, \theta_{1:k} | w_{1:k}) = \prod_{j=1}^{k} P(\theta_j) \prod_{i=1}^{n} P(s_i | w_{1:k}) P(p_i | \theta_{s_i}) $$</p>
-
-<table>
-  <tr>
-    <td> $p_i$ </td>
-    <td> position of Dark Templar $i$ </td>
-  </tr>
-  <tr>
-    <td> $s_i$ </td>
-    <td> squad number of Dark Templar $i$ </td>
-  </tr>
-  <tr> 
-    <td> $\theta_j$ </td>
-    <td> parameters for probability distribution of position of a Dark Templar given he is assigned to Pylon $j$ </td>
-  </tr>
-  <tr>
-    <td> $w_{j}$ </td>
-    <td> probability of sending a Dark Templar to Pylon $j$ </td>
-  </tr>
-  <tr>
-    <td> $n_{unit}$ </td>
-    <td> number of Dark Templar </td>
-  </tr>
-  <tr>
-    <td> $k$ </td>
-    <td> number of Pylons </td>
-  </tr>
-</table>
-
-
-<p>Once we assume the above probability distribution, we can use one of a variety
-of algorithm for Probabilistic Inference to find
-$P(s_{1:n} , \theta_{1:k} | p_{1:n})$, giving us a good guess as to which
-cluster each data point belongs to and how strong each Pylon is.</p>
-
-<h2>Step 2: Topic Models</h2>
-
-<p>Back to our example, let&#8217;s now extend the Mixture Model to a full Topic Model.
-Suppose now that the traitorous Archon is not just any Archon, but a Dark
-Archon gifted with the ability to observe the outcome of many alternative
-universes.  In each alternative universe, the High Templar chooses different
-proportions of his units to assign to each squad and each unit&#8217;s position ends
-up being different, but the behavior of each Pylon remains unchanged.  The Dark
-Archon&#8217;s power is limited however, and he can only observe a finite number of
-different universes before exhausting his energy.  While the outcome of each
-alternative universe cannot help him figure out which Dark Templar is assigned
-to which Pylon directly in this universe, it can help him figure out how each
-Pylon behaves.  In addition, the Dark Archon gets a better idea of how the
-opposing High Templar will assign his Dark Templar as the strategic value of
-each Pylon remains the same.</p>
-
-<p><img class="center" src="/images/starcraft/map-1.jpg">
-<img class="center" src="/images/starcraft/map-3.jpg">
-<img class="center" src="/images/starcraft/map-4.jpg"></p>
-
-<p>The problem I have just described is precisely that modeled by Latent Dirichlet
-Allocation, the most basic Probabilistic Topic Model. Each universe is that of
-a single &#8220;document&#8221;, with its own unobserved document-cluster weights
-(proportions).  Within each universe, there exists a Mixture Model, but with a
-twist &#8211; all universes (documents) share the same cluster (Pylon) parameters.
-To put it mathematically,</p>
-
-<p>$$ P(p_{1:n_{doc},1:n_{unit}}, s_{1:n_{doc},1:n_{unit}}, w_{1:n_{doc}, 1:k}, \theta_{1:k}) $$
-$$ = P(\alpha) \prod_{j=1}^{k} P(\theta_{j}) \prod_{l=1}^{n_{doc}} P(w_{l, 1:k} | \alpha) \prod_{i=1}^{n_{unit}} P(s_{l,i} | w_{l, 1:k}) P(p_{l,i} | \theta_{s_{l,i}}) $$</p>
-
-<table>
-  <tr>
-     <td> $p_{l,i}$ </td>
-     <td> position of $i$-th Dark Templar in $l$-th universe </td>
-  </tr>
-  <tr>
-     <td> $s_{l,i}$ </td>
-     <td> squad number of $i$-th Dark Templar in $l$-th universe </td>
-  </tr>
-  <tr>
-     <td> $w_{l,j}$ </td>
-     <td> probability of sending a Dark Templar to Pylon $j$ in universe $l$ </td>
-  </tr>
-  <tr>
-     <td> $\theta_{j}$ </td>
-     <td> parameters for probability distribution of position of a Dark Templar given he is assigned to Pylon $j$ </td>
-  </tr>
-  <tr>
-     <td> $\alpha$ </td>
-     <td> parameters for probability distribution over universe-specific proportions </td>
-  </tr>
-  <tr>
-     <td> $n_{doc}$ </td>
-     <td> number of universes </td>
-  </tr>
-  <tr>
-     <td> $n_{unit}$ </td>
-     <td> number of Dark Templar units </td>
-  </tr>
-  <tr>
-     <td> $k$ </td>
-     <td> number of Pylons </td>
-  </tr>
-</table>
-
-
-<p>Once again, once we assume the above probability distribution, we can use
-Probabilistic Inference to find a good estimate for the parameters common to
-every universe &#8211; $\alpha$ and $\theta_{1:k}$.</p>
-
-<h2>Epilogue</h2>
-
-<p>To summarize, Topic Models are simply a probabilistic model assigning
-probabilities to multiple-universe Mixture Models.  So how do  &#8220;topics&#8221; fit
-into all of this?  Recall earlier that I described each universe as a
-&#8220;document&#8221; &#8211; there&#8217;s a good reason for this. In the original Latent Dirichlet
-Allocation paper, the goal wasn&#8217;t to figure out which squads Dark Templars are
-assigned to but rather which &#8220;topics&#8221; individual words in articles were part
-of.  The intuition is that when you&#8217;re talking about a particular topic (e.g.
-sports, wallabees, or Cards Against Humanity), there is a distinctive
-probability distribution over words you would use, separate from every other
-topic.  Keep in mind that nothing about the model includes human supervision &#8211;
-what the model thinks is a likely set of &#8220;topics&#8221; may not correspond to
-anything we as readers identify as meaningful.  However, in practice some
-rather interesting &#8220;topics&#8221; pop up, so a cottage research field has spent the
-last 10+ years trying to extend Latent Dirichlet Allocation to better capture
-the &#8220;topics&#8221; we as humans find &#8220;nice&#8221;.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/10/the-limits-of-bayesian-networks/">The Limits of Bayesian Networks</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-10T20:03:00-07:00" pubdate data-updated="true">May 10<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>  So you&#8217;re a smart guy or gal.  You have Bayesian Networks down.  <a href="http://en.wikipedia.org/wiki/Belief_propagation">Belief Propagation</a>?  &#8220;Please, I build Junction Trees in my sleep&#8221;.  What&#8217;s that, a <a href="http://www.cs.ubc.ca/~murphyk/Papers/dbnchapter.pdf">Dynamic Bayesian Network</a>?  &#8220;I&#8217;ll have a <a href="http://en.wikipedia.org/wiki/Variational_Bayesian_methods">Variational Inference</a> algorithm done by the end of the week, and if that isn&#8217;t enough I&#8217;ll whip out my <a href="http://www.cs.ubc.ca/~arnaud/doucet_johansen_tutorialPF.pdf">Particle Filter</a>.  MCMC, EM, whatever, I got this.  Give me a Bayesian Network, and I&#8217;ll show you how to do inference&#8221;, you say.</p>
-
-<p>  But believe it or not, Bayesian Networks just aren&#8217;t enough, and even if you <em>do</em> have inference in Bayesian Networks down cold, the world is far, far bigger than that.  Let&#8217;s take a look at an example.</p>
-
-<p>  A storm is coming, and it&#8217;s about to hit town A.  Unfortunately, they&#8217;re completely in the dark about it and have absolutely no idea.  Still, they&#8217;re prepared as much as they always are ($$P_A$$), and when it finally comes, they sustain damage $$D_A$$ based on how much they prepared and how strong the storm was ($$S$$).  The storm then turns to town $$B$$, butseeing what happened to town A, they&#8217;re more prepared (thus the edge $$D_A \rightarrow P_B$$).  The storm finally comes, and they take damage $$D_B$$.We can make a Bayesian Network for this generative model below.</p>
-
-<p><img class="center" src="/images/bayesian-networks-arent-enough/weather-prep-1.png"></p>
-
-<p>  So far so good, but what if we didn&#8217;t know which town $$S$$ is going to hit first ($$F$$)?  Sure, we may think, &#8220;Well, if A was hit first, it&#8217;s the same as before, but if B is hit first, we have $$D_B$$ pointing to $$P_A$$,&#8221; but look at what happens,</p>
-
-<p><img class="center" src="/images/bayesian-networks-arent-enough/weather-prep-2.png"></p>
-
-<p>  Woah woah woah, a <em>loop</em>?  You just <em>know</em> that&#8217;s not allowed. We&#8217;re able to provide a &#8220;generative story&#8221;, so why can&#8217;t we make a Bayesian Network for it?  The issue here is one of <strong>identity uncertainty</strong> and <strong>context-specific independence</strong>.  If we knew the identity of the city to be hit first, we know that one of the edges in the center don&#8217;t matter.  Really, we can think of $$F$$ as selecting one of two possible Bayesian Networks which differ only by one edge.</p>
-
-<p>  At the same time, this is also a case of context-specific independence.  Given the &#8220;context&#8221; $$F=A$$, we know that $$P_A$$ is independent of $$D_B$$.  On the other hand, if $$F=B$$, then $$P_B$$ is independent of $$D_A$$.  Identity uncertainty and context-specific independence are really two sides to the same coin.</p>
-
-<p>  So how can we do inference?  Monte Carlo algorithms luckily seem to &#8220;just work&#8221; (see Brian Milch&#8217;s Thesis), but we don&#8217;t know a whole lot about exact or Variational Methods.</p>
-
-<p>  There have been a number of projects over the last decade to make a &#8220;language&#8221; broader than Bayesian Networks to define generative models, including <a href="http://projects.csail.mit.edu/church/wiki/Church">MIT-Church</a>,  <a href="http://alchemy.cs.washington.edu/">Markov Logic Networks</a>, <a href="http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.29.1299">IBAL</a>, and <a href="http://people.csail.mit.edu/milch/blog/index.html">BLOG</a>.  With any luck, we&#8217;ll be teaching students how to use one of these in our undergraduate AI classes in a few years.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/10/sparse-features-and-l2-regularization/">Sparse Features and L2 Regularization</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-10T17:21:00-07:00" pubdate data-updated="true">May 10<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>  Suppose you&#8217;re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter $$w$$ is simply the sum of the losses of each sample $$i$$, i.e.,</p>
-
-<p>$$
-  L(w) = \sum_{i} l(x_i, y_i, w)
-$$</p>
-
-<p>  Basically any loss function you can think of in the i.i.d sample regime can be composed this way.  Since we assumed that your dataset was huge, there&#8217;s no way you&#8217;re going to be able to load it all into memory for BFGS, so you choose to use <a href="http://en.wikipedia.org/wiki/Stochastic_gradient_descent">Stochastic Gradient Descent</a>.  The update for sample $$i$$ with step size $$\eta_t$$ would then be,</p>
-
-<p>$$
-  w_{t+1} = w_t - \eta_t \nabla_w l(x_i, y_i, w_t)
-$$</p>
-
-<p>  So far, so good.  If $$\nabla_w l(x_i, y_i, w)$$ is sparse, then you only need to change a handful of $$w$$&#8217;s components.  Of course, being the astute Machine Learning expert that you are, you know that you&#8217;re going to need some regularization.  Let&#8217;s redefine the total loss and take a look at our new update equation,</p>
-
-<p>$$
-\begin{align}
-  L(w) &amp; = \sum<em>{i} l(x_i, y_i, w) + \frac{\lambda}{2}||w||</em>2<sup>2</sup>  \
-  w_{t+1} &amp; = w_t - \eta_t \left( \nabla_w l(x_i, y_i, w_t) + \lambda w_t \right)
-\end{align}
-$$</p>
-
-<p>  Uh oh.  Now that $$w$$ appears in our Stochastic Gradient Descent update equation, you&#8217;re going to have change <em>every</em> non-zero element of $$w$$ at <em>every</em> iteration, even if $$\nabla_w l(x_i, y_i, w)$$ is sparse!  Whatever shall you do?</p>
-
-<p>  The answer isn&#8217;t as scary as you might think.  Let&#8217;s do some algebraic manipulation from $$t=0$$,</p>
-
-<p>$$
-\begin{align}
-  w_{1}
-  &amp; = w_0 - \eta_0 \left( \nabla_w l(x_i, y_i, w_0) + \lambda w_0 \right) \
-  &amp; = w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) - \eta_0 \lambda w_0 \
-  &amp; = (1 - \eta_0 \lambda ) w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) \
-  &amp; = (1 - \eta_0 \lambda ) \left(</p>
-
-<pre><code>  w_0 - \frac{\eta_0}{1-\eta_0 \lambda } \nabla_w l(x_i, y_i, w_0)
-\right) \\
-</code></pre>
-
-<p>\end{align}
-$$</p>
-
-<p>  Do you see it now?  $$L_2$$ regularization is really just a <em>rescaling</em> of $$w_t$$ at <em>every</em> iteration.  Thus instead of keeping $$w_t$$, let&#8217;s keep track of,</p>
-
-<p>$$
-\begin{align}
-  c_t &amp; = \prod<em>{\tau=0}^t (1-\eta</em>{\tau} \lambda )  \
-  \bar{w}_t &amp; = \frac{w_t}{c_t}
-\end{align}
-$$</p>
-
-<p>  where you update $$\bar{w}_t$$ and $$c_t$$ by,</p>
-
-<p>$$
-\begin{align}
-  \bar{w}<em>{t+1}
-  &amp; = \bar{w}</em>t - \frac{\eta_t}{(1 - \eta_t) c_t} \nabla_w l(x_i, w_i, c_t \bar{w}<em>t) \
-  c</em>{t+1}
-  &amp; = (1 - \eta_t \lambda) c_t
-\end{align}
-$$</p>
-
-<p>  And that&#8217;s it!  As a final note, depending what value you choose for $$\lambda$$, $$c_t$$ is going to get really big or really small pretty fast.  The usual &#8220;take the log&#8221; tricks aren&#8217;t going to fly, either, as $$c_t$$ need not be positive.  The only way around it I&#8217;ve found is to check every iteration if $$c_t$$ is getting out of hand, then transform $$\bar{w}_{t} \leftarrow \bar{w}_t c_t$$ and $$c_t \leftarrow 1$$ if it is.</p>
-
-<p>  Finally, credit should be given where credit is due.  This is a slightly more detailed explanation of <a href="http://blog.smola.org/post/940672544/fast-quadratic-regularization-for-online-learnin">Alex Smola&#8217;s Blog Post</a> from about a year ago, which in turn is accredited to Leon Bottou.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2012/12/31/topic-models-via-starcraft/">Topic Models via Starcraft</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/10/the-limits-of-bayesian-networks/">The Limits of Bayesian Networks</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/10/sparse-features-and-l2-regularization/">Sparse Features and L2 Regularization</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-<section>
-  <h1>Latest Tweets</h1>
-  <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
-  </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("duck", 4, false);
-    });
-  </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/duck" class="twitter-follow-button" data-show-count="false">Follow @duck</a>
-  
-</section>
-
-
-
-
-
-  
-</aside>
-
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Transmogrifier</title>
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="span10 offset1 nav-div">
+        <a class="brand logo" href="#">
+          <img src="/assets/img/transmogrifier2.png"></img>
+        </a>
+        <ul class="nav">
+          <li><a href="/index.html">Home</a></li>
+          <li><a href="/projects.html">Projects</a></li>
+          <li><a href="/blog.html">Blog</a></li>
+          <li><a href="/feed.xml">
+            <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+          </a></li>
+        </ul>
+        <form class="navbar-search pull-right" method="get" action="http://google.com/search">
+          <p>
+            <input type="hidden" name="q" value="site:http://www.transmogrifier.com" />
+            <input type="text" class="search-query" name="q" />
+            <button class="btn btn-mini" type="submit"><i class="icon-search"></i></button>
+          </p>
+        </form>
+      </div> <!-- span10 offset1 -->
+    </div> <!-- /container -->
+  </div> <!-- /navbar-inner -->
+</div> <!-- /navbar -->
+
+    <div class="container">
+
+
+<div class="row-fluid">
+  <div class="span10 offset1 box-shadow">
+    <!-- main image -->
+    <!-- TODO stylize -->
+    <!-- TODO take picture -->
+    <div class="row-fluid">
+      <div class="hero-unit">
+        <h1>Hi.</h1>
+      </div>
+    </div>
+
+    <!-- personal message -->
+    <div class="message row-fluid">
+      <div class="span8 offset2">
+        <p>
+          My name is Daniel Duckworth, and I am a student at University of
+          Massachusetts, Amherst in the
+          <a href="http://iesl.cs.umass.edu/"> Information Extraction and
+            Synthesis Lab</a>.  My
+          current research revolves around
+          <a href="/blog/topic-models.html"> Topic Modeling</a>
+          , an area concerned with extracting "topics" out of large bodies of
+          text.  My academic interests however are far more broad, touching on
+          Linear Algebra, Probability Theory, Machine Learning, and Robotics.
+        </p>
+        <p>
+          I was born, raised, and educated in California, a land of hope and
+          opportunity. The
+          <a href="/assets/img/infinite-city.jpg" rel="lightbox" title="Infinite City"> Infinite City </a>
+          is where my heart still resides.
+        </p>
+      </div>
+    </div>
+
+    <!-- contact -->
+    <div class="contact-info row-fluid">
+      <div class="span6 offset3">
+        <!-- TODO get little icons for method -->
+        <!-- TODO style these -->
+        <div class="row-fluid">
+          <div class="method">
+            <div class="method-inner">
+              <img src="/assets/img/glyphicons/glyphicons_121_message_empty.png"></img>
+            </div>
+          </div>
+          <div class="destination"> duckworthd [at] gmail [dot] com </div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="method">
+            <div class="method-inner">
+              <img src="/assets/img/glyphicons/glyphicons_169_phone.png"></img>
+            </div>
+          </div>
+          <div class="destination"> (831) 285-04 six eight </div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="method">
+            <div class="method-inner">
+              <img src="/assets/img/glyphicons/glyphicons_411_twitter.png"></img>
+            </div>
+          </div>
+          <div class="destination"> <a href="http://twitter.com/duck"> @duck </a> </div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="method">
+            <div class="method-inner">
+              <img src="/assets/img/glyphicons/glyphicons_397_linked_in.png"></img>
+            </div>
+          </div>
+          <div class="destination"> <a href="http://www.linkedin.com/in/dduckworth/"> dduckworth </a> </div>
+        </div>
+      </div>
     </div>
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - duckworthd -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
-  
+<div>
 
 
+    </div> <!-- container -->
+    <!-- jquery -->
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
 
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-
-  <!-- mathjax config similar to math.stackexchange -->
-  <script type="text/x-mathjax-config">
+<!-- MathJax -->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
   MathJax.Hub.Config({
-    jax: ["input/TeX", "output/HTML-CSS"],
-    tex2jax: {
-      inlineMath: [ ['$', '$'] ],
-      displayMath: [ ['$$', '$$']],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    messageStyle: "none",
-    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+    TeX: {
+      equationNumbers: {
+        autoNumber: "all"
+      }
+    }
   });
-  </script>
-  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script>
-</body>
+</script>
+
+<!-- Bootstrap -->
+<script type="text/javascript"
+        src="/assets/js/bootstrap.min.js"></script>
+
+<!-- Lightbox -->
+<script type="text/javascript"
+        src="/assets/js/lightbox.js"></script>
+
+  </body>
 </html>
+
