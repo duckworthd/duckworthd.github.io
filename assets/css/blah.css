@@ -1,6 +1,12 @@
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  width: 95%;
+}
+
 body {
   positive: relative;
-  padding-top: 75px;
   background-color: #eee;
   text-align: justify;
 }
@@ -10,6 +16,16 @@ body {
   background: white;
   padding: 1em 3em 1em 3em;
   margin-bottom: 10px;
+}
+
+/** slow transitioning links **/
+a {
+  transition: .5s;
+}
+
+a:hover {
+  color: DeepSkyBlue;
+  text-decoration: none;
 }
 
 /**************************** navbar.html *************************************/
@@ -34,21 +50,25 @@ body {
 /**************************** blog.html ***************************************/
 
 .post-preview {
-  list-style-type: none;
+  clear: both;
+  width: 100%;
 }
 
 .post-preview .date {
   float: left;
-  width: 12%;
   font-family: Monaco, "Courier New", monospace;
   font-size: smaller;
+  margin: 0 1.5em 0 0;
 }
 
 .post-preview .title {
   float: left;
-  width: 40%;
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.post-preview .subtext {
+  clear: bloth;
 }
 
 /**************************** posts *******************************************/
@@ -69,16 +89,26 @@ body {
 
 .post article h1 {
   font-size: 150%;
+  padding-left: .5em;
+  border-width: 1px 0 1px 0;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.3);
 }
 
 .img-center {
-  width: 400px;
+  max-width: 500px;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
 
 .img-center img {
   max-width: 100%;
+}
+
+.img-center .caption {
+  font-size: 80%;
+  text-align: center;
 }
 
 /**************************** project.html ************************************/

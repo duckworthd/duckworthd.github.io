@@ -10,37 +10,28 @@
     <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
     <div class="container">
-      <div class="span10 offset1 nav-div">
-        <a class="brand logo" href="#">
-          <img src="/assets/img/transmogrifier2.png"></img>
-        </a>
-        <ul class="nav">
-          <li><a href="/index.html">Home</a></li>
-          <li><a href="/projects.html">Projects</a></li>
-          <li><a href="/blog.html">Blog</a></li>
-          <li><a href="/feed.xml">
-            <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
-          </a></li>
-        </ul>
-        <form class="navbar-search pull-right" method="get" action="http://google.com/search">
-          <p>
-            <input type="hidden" name="q" value="site:http://www.transmogrifier.com" />
-            <input type="text" class="search-query" name="q" />
-            <button class="btn btn-mini" type="submit"><i class="icon-search"></i></button>
-          </p>
-        </form>
-      </div> <!-- span10 offset1 -->
-    </div> <!-- /container -->
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="nav-div">
+      <a class="brand logo" href="#">
+        <img src="/assets/img/transmogrifier2.png"></img>
+      </a>
+      <ul class="nav pull-right">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/projects.html">Projects</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/feed.xml">
+          <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+        </a></li>
+      </ul>
+    </div> <!-- span10 offset1 -->
   </div> <!-- /navbar-inner -->
 </div> <!-- /navbar -->
 
-    <div class="container">
 
 <div class="row-fluid">
-  <div class="span10 offset1 post box-shadow">
+  <div class="post box-shadow">
     <header>
       <h1 class="header-title">ADMM: parallelizing convex optimization</h1>
       <p class="header-subtext">by Daniel Duckworth on Jun 24, 2012</p>
@@ -139,23 +130,22 @@ y_{t+1, i} = y_{t, i} + \rho ( x_{t+1,i} - z_{t+1} )
   </div>
 </div> <!-- row -->
 <!-- Disqus Comments -->
-<div class="row disqus">
-  <div class="span8">
-    <div id="disqus_thread"></div>
-      <script type="text/javascript">
-        var disqus_shortname = 'duckworthd'; // required: replace example with your forum shortname
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-      </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  </div>
+<div class="row-fluid disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'duckworthd-blog'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
-
-
 
     </div> <!-- container -->
     <!-- jquery -->
@@ -166,13 +156,14 @@ y_{t+1, i} = y_{t, i} + \rho ( x_{t+1,i} - z_{t+1} )
 <script type="text/javascript"
         src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "all"
-      }
-    }
-  });
+  /* If you want automatic equation numbering... */
+  // MathJax.Hub.Config({
+  //   TeX: {
+  //     equationNumbers: {
+  //       autoNumber: "all"
+  //     }
+  //   }
+  // });
 </script>
 
 <!-- Bootstrap -->

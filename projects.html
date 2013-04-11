@@ -10,34 +10,25 @@
     <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
     <div class="container">
-      <div class="span10 offset1 nav-div">
-        <a class="brand logo" href="#">
-          <img src="/assets/img/transmogrifier2.png"></img>
-        </a>
-        <ul class="nav">
-          <li><a href="/index.html">Home</a></li>
-          <li><a href="/projects.html">Projects</a></li>
-          <li><a href="/blog.html">Blog</a></li>
-          <li><a href="/feed.xml">
-            <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
-          </a></li>
-        </ul>
-        <form class="navbar-search pull-right" method="get" action="http://google.com/search">
-          <p>
-            <input type="hidden" name="q" value="site:http://www.transmogrifier.com" />
-            <input type="text" class="search-query" name="q" />
-            <button class="btn btn-mini" type="submit"><i class="icon-search"></i></button>
-          </p>
-        </form>
-      </div> <!-- span10 offset1 -->
-    </div> <!-- /container -->
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="nav-div">
+      <a class="brand logo" href="#">
+        <img src="/assets/img/transmogrifier2.png"></img>
+      </a>
+      <ul class="nav pull-right">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/projects.html">Projects</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/feed.xml">
+          <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+        </a></li>
+      </ul>
+    </div> <!-- span10 offset1 -->
   </div> <!-- /navbar-inner -->
 </div> <!-- /navbar -->
 
-    <div class="container">
 
 
 <div class="row-fluid">
@@ -114,13 +105,14 @@
 <script type="text/javascript"
         src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "all"
-      }
-    }
-  });
+  /* If you want automatic equation numbering... */
+  // MathJax.Hub.Config({
+  //   TeX: {
+  //     equationNumbers: {
+  //       autoNumber: "all"
+  //     }
+  //   }
+  // });
 </script>
 
 <!-- Bootstrap -->

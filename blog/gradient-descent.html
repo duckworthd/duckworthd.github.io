@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Gradient Descent</title>
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="nav-div">
+      <a class="brand logo" href="#">
+        <img src="/assets/img/transmogrifier2.png"></img>
+      </a>
+      <ul class="nav pull-right">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/projects.html">Projects</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/feed.xml">
+          <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+        </a></li>
+      </ul>
+    </div> <!-- span10 offset1 -->
+  </div> <!-- /navbar-inner -->
+</div> <!-- /navbar -->
+
+
+<div class="row-fluid">
+  <div class="post box-shadow">
+    <header>
+      <h1 class="header-title">Gradient Descent</h1>
+      <p class="header-subtext">by Daniel Duckworth on Apr 10, 2013</p>
+    </header>
+    <article>
+      <p>Gradient Descent is perhaps the most intuitive of all optimization algorithms. Imagine you’re standing on the side of a mountain and want to reach the bottom. You’d probably do something like this,</p>
+<div class="well">
+  
+<ol style="list-style-type: decimal">
+<li>Look around you and see which way points the most downwards</li>
+<li>Take a step in that direction
+</div>
+</li>
+</ol>
+<p>Well that’s Gradient Descent!</p>
+<h1 id="how-does-it-work">How does it work?</h1>
+<p>So how do we frame Gradient Descent mathematically? As usual, we define our problem in terms of minimizing a function,</p>
+<p><span class="math">\[
+  \min_{x} \, f(x)
+\]</span></p>
+<p>We assume that <span class="math">\(f\)</span> is differentiable. That is, we can easily compute,</p>
+<p><span class="math">\[
+  \nabla_x \, f(x) = \begin{pmatrix}
+    \frac{d f(x)}{d x_1} \\
+    \frac{d f(x)}{d x_2} \\
+    \vdots \\
+  \end{pmatrix}
+\]</span></p>
+<p>Given this, Gradient Descent is simply the following,</p>
+<!-- TODO Replace well with something more contextually meaningful -->
+<div class="well">
+  
+<p><strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
+<ol style="list-style-type: decimal">
+<li>For <span class="math">\(t = 0, 1, \ldots\)</span>
+<ol start="2" style="list-style-type: decimal">
+<li>if converged, return <span class="math">\(x^{(t)}\)</span></li>
+<li>Compute the <a href="http://en.wikipedia.org/wiki/Gradient">gradient</a> of <span class="math">\(f\)</span> at <span class="math">\(x^{(t)}\)</span>, <span class="math">\(g^{(t)}    \triangleq \nabla f(x^{(t)})\)</span></li>
+<li><span class="math">\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}\)</span>
+</div>
+</li>
+</ol></li>
+</ol>
+<p>The initial iterate <span class="math">\(x^{(0)}\)</span> can be selected arbitrarily, and step size <span class="math">\(\alpha^{(t)}\)</span> can be selected by <a href="#line_search">Line Search</a>, a small constant, or simply <span class="math">\(\frac{1}{t}\)</span>.</p>
+<h1 id="a-small-example">A Small Example</h1>
+<p>Let’s look at Gradient Descent in action. We’ll use the objective function <span class="math">\(f(x) = x^4\)</span>, meaning that <span class="math">\(\nabla_x f(x) = 4 x^3\)</span>. For a step size, we’ll choose a constant step size <span class="math">\(\alpha_t = 0.05\)</span>. Finally, we’ll start at <span class="math">\(x^{(0)} = 1\)</span>.</p>
+<div class="img-center">
+  
+<img src="/assets/img/gradient_descent/animation.gif"></img> <span class="caption"> Gradient Descent in action. The curved line is the <span class="math">\(f(x)\)</span>, and the flat line is its linear approximation, <span class="math">\(\hat{f}(y) = f(x) + \nabla_x f(x)^T     (y-x)\)</span>, which is what Gradient Descent follows. </span>
+</div>
+
+<div class="img-center">
+  
+<img src="/assets/img/gradient_descent/convergence.png"></img> <span class="caption"> This plot shows how quickly the objective function decreases as the number of iterations increases. </span>
+</div>
+
+<div class="img-center">
+  
+<img src="/assets/img/gradient_descent/iterates.png"></img> <span class="caption"> This plot shows the actual iterates and the objective function evaluated at those points. More red indicates a higher iteration number. </span>
+</div>
+
+<h1 id="why-does-it-work">Why does it work?</h1>
+<p>Gradient Descent works, but it isn’t guaranteed to find the optimal solution to our problem (that is, <span class="math">\(x^{*} = \arg\min_{x} f(x)\)</span>) without a few assumptions. In particular,</p>
+<ol style="list-style-type: decimal">
+<li><span class="math">\(f\)</span> is convex and finite for all <span class="math">\(x\)</span></li>
+<li>a finite solution <span class="math">\(x^{*}\)</span> exists</li>
+<li><span class="math">\(\nabla f(x)\)</span> is Lipschitz continuous with constant <span class="math">\(L\)</span>. If <span class="math">\(f\)</span> is twice differentiable, this means that the largest eigenvalue of the Hessian is bounded by <span class="math">\(L\)</span> (<span class="math">\(\nabla^2 f(x) \preceq LI\)</span>). But more directly, there must be an <span class="math">\(L\)</span> such that,</li>
+</ol>
+<p><span class="math">\[
+  || \nabla f(x) - \nabla f(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
+\]</span></p>
+<p><strong>Assumptions</strong> So what do these assumptions give us? Assumption 1 tells us that <span class="math">\(f\)</span> is lower bounded by an affine function,</p>
+<p><span class="math">\[
+  f(y) \ge f(x) + \nabla f(x)^T (y - x)  \qquad \forall x,y
+\]</span></p>
+<p>Assumption 3 also tells us that <span class="math">\(f\)</span> is upper bounded by a quadratic (this is not obvious),</p>
+<p><span class="math">\[
+  f(y) \le f(x) + \nabla f(x)^T (y - x) + \frac{L}{2} || y - x ||_2^2
+\]</span></p>
+<p><strong>Proof Outline</strong> Now let’s dive into the proof. Our plan of attack is as follows. First, we upper bound the error <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span> in terms of <span class="math">\(||x^{(t)} - x^{*}||_2^2\)</span> and <span class="math">\(||x^{(t+1)} - x^{*}||_2^2\)</span>. We then sum these upper bounds across <span class="math">\(t\)</span> to upper bound the sum of errors in terms of <span class="math">\(||x^{(0)} - x^{*}||_2^2\)</span>. Finally, we use the fact that <span class="math">\(f(x^{(t)})\)</span> is decreasing in <span class="math">\(t\)</span> to take an average of that sum to bound <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span> in terms of <span class="math">\(||x^{(0)} - x^{*}||_2^2\)</span> and <span class="math">\(t\)</span>.</p>
+<p><strong>Step 1</strong>: upper bounding <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span>. Let <span class="math">\(x^{+} \triangleq x^{(t+1)}\)</span>, <span class="math">\(x \triangleq x^{(t)}\)</span>, and <span class="math">\(\alpha \triangleq \alpha^{(t)}\)</span>.</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{+})
+  \le &amp; f(x) + \nabla f(x)^T (x^{+} - x) + \frac{L}{2}||x^{+} - x||_2^2 &amp;&amp; \text{# Quadratic upper bound} \\
+  = &amp; f(x) + \nabla f(x)^T (- \alpha \nabla f(x)) + \frac{L}{2}||- \alpha \nabla f(x)||_2^2 &amp;&amp; \text{# Definition of $x^{+}$} \\
+  = &amp; f(x) - \alpha || \nabla f(x) ||_2^2 + \frac{\alpha^2 L}{2} ||\nabla f(x)||_2^2 \\
+  = &amp; f(x) - \alpha\left( 1 - \frac{\alpha L}{2} \right) || \nabla f(x) ||_2^2  \\
+  \le &amp; f(x) - \frac{\alpha}{2} || \nabla f(x) ||_2^2  &amp;&amp; \text{# Assuming $\frac{\alpha L}{2} \leq \frac{1}{2}$} \\
+  \le &amp; f(x^{*}) + \nabla f(x)^T (x - x^{*}) - \frac{\alpha}{2} || \nabla f(x) ||_2^2  &amp;&amp; \text{# Linear lower bound on $f(x)$} \\
+  = &amp; f(x^{*}) + \nabla f(x)^T (x - x^{*}) - \frac{\alpha}{2} || \nabla f(x) ||_2^2 \\
+    &amp; \quad \pm \frac{1}{2 \alpha} \left( ||x||_2^2 + ||x^{*}||_2^2 + x^T x^{*} \right)\\
+  = &amp; f(x^{*}) + \frac{1}{2 \alpha} \left(
+      ||x - x^{*}||_2^2 - ||(x - \alpha \nabla f(x)) - x^{*}||_2^2
+    \right) \\
+  = &amp; f(x^{*}) + \frac{1}{2 \alpha} \left(
+      ||x - x^{*}||_2^2 - ||x^{+} - x^{*}||_2^2
+    \right) \\
+\end{align*}
+\]</span></p>
+<p><strong>Step 2</strong>: Upper bound <span class="math">\(\sum_{t=1}^{T} f(x^{(t)}) - f(x^{*})\)</span> by summing across all <span class="math">\(t\)</span>. At this point we’ll assume that <span class="math">\(\alpha^{(t)}\)</span> is the same for all <span class="math">\(t\)</span>.</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{(t)}) - f(x^{*})
+  &amp; \le \frac{1}{2 \alpha^{(t)}} \left(
+    ||x^{(t)} - x^{*}||_2^2 - ||x^{(t+1)} - x^{*}||_2^2
+  \right) \\
+  \sum_{t=1}^{T} f(x^{(t)}) - f(x^{*})
+  &amp; \le \frac{1}{2 \alpha} \sum_{t=1}^{T} \left(
+    ||x^{(t)} - x^{*}||_2^2 - ||x^{(t+1)} - x^{*}||_2^2
+  \right) \\
+  &amp; = \frac{1}{2 \alpha} \left(
+    ||x^{(0)} - x^{*}||_2^2 - ||x_1 - x^{*}||_2^2 + ||x_1 - x^{*}||_2^2 - ||x_2 - x^{*}||_2^2 + \ldots
+  \right) \\
+  &amp; = \frac{1}{2 \alpha} \left( ||x^{(0)} - x^{*}||_2^2 - ||x^{(t)} - x^{*}||_2^2
+  \right) \\
+  &amp; \le \frac{1}{2 \alpha} ||x^{(0)} - x^{*}||_2^2 \\
+\end{align*}
+\]</span></p>
+<p><strong>Step 3</strong>: Upper bound <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span> by using the fact that <span class="math">\(f(x^{(t+1)}) &lt; f(x^{(t)})\)</span></p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{(T)}) - f(x^{*})
+  &amp; \le \frac{1}{T} \sum_{t=1}^{T} ( f(x^{(t)}) - f(x^{*}) ) \\
+  &amp; \le \frac{1}{2 \alpha T} ||x^{(0)} - x^{*}||_2^2
+\end{align*}
+\]</span></p>
+<p>Thus, we can conclude that if we want to reach an error tolerance <span class="math">\(f(x^{T}) - f(x^{*}) \le \epsilon\)</span>, we need <span class="math">\(O(\frac{1}{\epsilon})\)</span> iterations. In other words, Gradient Descent has a “convergence rate” of <span class="math">\(O(\frac{1}{T})\)</span>.</p>
+<h1 id="when-should-i-use-it">When should I use it?</h1>
+<p>Because it’s so easy to implement, Gradient Descent should be the first thing to try if you need to implement an optimization from scratch. So long as you calculate the gradient right, it’s practically impossible to make a mistake. If you have access to an <a href="http://justindomke.wordpress.com/2009/02/17/automatic-differentiation-the-most-criminally-underused-tool-in-the-potential-machine-learning-toolbox/">automatic differentiation library</a> to do the gradient computation for you, even better! In addition, Gradient Descent requires a minimal memory footprint, making it ideal for problems where <span class="math">\(x\)</span> is very high dimensional.</p>
+<p>As we’ll see in later posts, Gradient Descent trades memory for speed. The number of iterations required to reach a desired accuracy is actually quite large if you want accuracy on the order of <span class="math">\(10^{-8}\)</span>, and there are algorithms that are much faster if computation of the <a href="http://en.wikipedia.org/wiki/Hessian_matrix">Hessian</a> is feasible. Even when considering the same memory requirements, there is another gradient-based method with better convergence rates.</p>
+<h1 id="extensions">Extensions</h1>
+<p><strong>Step Size</strong> The proof above relies on a constant step size, but quicker convergence can be obtained when using <a href="#line_search">Line Search</a>, wherein <span class="math">\(\alpha^{(t)}\)</span> is chosen to (approximately) find <span class="math">\(\alpha^{(t)} = \arg\min_{\alpha} f(x^{(t)} - \alpha \nabla f(x^{(t)}))\)</span>. Keep in mind that unless <span class="math">\(0 \le t \le \frac{1}{L}\)</span>, <em>Gradient Descent will not converge!</em></p>
+<p><strong>Checking Convergence</strong> We have shown that the algorithm’s error at iteration <span class="math">\(T\)</span> relies on <span class="math">\(T\)</span> and the distance between <span class="math">\(x^{(0)}\)</span> and <span class="math">\(x^{*}\)</span>, the latter of which is unknown. How then can we check if we’re “close enough”? A typical choice is simply to stop after a fixed number of iterations, but another common alternative is to quit when <span class="math">\(||\nabla f(x^{(t)})||_2 &lt; \epsilon_{g}\)</span> for a chosen <span class="math">\(\epsilon_{g}\)</span>. The intuition for this comes from the assumption that <span class="math">\(f\)</span> is “strongly convex” with constant <span class="math">\(m\)</span>, which then implies that <span class="math">\(||x - x^{*}||_2 \le \frac{2}{m}||\nabla f(x)||_2\)</span> (see <a href="http://www.stanford.edu/~boyd/cvxbook/">Convex Optimization</a>, page 460, equation 9.10).</p>
+<h1 id="references">References</h1>
+<p><strong>Proof of Convergence</strong> The proof of convergence for Gradient Descent is adapted from slide 1-18 of of UCLA’s <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures/gradient.pdf">EE236C lecture on Gradient Methods</a>.</p>
+<p><a id="line_search"></a> <strong>Line Search</strong> The algorithm for Backtracking Line Search, a smart method for choosing step sizes, can be found on slide 10-6 of UCLA’s <a href="http://www.ee.ucla.edu/ee236b/lectures/unconstrained.pdf">EE236b lecture on unconstrained optimization</a>.</p>
+<h1 id="reference-implementation">Reference Implementation</h1>
+<p>Here’s a quick implementation of gradient descent,</p>
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Gradient Descent</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  gradient : function</span>
+<span class="sd">      Computes the gradient of the objective function at x</span>
+<span class="sd">  x0 : array</span>
+<span class="sd">      initial value for x</span>
+<span class="sd">  alpha : function</span>
+<span class="sd">      function computing step sizes</span>
+<span class="sd">  n_iterations : int, optional</span>
+<span class="sd">      number of iterations to perform</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  xs : list</span>
+<span class="sd">      intermediate values for x</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x_plus</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">xs</span>
+
+<span class="c"># This generates the plots that appear above</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">os</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+
+  <span class="c">### GRADIENT DESCENT ###</span>
+
+  <span class="c"># problem definition</span>
+  <span class="n">function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">4</span>  <span class="c"># the function to minimize</span>
+  <span class="n">gradient</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span><span class="mi">3</span>  <span class="c"># its gradient</span>
+  <span class="n">step_size</span> <span class="o">=</span> <span class="mf">0.05</span>
+  <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.0</span>
+  <span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">10</span>
+
+  <span class="c"># run gradient descent</span>
+  <span class="n">iterates</span> <span class="o">=</span> <span class="n">gradient_descent</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">)</span>
+
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s">&#39;figures/animation&#39;</span><span class="p">)</span>
+  <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+  <span class="c">### PLOTTING ###</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+  <span class="c"># plot iteration number vs. objective function evaluated at that iteration</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;o&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iteration&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;value of objective function&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="c"># plot the iterate vs. the objective value</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)))</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iterates&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;objective function evaluated at iterates&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="c"># make animation</span>
+  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">iterates</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+    <span class="n">x_plus</span> <span class="o">=</span> <span class="n">iterates</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">function</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gradient</span>
+    <span class="n">f_hat</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="n">x_min</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span>
+    <span class="n">x_max</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.1</span><span class="o">-</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span>
+
+    <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+    <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">])</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">])</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;f(x)&#39;</span><span class="p">)</span>
+
+    <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">],</span> <span class="p">[</span><span class="n">f_hat</span><span class="p">(</span><span class="n">x_min</span><span class="p">),</span> <span class="n">f_hat</span><span class="p">(</span><span class="n">x_max</span><span class="p">)],</span> <span class="s">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x_plus</span><span class="p">],</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)],</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
+
+    <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/animation/</span><span class="si">%02d</span><span class="s">.png&#39;</span> <span class="o">%</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+    </article>
+  </div>
+</div> <!-- row -->
+<!-- Disqus Comments -->
+<div class="row-fluid disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'duckworthd-blog'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+    </div> <!-- container -->
+    <!-- jquery -->
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+<!-- MathJax -->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  /* If you want automatic equation numbering... */
+  // MathJax.Hub.Config({
+  //   TeX: {
+  //     equationNumbers: {
+  //       autoNumber: "all"
+  //     }
+  //   }
+  // });
+</script>
+
+<!-- Bootstrap -->
+<script type="text/javascript"
+        src="/assets/js/bootstrap.min.js"></script>
+
+<!-- Lightbox -->
+<script type="text/javascript"
+        src="/assets/js/lightbox.js"></script>
+
+  </body>
+</html>
+
