@@ -42,7 +42,7 @@
   
 <ol style="list-style-type: decimal">
 <li>Look around you and see which way points the most downwards</li>
-<li>Take a step in that direction
+<li>Take a step in that direction, then repeat
 </div>
 </li>
 </ol>
@@ -77,7 +77,7 @@
 </ol>
 <p>The initial iterate <span class="math">\(x^{(0)}\)</span> can be selected arbitrarily, and step size <span class="math">\(\alpha^{(t)}\)</span> can be selected by <a href="#line_search">Line Search</a>, a small constant, or simply <span class="math">\(\frac{1}{t}\)</span>.</p>
 <h1 id="a-small-example">A Small Example</h1>
-<p>Let’s look at Gradient Descent in action. We’ll use the objective function <span class="math">\(f(x) = x^4\)</span>, meaning that <span class="math">\(\nabla_x f(x) = 4 x^3\)</span>. For a step size, we’ll choose a constant step size <span class="math">\(\alpha_t = 0.05\)</span>. Finally, we’ll start at <span class="math">\(x^{(0)} = 1\)</span>.</p>
+<p><a id="example"></a> Let’s look at Gradient Descent in action. We’ll use the objective function <span class="math">\(f(x) = x^4\)</span>, meaning that <span class="math">\(\nabla_x f(x) = 4 x^3\)</span>. For a step size, we’ll choose a constant step size <span class="math">\(\alpha_t = 0.05\)</span>. Finally, we’ll start at <span class="math">\(x^{(0)} = 1\)</span>.</p>
 <div class="img-center">
   
 <img src="/assets/img/gradient_descent/animation.gif"></img> <span class="caption"> Gradient Descent in action. The curved line is the <span class="math">\(f(x)\)</span>, and the flat line is its linear approximation, <span class="math">\(\hat{f}(y) = f(x) + \nabla_x f(x)^T     (y-x)\)</span>, which is what Gradient Descent follows. </span>
@@ -298,14 +298,14 @@
 <script type="text/javascript"
         src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/x-mathjax-config">
-  /* If you want automatic equation numbering... */
-  // MathJax.Hub.Config({
-  //   TeX: {
-  //     equationNumbers: {
-  //       autoNumber: "all"
-  //     }
-  //   }
-  // });
+  MathJax.Hub.Config({
+    TeX: {
+      //equationNumbers: {
+      //  autoNumber: "all"
+      //},
+      extensions: ["color.js"]
+    }
+  });
 </script>
 
 <!-- Bootstrap -->

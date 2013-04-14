@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Accelerated Gradient Descent</title>
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="nav-div">
+      <a class="brand logo" href="#">
+        <img src="/assets/img/transmogrifier2.png"></img>
+      </a>
+      <ul class="nav pull-right">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/projects.html">Projects</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/feed.xml">
+          <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+        </a></li>
+      </ul>
+    </div> <!-- span10 offset1 -->
+  </div> <!-- /navbar-inner -->
+</div> <!-- /navbar -->
+
+
+<div class="row-fluid">
+  <div class="post box-shadow">
+    <header>
+      <h1 class="header-title">Accelerated Gradient Descent</h1>
+      <p class="header-subtext">by Daniel Duckworth on Apr 12, 2013</p>
+    </header>
+    <article>
+      <p>In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run. At the same time, he established the Accelerated Gradient Method, proved that its convergence rate superior to Gradient Descent (<span class="math">\(O(1/\sqrt{\epsilon})\)</span> iterations instead of <span class="math">\(O(1/\epsilon)\)</span>), and then proved that no other first-order (that is, gradient-based) algorithm could ever hope to beat it. What a boss.</p>
+<p><a href="/blog/gradient-descent.html">Continuing</a> <a href="/blog/subgradient-descent.html">my analogy</a>, imagine that you are standing on the side of a mountain and want to reach the bottom. If you were to follow the Accelerated Gradient Method, you’d do something like this,</p>
+<div class="well">
+  
+<ol style="list-style-type: decimal">
+<li>Look around you and see which way points the most dowards</li>
+<li>Take a step in that direction</li>
+<li>Take another step in that direction, even if it starts taking you uphill. Then repeat.
+</div>
+</li>
+</ol>
+<p>As we’ll see, that last unintuitive bit is the key to Accelerated Gradient Descent’s speed.</p>
+<h1 id="how-does-it-work">How does it work?</h1>
+<p>We begin by assuming the we want to minimize an unconstrained function <span class="math">\(f\)</span>,</p>
+<p><span class="math">\[
+  \min_{x} \, f(x)
+\]</span></p>
+<p>As with Gradient Descent, we’ll assume that <span class="math">\(f\)</span> is differentiable and that we can easily compute its gradient <span class="math">\(\nabla f(x)\)</span>. Then the Accelerated Gradient Method is defined as,</p>
+<div class="well">
+  
+<p><strong>Input</strong>: initial iterate <span class="math">\(y^{(0)}\)</span></p>
+<ol style="list-style-type: decimal">
+<li>For <span class="math">\(t = 1, 2, \ldots\)</span>
+<ol start="2" style="list-style-type: decimal">
+<li>Let <span class="math">\(x^{(t)} = y^{(t-1)} - \alpha^{(t)} \nabla f(y^{(t-1)})\)</span></li>
+<li>if converged, return <span class="math">\(x^{(t)}\)</span></li>
+<li>Let <span class="math">\(y^{(t)} = x^{(t)} + \frac{t-1}{t+2} (x^{(t)} - x^{(t-1)})\)</span>
+</div>
+</li>
+</ol></li>
+</ol>
+<h1 id="a-small-example">A Small Example</h1>
+<p>We’ll try out Accelerated Gradient on the <a href="/blog/gradient-descent.html#example">same example used to showcase Gradient Descent</a>. We’ll use the objective function <span class="math">\(f(x) = x^4\)</span>, meaning that <span class="math">\(\nabla_x f(x) = 4 x^3\)</span>. For a step size, we’ll use Backtracking Line Search where the largest acceptable step size is <span class="math">\(0.05\)</span>. Finally, we’ll start at <span class="math">\(x^{(0)} = 1\)</span>. Compare these 2 graphs to the ones for Gradient Descent.</p>
+<div class="img-center">
+  
+<img src="/assets/img/accelerated_gradient/convergence.png"></img> <span class="caption"> This plot shows how quickly the objective function decreases as the number of iterations increases. </span>
+</div>
+
+<div class="img-center">
+  
+<img src="/assets/img/accelerated_gradient/iterates.png"></img> <span class="caption"> This plot shows the actual iterates and the objective function evaluated at those points. More red indicates a higher iteration number. </span>
+</div>
+
+
+<h1 id="why-does-it-work">Why does it work?</h1>
+<p>The assumptions for the Accelerated Gradient Method are identical to Gradient Descent’s. In particular, we assume,</p>
+<ol style="list-style-type: decimal">
+<li><span class="math">\(f\)</span> is convex and finite for all <span class="math">\(x\)</span></li>
+<li>a finite solution <span class="math">\(x^{*}\)</span> exists</li>
+<li><span class="math">\(\nabla f(x)\)</span> is Lipschitz continuous with constant <span class="math">\(L\)</span>. That is, there must be an <span class="math">\(L\)</span> such that,</li>
+</ol>
+<p><span class="math">\[
+  || \nabla f(x) - \nabla f(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
+\]</span></p>
+<p><strong>Assumptions</strong> As explained in my post on <a href="/blog/gradient-descent.html">Gradient Descent</a>, these assumptions give us 2 things. Assumption 1 gives us a linear lower bound on <span class="math">\(f\)</span>,</p>
+<p><span class="math">\[
+  f(y) \ge f(x) + \nabla f(x)^T (y-x) \qquad \forall x, y
+\]</span></p>
+<p>Assumption 3 then gives us a quadratic upper bound on <span class="math">\(f\)</span>,</p>
+<p><span class="math">\[
+  f(y) \le f(x) + \nabla f(x)^T (y-x) + \frac{L}{2} ||x - y||_2^2 \qquad \forall x, y
+\]</span></p>
+<p>Both of these will prove critical in the following proof.</p>
+<p><strong>Proof Outline</strong> The proof for the Accelerated Gradient Method is the trickiest one yet. We’ll see that everything fits into place just right, but that there’s very little intuition as to where it all came from.</p>
+<p>We begin in Step 1 by defining a third iterate <span class="math">\(v^{(t)}\)</span> that’s a linear combination of <span class="math">\(x^{(t)}\)</span> and <span class="math">\(x^{(t-1)}\)</span>. These iterates are purely for the sake of the proof and are not computed during the algorithm. Using these iterates, we upper bound <span class="math">\(f(x^{(t+1)})\)</span> in terms of <span class="math">\(f(x^{(t)})\)</span>, <span class="math">\(f(x^{*})\)</span>, the distance between <span class="math">\(v^{(t+1)}\)</span> and <span class="math">\(x^{*}\)</span>, and the distance between <span class="math">\(v^{(t)}\)</span> and <span class="math">\(x^{*}\)</span>.</p>
+<p>Step 2 involves upper bounding the error <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span> by <span class="math">\(f(x^{0}) - f(x^{*})\)</span> and the distance between <span class="math">\(v^{(0)}\)</span> and <span class="math">\(x^{*}\)</span> using our very careful choice of <span class="math">\(\frac{t-1}{t+2}\)</span>.</p>
+<p>Finally, Step 3 brings it all together by bounding <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span> by a term depending on <span class="math">\(1/(t+2)^2\)</span>.</p>
+<p><strong>Step 1</strong> upper bounding <span class="math">\(f(x^{(t+1)})\)</span>. First, define the following and assume that <span class="math">\(\theta^{(0)} = 1\)</span>, <span class="math">\(v^{(0)} = x^{(0)}\)</span>,</p>
+<p><span class="math">\[
+  v^{(t)}
+  = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} \qquad
+  \theta^{(t)}
+  = \frac{2}{t+2}
+\]</span></p>
+<p>There are 2 consequences of this definition for <span class="math">\(v^{(t)}\)</span>. The first is that <span class="math">\(y^{(t)}\)</span> is a linear combination of <span class="math">\(v^{(t)}\)</span> and <span class="math">\(x^{(t)}\)</span>,</p>
+<p><span class="math">\[
+\begin{align*}
+  \color{fuchsia} y^{(t)}
+  &amp; = x^{(t)} + \frac{t-1}{t+2} ( x^{(t)} - x^{(t-1)} ) \\
+  &amp; = \frac{(t+2) + (t-1)}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} \\
+  &amp; = \frac{t+1}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} + \frac{t}{t+2} x^{(t)} \\
+  &amp; = \frac{2}{t+2} \left( \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} \right) + (1 - \frac{2}{t+2}) x^{(t)} \\
+  &amp; = \color{fuchsia} \theta^{(t)} v^{(t)} + (1 - \theta^{(t)}) x^{(t)} \\
+\end{align*}
+\]</span></p>
+<p>The second is that <span class="math">\(v^{(t)}\)</span> is a gradient step on <span class="math">\(v^{(t)}\)</span>, except that the gradient is evaluated at <span class="math">\(y^{(t)}\)</span> (work backwards from the following),</p>
+<p><span class="math">\[
+\begin{align*}
+  \color{OrangeRed} v^{(t+1)}
+  &amp; = \color{OrangeRed} v^{(t)} - \frac{\alpha^{(t+1)}}{\theta^{(t)}} \nabla f(y^{(t)}) \\
+  &amp; = v^{(t)} + \frac{1}{\theta^{(t)}} ( y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)}) - y^{(t)} ) \\
+  &amp; = v^{(t)} + \frac{1}{\theta^{(t)}} ( x^{(t+1)} - y^{(t)} ) \\
+  \frac{t+2}{2} x^{(t+1)} - \frac{t}{2} x^{(t)}
+  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} + \frac{1}{\theta^{(t)}} ( x^{(t+1)} - y^{(t)} ) \\
+  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} + \frac{t+2}{2} ( x^{(t+1)} - y^{(t)} ) \\
+  - \frac{t}{2} x^{(t)}
+  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} - \frac{t+2}{2} y^{(t)} \\
+  y^{(t)}
+  &amp; = \frac{2t+1}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} \\
+  &amp; = x^{(t)} + \frac{t-1}{t+2} ( x^{(t)} - x^{(t-1)} )
+\end{align*}
+\]</span></p>
+<p>With these 2 properties in hand, let’s upper bound <span class="math">\(f(x^{(t)})\)</span>. Let <span class="math">\(\alpha^{(t)} \le \frac{1}{L}\)</span> and define <span class="math">\(x^{+} \triangleq x^{(t)}\)</span>, <span class="math">\(x \triangleq x^{(t-1)}\)</span>, <span class="math">\(v^{+} \triangleq v^{(t)}\)</span>, <span class="math">\(v \triangleq v^{(t-1)}\)</span>, <span class="math">\(\alpha^{+} \triangleq \alpha^{(t)}\)</span>, <span class="math">\(y \triangleq y^{(t-1)}\)</span>, <span class="math">\(\theta \triangleq \theta^{(t-1)}\)</span></p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{+})
+  &amp; = f(y - \alpha^{+} \nabla f(y)) \\
+  &amp; \le {\color{red} f(y) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2} \\
+  &amp; \le {\color{blue} (1-\theta) f(x) + \theta f(x^{*}) + \nabla f(y)^T (y - (1-\theta) x + \theta x^{*}) } - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \\
+  &amp; = (1-\theta) f(x) + \theta f(x^{*}) + \nabla f(y)^T ({\color{fuchsia} \theta v} + \theta x^{*}) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \\
+  &amp; = (1-\theta) f(x) + \theta f(x^{*}) + \frac{\theta^2}{2 \alpha^{+}} \left(
+        \frac{2 \alpha^{+}}{\theta} \nabla f(y)^T (v-x) - \left( \frac{\alpha^{+}}{\theta} \right)^2 || \nabla f(y) ||_2^2
+        \pm ||v - x^{*}||_2^2
+      \right) \\
+  &amp; = (1-\theta) f(x) + \theta f(x^{*}) + \frac{\theta^2}{2 \alpha^{+}} \left(
+        ||v - x^{*}||_2^2 - ||v - x^{*} - \frac{\alpha^{+}}{\theta} \nabla f(y)||_2^2 
+      \right) \\
+  &amp; = (1-\theta) f(x) + \theta f(x^{*}) + \frac{\theta^2}{2 \alpha^{+}} \left(
+        ||v - x^{*}||_2^2 - ||{\color{OrangeRed} v^{+} } - x^{*}||_2^2
+      \right) \\
+\end{align*}
+\]</span></p>
+<p>Using the Lipschitz assumption on <span class="math">\(||\nabla f(y)||_2\)</span> and that <span class="math">\(\alpha^{+} \le \frac{1}{L}\)</span>,</p>
+<p><span class="math">\[
+\begin{align*}
+  \color{red}
+  f(y - \alpha^{+} \nabla f(y))
+  &amp; \le f(y) + \nabla f(y)^T (y - \alpha^{+} \nabla f(y) - y) + \frac{L}{2}{ ||y - \alpha^{+} \nabla f(y) - y ||_2^2 } \\
+  &amp; = f(y) - \alpha^{+} || \nabla f(y) ||_2^2 + \frac{L (\alpha^{+})^2}{2} || \nabla f(y) ||_2^2 \\
+  &amp; = f(y) - \frac{\alpha^{+}}{2} ( 2 - L \alpha^{+} ) || \nabla f(y) ||_2^2 \\
+  &amp; \le \color{red} f(y) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>Using convexity’s linear lower bound and its line-over-function properties,</p>
+<p><span class="math">\[
+\begin{align*}
+  \color{blue}
+  f( (1-\theta)x + \theta x^{*} )
+  &amp; \ge f(y) + \nabla f(y)^T ( (1-\theta)x + \theta x^{*} - y) \\
+  (1-\theta) f(x) + \theta f(x^{*}) 
+  &amp; \ge f(y) + \nabla f(y)^T ( (1-\theta)x + \theta x^{*} - y) \\
+  f(y)
+  &amp; \le \color{blue} (1-\theta) f(x) + \theta f(x^{*}) + \nabla f(y)^T(y - (1-\theta) x + \theta x^{*} )
+\end{align*}
+\]</span></p>
+<p><strong>Step 2</strong> Upper bounding <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span>. We begin by manipulating the result from step 1 into something such that the left and right side look almost the same,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{(t+1)})
+  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) + \theta^{(t)} f(x^{*}) \\
+  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} \left(
+        ||v^{(t)} - x^{*}||_2^2 - \underbrace{ ||v^{(t+1)} - x^{*}||_2^2 }_{\text{move to other side}}
+     \right) \\
+  f(x^{(t+1)}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) + \theta^{(t)} f(x^{*}) \\
+  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{*}||_2^2 \underbrace{ \pm f(x^{*}) }_{=0} \\
+  f(x^{(t+1)}) - f(x^{*}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) \underbrace{ - f(x^{*}) + \theta^{(t)} f(x^{*}) }_{\text{group together}} \\
+  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{*}||_2^2 \\
+  f(x^{(t+1)}) - f(x^{*}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) - (1-\theta^{(t)}) f(x^{*}) \\
+  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{*}||_2^2 \\
+  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{*}) \right) + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le \frac{ (1-\theta^{(t)}) }{ (\theta^{(t)})^2 } \left( f(x^{(t)}) - f(x^{*}) \right) \\
+  &amp; \quad + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{*}||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>Remember how <span class="math">\(\theta^{(t)} = \frac{2}{t+2}\)</span>? Well that means <span class="math">\(\theta^{(t)} &gt; 0\)</span> and thus <span class="math">\(\frac{1 - \theta^{(t)}}{ (\theta^{(t)})^2 } \le \frac{1}{ (\theta^{(t)})^2 }\)</span>. Subbing that into the previous equation lets us apply it recursively to obtain,</p>
+<p><span class="math">\[
+\begin{align*}
+  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{*}) \right) + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le \frac{ (1-\theta^{(0)}) }{ (\theta^{(0)})^2 } \left( f(x^{(0)}) - f(x^{*}) \right) + \frac{1}{2 \alpha^{(1)}} ||v^{(0)} - x^{*}||_2^2 \\
+\end{align*}
+\]</span></p>
+<p><strong>Step 3</strong> Bound the error in terms of <span class="math">\(\frac{1}{(t+2)^2}\)</span>. Recall that <span class="math">\(\theta^{(0)} = 1\)</span> and <span class="math">\(v^{(0)} = x^{(0)}\)</span>. Then,</p>
+<p><span class="math">\[
+\begin{align*}
+  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{*}) \right) 
+    + \underbrace{ \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2 }_{\ge 0 \text{, so drop}}
+  &amp; \le \underbrace{ \frac{ (1-\theta^{(0)}) }{ (\theta^{(0)})^2 } }_{= 0} \left( f(x^{(0)}) - f(x^{*}) \right)
+    + \frac{1}{2 \alpha^{(1)}} ||\underbrace{ v^{(0)} }_{x^{(0)}} - x^{*}||_2^2 \\
+  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{*}) \right)
+  &amp; \le \frac{1}{2 \alpha^{(1)}} || x^{(0)} - x^{*} ||_2^2 \\
+  f(x^{(t+1)}) - f(x^{*})
+  &amp; \le \frac{( \theta^{(t)} )^2}{2 \alpha^{(1)}} || x^{(0)} - x^{*} ||_2^2 \\
+  &amp; = \frac{2}{ (t+2)^2 \alpha^{(1)} } || x^{(0)} - x^{*} ||_2^2
+\end{align*}
+\]</span></p>
+<p>Thus, the convergence rate of the Accelerated Gradient Method is <span class="math">\(O(\frac{1}{\sqrt{\epsilon}})\)</span>. Woo!</p>
+<h1 id="when-should-i-use-it">When should I use it?</h1>
+<p>The Accelerated Gradient Method trumps Gradient Descent in every way theoretically, but the latter is still more widely used and preferred. Why? The fact is that Accelerated Gradient is much more of a pain to implement. Whereas with Gradient Descent you can simply check if your new iterate’s score is less than the previous one, Accelerated Gradient’s score may increase before decreasing again. Accelerated Gradient is also extremely sensitive to step size – if <span class="math">\(\alpha^{(t)}\)</span> isn’t in <span class="math">\((0, \frac{1}{L}]\)</span>, <em>it will diverge</em>. Accelerated Gradient is a powerful but fickle tool. Use it when you can, but keep Gradient Descent handy if everything is going awry.</p>
+<h1 id="extensions">Extensions</h1>
+<p><strong>Step Size</strong> As mentioned previously, Accelerated Gradient is very fickle with step size. While Backtracking Line Search can and should be used when possible, it is essential that the constants be set such that <span class="math">\(\alpha^{(t+1)} \le \frac{1}{L}\)</span>. In other words, when,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)}))
+  &amp; \le f(y^{(t)}) + \nabla f(y^{(t)})^T ((y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)})) - y^{(t)}) \\
+  &amp; \quad + \frac{1}{2 \alpha^{(t+1)} } ||(y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)})) - y^{(t)}||_2^2 \\
+  &amp; = f(y^{(t)}) - \alpha^{(t+1)} || \nabla f(y^{(t)}) ||_2^2 + \frac{ \alpha^{(t+1)} }{2} ||\nabla f(y^{(t)}) ||_2^2 \\
+  &amp; = f(y^{(t)}) - \frac{\alpha^{(t+1)}}{2} || \nabla f(y^{(t)}) ||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>Typically the <span class="math">\(\frac{1}{2}\)</span> in the last part of the last line is traded for another constant. <em>This will not work for Accelerated Gradient!</em></p>
+<p><strong>Checking Convergence</strong> As with Gradient Descent and Subgradient Descent, there is no real way to be certain when <span class="math">\(f(x^{(t)}) - f(x^{*}) &lt; \epsilon\)</span> without some problem-specific knowledge. Instead, it is common to stop after a fixed number of iterations or when <span class="math">\(||\nabla f(x^{(t)})||_2\)</span> is small.</p>
+<h1 id="references">References</h1>
+<p><strong>Proof of Convergence</strong> The proof of convergence is thanks to Lieven Vandenberghe’s <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gradient.pdf">EE236c slides</a> hosted by Zaiwen Wen.</p>
+<h1 id="reference-implementation">Reference Implementation</h1>
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">accelerated_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Accelerated Gradient Method</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  gradient : function</span>
+<span class="sd">      Computes the gradient of the objective function at x</span>
+<span class="sd">  y0 : array</span>
+<span class="sd">      initial value for x</span>
+<span class="sd">  alpha : function</span>
+<span class="sd">      function computing step sizes</span>
+<span class="sd">  n_iterations : int, optional</span>
+<span class="sd">      number of iterations to perform</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  xs : list</span>
+<span class="sd">      intermediate values for x</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">y0</span><span class="p">]</span>
+  <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">y0</span><span class="p">]</span>
+  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">ys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">x_plus</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span>
+    <span class="n">y_plus</span> <span class="o">=</span> <span class="n">x_plus</span> <span class="o">+</span> <span class="p">((</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_plus</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_plus</span><span class="p">)</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">xs</span>
+
+<span class="k">class</span> <span class="nc">BacktrackingLineSearch</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">function</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>    <span class="o">=</span> <span class="mf">0.05</span>
+
+  <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
+    <span class="k">while</span> <span class="n">f</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">a</span> <span class="o">*</span> <span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">f</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">g</span><span class="o">*</span><span class="n">g</span><span class="p">):</span>
+      <span class="n">a</span> <span class="o">*=</span> <span class="mf">0.99</span>
+    <span class="k">return</span> <span class="n">a</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">os</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+
+  <span class="c">### ACCELERATED GRADIENT ###</span>
+
+  <span class="c"># problem definition</span>
+  <span class="n">function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">4</span>     <span class="c"># the function to minimize</span>
+  <span class="n">gradient</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span><span class="mi">3</span>  <span class="c"># its gradient</span>
+  <span class="n">alpha</span> <span class="o">=</span> <span class="n">BacktrackingLineSearch</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+  <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.0</span>
+  <span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">10</span>
+
+  <span class="c"># run gradient descent</span>
+  <span class="n">iterates</span> <span class="o">=</span> <span class="n">accelerated_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">)</span>
+
+  <span class="c"># plot iteration number vs. objective function evaluated at that iteration</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;o&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iteration&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;value of objective function&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+  <span class="c"># plot the iterate vs. the objective value</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)))</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iterates&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;objective function evaluated at iterates&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">)</span>
+  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+    </article>
+  </div>
+</div> <!-- row -->
+<!-- Disqus Comments -->
+<div class="row-fluid disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'duckworthd-blog'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+    </div> <!-- container -->
+    <!-- jquery -->
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+<!-- MathJax -->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      //equationNumbers: {
+      //  autoNumber: "all"
+      //},
+      extensions: ["color.js"]
+    }
+  });
+</script>
+
+<!-- Bootstrap -->
+<script type="text/javascript"
+        src="/assets/js/bootstrap.min.js"></script>
+
+<!-- Lightbox -->
+<script type="text/javascript"
+        src="/assets/js/lightbox.js"></script>
+
+  </body>
+</html>
+

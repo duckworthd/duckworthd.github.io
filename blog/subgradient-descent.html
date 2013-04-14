@@ -37,12 +37,12 @@
       <p class="header-subtext">by Daniel Duckworth on Apr 11, 2013</p>
     </header>
     <article>
-      <p>Not far from <a href="/blog/gradient-descent.html">Gradient Descent</a> is another first-order descent algorithm (that is, an algorithm that only relies on the first derivative) is Subgradient Descent. In implementation, they are in fact look identical. The only difference is on the assumptions placed on the objective function we wish to minimize, <span class="math">\(f(x)\)</span>. If you were to follow the Subgradient Descent algorithm to walk down a mountain, it would look something like this</p>
+      <p>Not far from <a href="/blog/gradient-descent.html">Gradient Descent</a> is another first-order descent algorithm (that is, an algorithm that only relies on the first derivative) is Subgradient Descent. In implementation, they are in fact identical. The only difference is on the assumptions placed on the objective function we wish to minimize, <span class="math">\(f(x)\)</span>. If you were to follow the Subgradient Descent algorithm to walk down a mountain, it would look something like this,</p>
 <div class="well">
   
 <ol style="list-style-type: decimal">
 <li>Look around you and see which way points the most downwards. If there are multiple directions that are equally downwards, just pick one.</li>
-<li>Take a step in that direction
+<li>Take a step in that direction. Then repeat.
 </div>
 
 </li>
@@ -339,14 +339,14 @@
 <script type="text/javascript"
         src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/x-mathjax-config">
-  /* If you want automatic equation numbering... */
-  // MathJax.Hub.Config({
-  //   TeX: {
-  //     equationNumbers: {
-  //       autoNumber: "all"
-  //     }
-  //   }
-  // });
+  MathJax.Hub.Config({
+    TeX: {
+      //equationNumbers: {
+      //  autoNumber: "all"
+      //},
+      extensions: ["color.js"]
+    }
+  });
 </script>
 
 <!-- Bootstrap -->
