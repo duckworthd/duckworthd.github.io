@@ -76,8 +76,9 @@
 </ol></li>
 </ol>
 <p>The initial iterate <span class="math">\(x^{(0)}\)</span> can be selected arbitrarily, and step size <span class="math">\(\alpha^{(t)}\)</span> can be selected by <a href="#line_search">Line Search</a>, a small constant, or simply <span class="math">\(\frac{1}{t}\)</span>.</p>
+<p><a id="example"></a></p>
 <h1 id="a-small-example">A Small Example</h1>
-<p><a id="example"></a> Let’s look at Gradient Descent in action. We’ll use the objective function <span class="math">\(f(x) = x^4\)</span>, meaning that <span class="math">\(\nabla_x f(x) = 4 x^3\)</span>. For a step size, we’ll choose a constant step size <span class="math">\(\alpha_t = 0.05\)</span>. Finally, we’ll start at <span class="math">\(x^{(0)} = 1\)</span>.</p>
+<p>Let’s look at Gradient Descent in action. We’ll use the objective function <span class="math">\(f(x) = x^4\)</span>, meaning that <span class="math">\(\nabla_x f(x) = 4 x^3\)</span>. For a step size, we’ll choose a constant step size <span class="math">\(\alpha_t = 0.05\)</span>. Finally, we’ll start at <span class="math">\(x^{(0)} = 1\)</span>.</p>
 <div class="img-center">
   
 <img src="/assets/img/gradient_descent/animation.gif"></img> <span class="caption"> Gradient Descent in action. The curved line is the <span class="math">\(f(x)\)</span>, and the flat line is its linear approximation, <span class="math">\(\hat{f}(y) = f(x) + \nabla_x f(x)^T     (y-x)\)</span>, which is what Gradient Descent follows. </span>
@@ -93,6 +94,7 @@
 <img src="/assets/img/gradient_descent/iterates.png"></img> <span class="caption"> This plot shows the actual iterates and the objective function evaluated at those points. More red indicates a higher iteration number. </span>
 </div>
 
+<p><a id="proof"></a></p>
 <h1 id="why-does-it-work">Why does it work?</h1>
 <p>Gradient Descent works, but it isn’t guaranteed to find the optimal solution to our problem (that is, <span class="math">\(x^{*} = \arg\min_{x} f(x)\)</span>) without a few assumptions. In particular,</p>
 <ol style="list-style-type: decimal">
@@ -160,6 +162,7 @@
 \end{align*}
 \]</span></p>
 <p>Thus, we can conclude that if we want to reach an error tolerance <span class="math">\(f(x^{T}) - f(x^{*}) \le \epsilon\)</span>, we need <span class="math">\(O(\frac{1}{\epsilon})\)</span> iterations. In other words, Gradient Descent has a “convergence rate” of <span class="math">\(O(\frac{1}{T})\)</span>.</p>
+<p><a id="usage"></a></p>
 <h1 id="when-should-i-use-it">When should I use it?</h1>
 <p>Because it’s so easy to implement, Gradient Descent should be the first thing to try if you need to implement an optimization from scratch. So long as you calculate the gradient right, it’s practically impossible to make a mistake. If you have access to an <a href="http://justindomke.wordpress.com/2009/02/17/automatic-differentiation-the-most-criminally-underused-tool-in-the-potential-machine-learning-toolbox/">automatic differentiation library</a> to do the gradient computation for you, even better! In addition, Gradient Descent requires a minimal memory footprint, making it ideal for problems where <span class="math">\(x\)</span> is very high dimensional.</p>
 <p>As we’ll see in later posts, Gradient Descent trades memory for speed. The number of iterations required to reach a desired accuracy is actually quite large if you want accuracy on the order of <span class="math">\(10^{-8}\)</span>, and there are algorithms that are much faster if computation of the <a href="http://en.wikipedia.org/wiki/Hessian_matrix">Hessian</a> is feasible. Even when considering the same memory requirements, there is another gradient-based method with better convergence rates.</p>
@@ -204,6 +207,7 @@
 
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
   <span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
 
   <span class="c">### GRADIENT DESCENT ###</span>
 
@@ -217,32 +221,18 @@
   <span class="c"># run gradient descent</span>
   <span class="n">iterates</span> <span class="o">=</span> <span class="n">gradient_descent</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">)</span>
 
+  <span class="c">### PLOTTING ###</span>
+
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+  <span class="c"># make animation</span>
   <span class="k">try</span><span class="p">:</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s">&#39;figures/animation&#39;</span><span class="p">)</span>
   <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
     <span class="k">pass</span>
-
-  <span class="c">### PLOTTING ###</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-
-  <span class="c"># plot iteration number vs. objective function evaluated at that iteration</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;o&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iteration&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;value of objective function&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-  <span class="c"># plot the iterate vs. the objective value</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)))</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iterates&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;objective function evaluated at iterates&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-  <span class="c"># make animation</span>
   <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">iterates</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
     <span class="n">x_plus</span> <span class="o">=</span> <span class="n">iterates</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>

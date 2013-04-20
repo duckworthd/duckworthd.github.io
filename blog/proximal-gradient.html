@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Proximal Gradient Descent</title>
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="nav-div">
+      <a class="brand logo" href="#">
+        <img src="/assets/img/transmogrifier2.png"></img>
+      </a>
+      <ul class="nav pull-right">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/projects.html">Projects</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/feed.xml">
+          <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+        </a></li>
+      </ul>
+    </div> <!-- span10 offset1 -->
+  </div> <!-- /navbar-inner -->
+</div> <!-- /navbar -->
+
+
+<div class="row-fluid">
+  <div class="post box-shadow">
+    <header>
+      <h1 class="header-title">Proximal Gradient Descent</h1>
+      <p class="header-subtext">by Daniel Duckworth on Apr 19, 2013</p>
+    </header>
+    <article>
+      <p><span class="math">\[
+  \def\prox{\text{prox}}
+\]</span></p>
+<p>In a <a href="/blog/subgradient-descent.html#usage">previous post</a>, I mentioned that one cannot hope to asymptotically outperform the <span class="math">\(O(\frac{1}{\epsilon^2})\)</span> convergence rate of Subgradient Descent when dealing with a non-differentiable objective function. This is in fact only half-true; Subgradient Descent cannot be beat <em>using only first-order information</em> (that is, gradients and subgradients). In this article, I’ll describe Proximal Gradient Descent, an algorithm that exploits problem structure to obtain a rate of <span class="math">\(O(\frac{1}{\epsilon})\)</span>. In particular, Proximal Gradient is useful if the following 2 assumptions hold. First, the objective function must be of the form,</p>
+<p><span class="math">\[
+  \min_{x} \, g(x) + h(x)
+\]</span></p>
+<p>with <span class="math">\(g\)</span> is differentiable. Second <span class="math">\(h\)</span> must be “simple” enough such that we can calculate its <span class="math">\(\prox\)</span> operator very quickly,</p>
+<p><span class="math">\[
+  \prox_{h}(x) = \min_{u} h(u) + \frac{1}{2} ||u-x||_2^2
+\]</span></p>
+<p>Using these two assumptions, we can obtain a convergence rate identical to Gradient Descent even when optimizing non-differentiable objective functions.</p>
+<h1 id="how-does-it-work">How does it work?</h1>
+<div class="well">
+  
+<p><strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
+<ol style="list-style-type: decimal">
+<li>For <span class="math">\(t = 0, 1, 2, \ldots\)</span>
+<ol start="2" style="list-style-type: decimal">
+<li>Let <span class="math">\(x^{(t+1)} = \prox_{ \alpha^{(t)} h } \left( x^{(t)} - \alpha^{(t)} \nabla g(x^{(t)}) \right)\)</span></li>
+<li>if converged, return <span class="math">\(x^{(t+1)}\)</span>
+</div>
+</li>
+</ol></li>
+</ol>
+<h1 id="intuition-for-the-prox-operator">Intuition for the <span class="math">\(\prox\)</span> Operator</h1>
+<p>At first sight, the <span class="math">\(\prox\)</span> operator looks suspicious. Where did it come from? Why did someone really think it would work? It ends up that we can derive the update for Gradient Descent and the update for Gradient Descent almost identically. First, notice that the Gradient Descent Update is the solution to the following quadratic approximation to <span class="math">\(f(x)\)</span>.</p>
+<p><span class="math">\[
+\begin{align*}
+  x^{(t+1)} &amp; = \arg\min_{y} f(x^{(t)}) + \nabla f(x^{(t)})^T (y-x^{(t)}) + \frac{L}{2} ||y-x^{(t)}||_2^2 \\
+  0     &amp; = \nabla f(x^{(t)}) + L (x^{(t+1)}-x^{(t)}) \\
+  x^{(t+1)} &amp; = x^{(t)} - \frac{1}{L} \nabla f(x^{(t)})
+\end{align*}
+\]</span></p>
+<p>We take the gradient of the right hand side with respect to <span class="math">\(y\)</span> and set it to zero in the second line. Now replace <span class="math">\(f\)</span> with <span class="math">\(g\)</span>, and add <span class="math">\(h(y)\)</span> to the very end of the first line,</p>
+<p><span class="math">\[
+\begin{align*}
+  x^{(t+1)}
+  &amp; = \arg\min_{y} g(x^{(t)}) + \nabla g(x^{(t)})^T (y-x^{(t)}) + \frac{L}{2} ||y-x^{(t)}||_2^2 + h(y) \\
+  &amp; = \arg\min_{y} g(x^{(t)}) + \frac{L}{2} \left( \frac{2}{L} \nabla g(x^{(t)})^T (y-x^{(t)}) \right) + \frac{L}{2} ||y-x^{(t)}||_2^2 + h(y) + \frac{L}{2} ||\nabla g(x^{(t)})||_2^2 \\
+  &amp; = \arg\min_{y} \frac{L}{2} || y - (x^{(t)} - \frac{1}{L} \nabla g(x^{(t)})) ||_2^2 + h(y) \\
+  &amp; = \prox_{ \frac{1}{L} h }(x^{(t)} - \frac{1}{L} \nabla g(x^{(t)})) \\
+\end{align*}
+\]</span></p>
+<p>This time, we add constants (with respect to <span class="math">\(y\)</span>) such that we can pull the <span class="math">\(\nabla g(x^{(t)})^T (y-x^{(t)})\)</span> into the quadratic term, leading us to the Proximal Gradient Descent update.</p>
+<h1 id="a-small-example">A Small Example</h1>
+<p>Let’s now see how well Proximal Gradient Descent works. For this example, we’ll solve the following problem,</p>
+<p><span class="math">\[
+  \min_{x} \, \log(1 + \exp(-2x)) + ||x||_1
+\]</span></p>
+<p>Letting <span class="math">\(g(x) = \log(1+\exp(-2x))\)</span> and <span class="math">\(h(x) = ||x||_1\)</span>, it can be shown that,</p>
+<p><span class="math">\[
+\begin{align*}
+  \nabla g(x) &amp;= \frac{1}{1 + \exp(-2x)} \left( \exp(-2x) \right) (-2) \\
+  \prox_{\alpha h}(x) &amp; = \text{sign}(x) \max(0, \text{abs}(x) - \alpha) \\
+\end{align*}
+\]</span></p>
+<p>We’ll use a variant of <a href="#line_search">Backtracking Line Search</a> modified for Proximal Gradient Descent and an initial choice of <span class="math">\(x^{(0)} = 5\)</span>.</p>
+<div class="img-center">
+  
+<img src="/assets/img/proximal_gradient_descent/convergence.png"></img> <span class="caption"> This plot shows how quickly the objective function decreases as the number of iterations increases. </span>
+</div>
+
+<div class="img-center">
+  
+<img src="/assets/img/proximal_gradient_descent/iterates.png"></img> <span class="caption"> This plot shows the actual iterates and the objective function evaluated at those points. More red indicates a higher iteration number. </span>
+</div>
+
+<h1 id="why-does-it-work">Why does it work?</h1>
+<p>Proximal Gradient Descent, like regular Gradient Descent, is a “descent” method where the objective value is guaranteed to decrease. In fact, the assumptions for Proximal Gradient Descent’s <span class="math">\(g(x)\)</span> are the identical to the Gradient Descent assumptions for <span class="math">\(f(x)\)</span>. The only additional condition is that <span class="math">\(h(x)\)</span> be convex,</p>
+<ol style="list-style-type: decimal">
+<li><span class="math">\(g(x)\)</span> is convex, differentiable, and finite for all <span class="math">\(x\)</span></li>
+<li>a finite solution <span class="math">\(x^{*}\)</span> exists</li>
+<li><span class="math">\(\nabla g(x)\)</span> is Lipschitz continuous with constant <span class="math">\(L\)</span>. That is, there must be an <span class="math">\(L\)</span> such that,</li>
+</ol>
+<p><span class="math">\[
+  || \nabla g(x) - \nabla g(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
+\]</span></p>
+<ol start="4" style="list-style-type: decimal">
+<li><span class="math">\(h(x)\)</span> is convex</li>
+</ol>
+<p><strong>Proof Outline</strong> The majority of the convergence proof for Proximal Gradient Descent is identical to the proof for regular Gradient Descent. The key is to carefully choose a function <span class="math">\(G_{\alpha}(x)\)</span> that can take the place of <span class="math">\(\nabla f(x)\)</span>. Once it is defined, we can rephrase Proximal Gradient Descent as <span class="math">\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} G_{\alpha^{(t)}}(x^{(t)})\)</span>. Next, we’ll show that,</p>
+<p><span class="math">\[
+  (g+h)(x^{(t+1)}) \le (g+h)(x^{*}) + G_{\alpha^{(t)}}(x^{(t)})^T (x-x^{*}) - \frac{\alpha^{(t)}}{2} ||G_{\alpha^{(t)}}(x^{(t)})||_2^2
+\]</span></p>
+<p>Once we have this, we can repeat the Gradient Descent proof verbatim with <span class="math">\(g + h \rightarrow f\)</span> and <span class="math">\(G_{\alpha^{(t)}}(x^{(t)}) \rightarrow \nabla   f(x^{(t)})\)</span>.</p>
+<p><strong>Step 1</strong> Phrase Proximal Gradient Descent as <span class="math">\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} G_{\alpha^{(t)}}(x^{(t)})\)</span>. Define <span class="math">\(G\)</span> as follows,</p>
+<p><span class="math">\[
+  G_{\alpha}(x) \triangleq \frac{1}{\alpha} (x - \prox_{\alpha h}( x - \alpha \nabla g(x)))
+\]</span></p>
+<p>Now let <span class="math">\(x^{+} \triangleq x^{(t+1)}\)</span>, <span class="math">\(x \triangleq x^{(t)}\)</span>, and <span class="math">\(\alpha \triangleq \alpha^{(t)}\)</span>. Using <span class="math">\(G\)</span>, we can reframe Proximal Gradient Descent as a typical descent method,</p>
+<p><span class="math">\[
+\begin{align*}
+  x^{+}
+  &amp;= x - \alpha G_{\alpha}(x) \\
+  &amp;= x - \alpha \left(
+      \frac{1}{\alpha} (x - \prox_{\alpha h}( x - \alpha \nabla g(x))
+    \right) \\
+  &amp;= x - (x - \prox_{\alpha h}( x - \alpha \nabla g(x)) \\
+  &amp;= \prox_{\alpha h}( x - \alpha \nabla g(x)) \\
+\end{align*}
+\]</span></p>
+<p><strong>Step 2</strong> Show that <span class="math">\(G_{\alpha}(x)\)</span> can be used like Gradient Descent’s <span class="math">\(\nabla f(x)\)</span>. Our goals is to obtain a statement identical to <span class="math">\(f(x^{+}) \le f(x^{*}) + \nabla f(x)^T (x-x^{*}) - \frac{\alpha}{2} ||\nabla f(x)||_2^2\)</span> except with <span class="math">\(G_{\alpha}(x)\)</span> instead of <span class="math">\(\nabla f(x)\)</span>. Once we have this, the rest of the proof is exactly the same as Gradient Descent’s. Begin by recalling the Lipschitz condition on <span class="math">\(g\)</span>,</p>
+<p><span class="math">\[
+  g(y) \le g(x) + \nabla g(x)^T (y-x) + \frac{L}{2} ||y-x||_2^2
+\]</span></p>
+<p>Substitute <span class="math">\(y = x^{+} = x - \alpha G_{\alpha}(x)\)</span> to obtain,</p>
+<p><span class="math">\[
+\begin{align*}
+  g(x - \alpha G_{\alpha}(x))
+  &amp; \le g(x) + \nabla g(x)^T(x - \alpha G_{\alpha}(x) - x) + \frac{L}{2}||x - \alpha G_{\alpha}(x) - x||_2^2 \\
+  &amp; = g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{L ( \alpha )^2}{2}||G_{\alpha}(x)||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>Assume then that <span class="math">\(\alpha \le \frac{1}{L}\)</span> (this is what Backtracking Line Search does), We can upper bound <span class="math">\(\frac{L ( \alpha )^2}{2} \le \frac{\alpha}{2}\)</span>,</p>
+<p><span class="math">\[
+\begin{align*}
+  g(x - \alpha G_{\alpha}(x))
+  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>Then add <span class="math">\(h(x - \alpha G_{\alpha}(x))\)</span> to both sides,</p>
+<p><span class="math">\[
+\begin{align*}
+  (g+h)(x - \alpha G_{\alpha}(x))
+  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+  &amp; \quad + h(x - \alpha G_{\alpha}(x)) \\
+\end{align*}
+\]</span></p>
+<p>Next, we’ll upper bound <span class="math">\(g(x)\)</span> and <span class="math">\(h(x - \alpha G_{\alpha}(x))\)</span> using the definition of convexity. The following 2 equations hold for all <span class="math">\(z\)</span>, For <span class="math">\(g\)</span>, we’ll use,</p>
+<p><span class="math">\[
+\begin{align*}
+  g(z) &amp; \ge g(x) + \nabla g(x)^T (z-x) \\
+  g(z) + \nabla g(x)^T (x-z) &amp; \ge g(x) \\
+\end{align*}
+\]</span></p>
+<p>For <span class="math">\(h\)</span> we have something a bit more mysterious,</p>
+<p><span class="math">\[
+\begin{align*}
+  h(z)
+  &amp; \ge h(x - \alpha G_{\alpha}(x)) + [G_{\alpha}(x) - \nabla g(x)]^T (z-(x - \alpha G_{\alpha}(x))) \\
+  h(z) + [G_{\alpha}(x) - \nabla g(x)]^T(x - \alpha G_{\alpha}(x) - z)
+  &amp; \ge h(x - \alpha G_{\alpha}(x))
+\end{align*}
+\]</span></p>
+<p>Where did that come from? It so happens that <span class="math">\(G_{\alpha}(x) - \nabla g(x)\)</span> is a valid subgradient for <span class="math">\(h\)</span> at <span class="math">\(x - \alpha G_{\alpha}(x)\)</span>. Recall the 2 definitions we have for <span class="math">\(x^{+}\)</span>,</p>
+<p><span class="math">\[
+\begin{align*}
+  x^{+}
+  &amp;= \prox_{\alpha h} (x - \alpha \nabla g(x)) \\
+  &amp;= \arg\min_{u} \alpha h(u) + \frac{1}{2} ||u - (x - \alpha \nabla g(x))||_2^2 \\
+  0
+  &amp; \in \alpha \partial h(x^{+}) + x^{+} - (x - \alpha \nabla g(x)) \\
+  (x - \alpha \nabla g(x)) - x^{+}
+  &amp; \in \alpha \partial h(x^{+}) \\
+  (x - \alpha \nabla g(x)) - (x - \alpha G_{\alpha}(x))
+  &amp; \in \alpha \partial h(x^{+}) \\
+  \alpha [G_{\alpha}(x)) - \nabla g(x)]
+  &amp; \in \alpha \partial h(x^{+}) \\
+  [G_{\alpha}(x)) - \nabla g(x)]
+  &amp; \in \partial h(x^{+}) \\
+\end{align*}
+\]</span></p>
+<p>Thus, <span class="math">\(G_{\alpha}(x)) - \nabla g(x)\)</span> is a valid subgradient for <span class="math">\(h\)</span> at <span class="math">\(x^{+} \triangleq x - \alpha G_{\alpha}(x)\)</span>, and the previous lower bound on <span class="math">\(h(z)\)</span> holds. Putting the previous two inequalities back into the preceding equation and canceling out, we can see that for all <span class="math">\(z\)</span>,</p>
+<p><span class="math">\[
+\begin{align*}
+  (g+h)(x - \alpha G_{\alpha}(x))
+  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+  &amp; \quad + h(x - \alpha G_{\alpha}(x)) \\
+  (g+h)(x - \alpha G_{\alpha}(x))
+  &amp; \le \left( g(z) + \nabla g(z)^T (x-z) \right) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+  &amp; \quad + \left( h(z) + [G_{\alpha}(x) - \nabla g(x)]^T (x - \alpha G_{\alpha}(x) - z) \right) \\
+  &amp; = (g+h)(z) + G_{\alpha}(x)^T (x-z) - \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>Now let <span class="math">\(z = x^{*}\)</span> to get,</p>
+<p><span class="math">\[
+\begin{align*}
+  (g+h)(x^{+})
+  &amp; \le (g+h)(x^{*}) + G_{\alpha}(x)^T (x-x^{*}) - \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>Looking back at Step 1 of the <a href="/blog/gradient-descent.html#proof">Gradient Descent Proof</a>, you can see that this equation is exactly the same as the one used before except that <span class="math">\(G_{\alpha}(x)\)</span> replaces <span class="math">\(\nabla f(x)\)</span>. Following the rest of the Gradient Descent proof, we find that of we want <span class="math">\((g+h)(x^{(t)}) - (g+h)(x^{*}) \le \epsilon\)</span>, we need <span class="math">\(O(\frac{1}{\epsilon})\)</span> iterations, just like Gradient Descent.</p>
+<h1 id="when-should-i-use-it">When should I use it?</h1>
+<p>Proximal Gradient Descent requires being able to easily calculate <span class="math">\(\prox_{\alpha h}(x)\)</span>. The benefits of doing so are clear – we can reach an <span class="math">\(\epsilon\)</span>-approximate solution in far fewer iterations than Subgradient Descent. But this is only valuable if the cost of an iteration of Proximal Gradient Descent is similar to that of Subgradient Descent. For some choices of <span class="math">\(h(x)\)</span>, this actually holds (see <a href="#common_prox_functions">Common Prox Functions</a> below); it is then that Proximal Gradient Descent should be used. For other cases where no closed-form solution exists, it is often better to stick with Subgradient Descent.</p>
+<h1 id="extensions">Extensions</h1>
+<p><a id="line_search"></a> <strong>Step Size</strong> The proof above assumes the step size <span class="math">\(\alpha^{(t)} \le \frac{1}{L}\)</span> (<span class="math">\(L\)</span> is the Lipschitz constant of <span class="math">\(g(x)\)</span>). Rather than guessing for such values, Backtracking Line Search can be employed with a slight modification. Recall that Backtracking Line Search chooses <span class="math">\(\alpha^{(t)}\)</span> such that,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}))
+  &amp; \le f(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>If <span class="math">\(\alpha^{(t)} \le \frac{1}{L}\)</span>, this statement must hold. To see why, let’s write out where the condition came from,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{(t+1)})
+  &amp; \le f(x^{(t)}) + \nabla f(^{(t)})^T (x^{(t+1)} - x^{(t)}) + \frac{1}{2 \alpha^{(t)}}||x^{(t+1)} - x^{(t)}||_2^2 \\
+  f(x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}))
+  &amp; \le f(x^{(t)}) + \nabla f(^{(t)})^T (x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}) - x^{(t)}) \\
+  &amp; \quad + \frac{1}{2 \alpha^{(t)}}||x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}) - x^{(t)}||_2^2 \\
+  f(x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}))
+  &amp; \le f(x^{(t)}) - \alpha^{(t)} ||\nabla f(^{(t)}) ||_2^2 + \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \\
+  f(x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}))
+  &amp; \le f(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>If we assume that <span class="math">\(f\)</span> is <span class="math">\(L\)</span>-Lipschitz, then <span class="math">\(\alpha^{(t)} = \frac{1}{L}\)</span> is precisely the Lipschitz assumption. Recall now that for this problem, we have <span class="math">\(G_{\alpha^{(t)}}(x^{(t)})\)</span> in place of <span class="math">\(\nabla f(x^{(t)})\)</span>. Replacing <span class="math">\(f\)</span> with <span class="math">\(g+h\)</span> and <span class="math">\(\nabla f(x)\)</span> with <span class="math">\(G_{\alpha}(x)\)</span>, we come to a similar condition,</p>
+<p><span class="math">\[
+\begin{align*}
+  (g+h)(x^{(t+1)})
+  &amp; \le (g+h)(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| G_{\alpha^{(t)}}(x^{(t)}) ||_2^2 \\
+\end{align*}
+\]</span></p>
+<p>In other words, we can perform Backtracking Line Search for Proximal Gradient Descent as follows,</p>
+<div class="well">
+  
+<p><strong>Input</strong>: iterate <span class="math">\(x^{(t)}\)</span>, initial step size <span class="math">\(\alpha_0\)</span>, step factor <span class="math">\(\beta\)</span></p>
+<ol style="list-style-type: decimal">
+<li><span class="math">\(\alpha = \alpha_0\)</span></li>
+<li>While True
+<ol start="3" style="list-style-type: decimal">
+<li>Calculate <span class="math">\(G_{\alpha}(x^{(t)}) = \frac{1}{\alpha}( x - \prox_{\alpha h}(x^{(t)} - \alpha \nabla g(x)) )\)</span></li>
+<li>if <span class="math">\((g+h)(x^{(t+1)}) \le (g+h)(x^{(t)}) - \frac{\alpha}{2}|| G_{\alpha}(x^{(t)}) ||_2^2\)</span>, set <span class="math">\(\alpha^{(t)} = \alpha\)</span> and return</li>
+<li>otherwise set <span class="math">\(\alpha \leftarrow \alpha \beta\)</span> and continue
+</div>
+</li>
+</ol></li>
+</ol>
+<p><a id="common_prox_functions"></a></p>
+<h1 id="common-prox-functions">Common <span class="math">\(\prox\)</span> Functions</h1>
+<p>There are several common choices for <span class="math">\(h(x)\)</span> that admit particularly efficient <span class="math">\(\prox\)</span> functions. If your objective function contains one of these, consider applying Proximal Gradient immediately – you’ll converge far faster than Subgradient Descent.</p>
+<table class="table table-bordered table-centered">
+  <tr>
+    <th>
+<span class="math">\(h(x)\)</span>
+</th>
+    <th>
+<span class="math">\(\prox_{\alpha h}(x)\)</span>
+</th>
+  </tr>
+  <tr>
+    <td>
+<span class="math">\(||x||_1\)</span>
+</td>
+    <td>
+<span class="math">\(\text{sign}(x) \max(0, \text{abs}(x) - \alpha)\)</span>
+</td>
+  </tr>
+  <tr>
+    <td>
+<span class="math">\(\frac{1}{2}||x||_2^2\)</span>
+</td>
+    <td>
+<span class="math">\(\frac{1}{1 + \alpha} x\)</span>
+</td>
+  </tr>
+  <tr>
+    <td>
+<span class="math">\(||x||_2\)</span>
+</td>
+    <td>
+<span class="math">\(\left( 1 - \frac{\alpha}{||x||_2} \right) x\)</span>
+</td>
+  </tr>
+  <tr>
+    <td>
+<span class="math">\(||x||_{\infty}\)</span>
+</td>
+    <td>
+<p><span class="math">\[\text{sign}(x) \min( \text{abs}(x), \theta )\]</span></p>
+<p>where</p>
+<p><span class="math">\[\theta = \frac{1}{\rho} \sum_{j : |x_j| &gt; |x_{(\rho)}|} (|x_j| - \alpha)\]</span></p>
+where <span class="math">\(x_{(i)}\)</span> is is the <span class="math">\(i\)</span>-th largest element of <span class="math">\(x\)</span> in magnitude and <span class="math">\(\rho\)</span> is the smallest <span class="math">\(i\)</span> such that <span class="math">\(\sum_{j : |x_j| &gt; |x_{(i)}|} (|x_j| - |x_{(i)}|) &lt; \alpha\)</span>.
+</td>
+  </tr>
+  <tr>
+    <td>
+<span class="math">\(\frac{1}{2} x^T Q x + b^T x\)</span>
+</td>
+    <td>
+<span class="math">\((\alpha Q + I)^{-1} (x - \alpha b)\)</span>
+</td>
+  </tr>
+</table>
+
+<h1 id="references">References</h1>
+<p><strong>Proof of Convergence</strong> The original proof of convergence is thanks to Laurent El Ghaoui’s <a href="http://www.eecs.berkeley.edu/~elghaoui/Teaching/EE227A/lecture18.pdf">EE227a slides</a>.</p>
+<p><strong>List of Proximal Functions</strong>The list of proximal functions is taken from John Duchi’s article on <a href="http://www.cs.berkeley.edu/~jduchi/projects/DuchiSi09c.pdf">Forward-Backward Splitting (FOBOS)</a></p>
+<h1 id="reference-implementation">Reference Implementation</h1>
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">proximal_gradient_descent</span><span class="p">(</span><span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
+                              <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Proximal Gradient Descent</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  g_gradient : function</span>
+<span class="sd">      Compute the gradient of `g(x)`</span>
+<span class="sd">  h_prox : function</span>
+<span class="sd">      Compute prox operator for h * alpha</span>
+<span class="sd">  x0 : array</span>
+<span class="sd">      initial value for x</span>
+<span class="sd">  alpha : function</span>
+<span class="sd">      function computing step sizes</span>
+<span class="sd">  n_iterations : int, optional</span>
+<span class="sd">      number of iterations to perform</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  xs : list</span>
+<span class="sd">      intermediate values for x</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">g_gradient</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x_plus</span> <span class="o">=</span> <span class="n">h_prox</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">step</span> <span class="o">*</span> <span class="n">g</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">xs</span>
+
+<span class="k">def</span> <span class="nf">backtracking_line_search</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">):</span>
+  <span class="n">alpha_0</span> <span class="o">=</span> <span class="mf">1.0</span>
+  <span class="n">beta</span>    <span class="o">=</span> <span class="mf">0.9</span>
+  <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_0</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="n">x_plus</span> <span class="o">=</span> <span class="n">h_prox</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">g_gradient</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">alpha</span><span class="p">)</span>
+      <span class="n">G</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x_plus</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">g</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span> <span class="o">+</span> <span class="n">h</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">h</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">G</span><span class="o">*</span><span class="n">G</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">alpha</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">beta</span>
+  <span class="k">return</span> <span class="n">search</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">os</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
+
+  <span class="c">### PROXIMAL GRADIENT DESCENT ###</span>
+
+  <span class="c"># problem definition</span>
+  <span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+  <span class="n">h</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">h</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">g_gradient</span>  <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+  <span class="n">h_prox</span>      <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
+  <span class="n">alpha</span>       <span class="o">=</span> <span class="n">backtracking_line_search</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">)</span>
+  <span class="n">x0</span>          <span class="o">=</span> <span class="mf">5.0</span>
+  <span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">10</span>
+
+  <span class="c"># run gradient descent</span>
+  <span class="n">iterates</span> <span class="o">=</span> <span class="n">proximal_gradient_descent</span><span class="p">(</span>
+                  <span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span>
+                  <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span>
+             <span class="p">)</span>
+
+  <span class="c">### PLOTTING ###</span>
+
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</code></pre></div>
+    </article>
+  </div>
+</div> <!-- row -->
+<!-- Disqus Comments -->
+<div class="row-fluid disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'duckworthd-blog'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+    </div> <!-- container -->
+    <!-- jquery -->
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+<!-- MathJax -->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      //equationNumbers: {
+      //  autoNumber: "all"
+      //},
+      extensions: ["color.js"]
+    }
+  });
+</script>
+
+<!-- Bootstrap -->
+<script type="text/javascript"
+        src="/assets/js/bootstrap.min.js"></script>
+
+<!-- Lightbox -->
+<script type="text/javascript"
+        src="/assets/js/lightbox.js"></script>
+
+  </body>
+</html>
+

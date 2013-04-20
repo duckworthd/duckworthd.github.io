@@ -77,6 +77,7 @@
 </ol></li>
 </ol>
 <p>The initial iterate <span class="math">\(x^{(0)}\)</span> can be selected arbitrarily, but <span class="math">\(\alpha^{(t)}\)</span> must be selected more carefully than in Gradient Descent. A common choice is <span class="math">\(\frac{1}{t}\)</span>.</p>
+<p><a id="example"></a></p>
 <h1 id="a-small-example">A Small Example</h1>
 <p>Let’s watch Subgradient Descent do its thing. We’ll use <span class="math">\(f(x) = |x|\)</span> as our objective function, giving us <span class="math">\(sign(x)\)</span> as a valid way to compute subgradients. We’ll use the <a href="#polyak">Polyak Step Size</a> and initialize with <span class="math">\(x^{(0)} = 0.75\)</span>.</p>
 <div class="img-center">
@@ -90,6 +91,7 @@
 </div>
 
 
+<p><a id="proof"></a></p>
 <h1 id="why-does-it-work">Why does it work?</h1>
 <p>Now let’s prove that Subgradient Descent can find <span class="math">\(x^{*} = \arg\min_x f(x)\)</span>. We begin by making the following assumptions,</p>
 <ol style="list-style-type: decimal">
@@ -204,7 +206,7 @@
 \]</span></p>
 <p>Thus, we can conclude that if we want <span class="math">\(f(x^{(t)}) - f(x^{*}) \le \epsilon\)</span>, we need <span class="math">\(O(\frac{1}{\epsilon^2})\)</span> iterations. Compared to Gradient Descent’s <span class="math">\(O(\frac{1}{\epsilon})\)</span> convergence rate, Subgradient Descent looks pretty bad!</p>
 <h1 id="when-should-i-use-it">When should I use it?</h1>
-<p>As the implementation of Gradient Descent and Subgradient Descent are essentially the same, ease of use is always the first reason to use Subgradient Descent. Similarly, Subgradient Descent requires a minimal memory footprint, and has thus found a large following in the large scale machine learning community.</p>
+<p><a id="usage"></a> As the implementation of Gradient Descent and Subgradient Descent are essentially the same, ease of use is always the first reason to use Subgradient Descent. Similarly, Subgradient Descent requires a minimal memory footprint, and has thus found a large following in the large scale machine learning community.</p>
 <p>As far as black box, first-order for non-differentiable convex problems go, it can be shown that Subgradient Descent is as (asymptotically) fast as we can hope for. That doesn’t mean Subgradient Descent is as fast as you can get for your specific problem. Proximal Gradient methods, for example, are one such family of algorithms that allow you to exploit the properties of differentiable problems even if your problem isn’t.</p>
 <h1 id="extensions">Extensions</h1>
 <p><strong>Step Size</strong> As stated previously, a common choice of step size is <span class="math">\(\alpha^{(t)} = \frac{1}{t}\)</span>, but that’s far from your only choice. Indeed, any step rule that satisfies the following conditions works when inserted into the above proof,</p>
@@ -269,6 +271,7 @@
 
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
   <span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
 
   <span class="c">### SUBGRADIENT DESCENT ###</span>
 
@@ -280,34 +283,12 @@
   <span class="n">iterates</span> <span class="o">=</span> <span class="n">subgradient_descent</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">subgradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">polyak</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">)</span>
   <span class="n">iterates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">iterates</span><span class="p">)</span>
 
-  <span class="k">try</span><span class="p">:</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s">&#39;figures/animation&#39;</span><span class="p">)</span>
-  <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-    <span class="k">pass</span>
-
   <span class="c">### PLOTTING ###</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 
-  <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">iterates</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">iterates</span><span class="p">)</span>
-  <span class="n">xmid</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
-  <span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">])</span> <span class="o">-</span> <span class="n">xmid</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.2</span> <span class="o">+</span> <span class="n">xmid</span>
-
-  <span class="c"># plot iteration number vs. objective function evaluated at that iteration</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;o&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iteration&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;value of objective function&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-  <span class="c"># plot the iterate vs. the objective value</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)))</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iterates&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;objective function evaluated at iterates&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 </code></pre></div>
     </article>
   </div>

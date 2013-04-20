@@ -5,6 +5,14 @@
   width: 95%;
 }
 
+p {
+  text-indent: 1.5em;
+}
+
+.table-centered th, .table-centered td {
+  text-align: center;
+}
+
 body {
   positive: relative;
   background-color: #eee;

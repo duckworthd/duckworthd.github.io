@@ -81,10 +81,11 @@
 </div>
 
 
+<p><a id="proof"></a></p>
 <h1 id="why-does-it-work">Why does it work?</h1>
 <p>The assumptions for the Accelerated Gradient Method are identical to Gradient Descent’s. In particular, we assume,</p>
 <ol style="list-style-type: decimal">
-<li><span class="math">\(f\)</span> is convex and finite for all <span class="math">\(x\)</span></li>
+<li><span class="math">\(f\)</span> is convex, differentiable, and finite for all <span class="math">\(x\)</span></li>
 <li>a finite solution <span class="math">\(x^{*}\)</span> exists</li>
 <li><span class="math">\(\nabla f(x)\)</span> is Lipschitz continuous with constant <span class="math">\(L\)</span>. That is, there must be an <span class="math">\(L\)</span> such that,</li>
 </ol>
@@ -226,6 +227,7 @@
 \end{align*}
 \]</span></p>
 <p>Thus, the convergence rate of the Accelerated Gradient Method is <span class="math">\(O(\frac{1}{\sqrt{\epsilon}})\)</span>. Woo!</p>
+<p><a id="usage"></a></p>
 <h1 id="when-should-i-use-it">When should I use it?</h1>
 <p>The Accelerated Gradient Method trumps Gradient Descent in every way theoretically, but the latter is still more widely used and preferred. Why? The fact is that Accelerated Gradient is much more of a pain to implement. Whereas with Gradient Descent you can simply check if your new iterate’s score is less than the previous one, Accelerated Gradient’s score may increase before decreasing again. Accelerated Gradient is also extremely sensitive to step size – if <span class="math">\(\alpha^{(t)}\)</span> isn’t in <span class="math">\((0, \frac{1}{L}]\)</span>, <em>it will diverge</em>. Accelerated Gradient is a powerful but fickle tool. Use it when you can, but keep Gradient Descent handy if everything is going awry.</p>
 <h1 id="extensions">Extensions</h1>
@@ -288,12 +290,11 @@
       <span class="n">a</span> <span class="o">*=</span> <span class="mf">0.99</span>
     <span class="k">return</span> <span class="n">a</span>
 
-
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="kn">import</span> <span class="nn">os</span>
 
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-  <span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
 
   <span class="c">### ACCELERATED GRADIENT ###</span>
 
@@ -307,22 +308,12 @@
   <span class="c"># run gradient descent</span>
   <span class="n">iterates</span> <span class="o">=</span> <span class="n">accelerated_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">)</span>
 
-  <span class="c"># plot iteration number vs. objective function evaluated at that iteration</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;o&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="s">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iteration&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;value of objective function&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+  <span class="c">### PLOTTING ###</span>
 
-  <span class="c"># plot the iterate vs. the objective value</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">iterates</span><span class="p">)),</span> <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)))</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;iterates&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;objective function evaluated at iterates&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">)</span>
-  <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 </code></pre></div>
     </article>
   </div>
