@@ -38,7 +38,7 @@
     </header>
     <article>
       <p>Not far from <a href="/blog/gradient-descent.html">Gradient Descent</a> is another first-order descent algorithm (that is, an algorithm that only relies on the first derivative) is Subgradient Descent. In implementation, they are in fact identical. The only difference is on the assumptions placed on the objective function we wish to minimize, <span class="math">\(f(x)\)</span>. If you were to follow the Subgradient Descent algorithm to walk down a mountain, it would look something like this,</p>
-<div class="well">
+<div class="pseudocode">
   
 <ol style="list-style-type: decimal">
 <li>Look around you and see which way points the most downwards. If there are multiple directions that are equally downwards, just pick one.</li>
@@ -63,7 +63,7 @@
 <img src="/assets/img/subgradient_descent/subgradient.png"></img> <span class="caption"> <span class="math">\(f\)</span> is differentiable at <span class="math">\(x_1\)</span>, so there’s only one possible subgradient (the actual gradient). At <span class="math">\(x_2\)</span>, <span class="math">\(f\)</span> isn’t differentiable, so <span class="math">\(g_2\)</span> and <span class="math">\(g_3\)</span> are both in <span class="math">\(\partial f(x_2)\)</span>. Image taken from <a href="http://www.stanford.edu/class/ee392o/subgrad.pdf">EE392o slides</a>. </span>
 </div>
 
-<div class="well">
+<div class="pseudocode">
   
 <p><strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
 <ol style="list-style-type: decimal">

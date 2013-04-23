@@ -36,6 +36,20 @@ a:hover {
   text-decoration: none;
 }
 
+.pseudocode {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  background-color: #F0F0F0;
+  font-size: 90%;
+  margin: 1em 0 0;
+  padding: .5em;
+}
+
+.pseudocode ol, .pseudocode ul {
+  margin: 0 0 0 2em;
+}
+
+
 /**************************** navbar.html *************************************/
 
 /* TODO vertically center text in navbar */

@@ -39,7 +39,7 @@
     <article>
       <p>In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run. At the same time, he established the Accelerated Gradient Method, proved that its convergence rate superior to Gradient Descent (<span class="math">\(O(1/\sqrt{\epsilon})\)</span> iterations instead of <span class="math">\(O(1/\epsilon)\)</span>), and then proved that no other first-order (that is, gradient-based) algorithm could ever hope to beat it. What a boss.</p>
 <p><a href="/blog/gradient-descent.html">Continuing</a> <a href="/blog/subgradient-descent.html">my analogy</a>, imagine that you are standing on the side of a mountain and want to reach the bottom. If you were to follow the Accelerated Gradient Method, you’d do something like this,</p>
-<div class="well">
+<div class="pseudocode">
   
 <ol style="list-style-type: decimal">
 <li>Look around you and see which way points the most dowards</li>
@@ -55,7 +55,7 @@
   \min_{x} \, f(x)
 \]</span></p>
 <p>As with Gradient Descent, we’ll assume that <span class="math">\(f\)</span> is differentiable and that we can easily compute its gradient <span class="math">\(\nabla f(x)\)</span>. Then the Accelerated Gradient Method is defined as,</p>
-<div class="well">
+<div class="pseudocode">
   
 <p><strong>Input</strong>: initial iterate <span class="math">\(y^{(0)}\)</span></p>
 <ol style="list-style-type: decimal">

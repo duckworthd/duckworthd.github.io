@@ -50,7 +50,7 @@
 \]</span></p>
 <p>Using these two assumptions, we can obtain a convergence rate identical to Gradient Descent even when optimizing non-differentiable objective functions.</p>
 <h1 id="how-does-it-work">How does it work?</h1>
-<div class="well">
+<div class="pseudocode">
   
 <p><strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
 <ol style="list-style-type: decimal">
@@ -252,7 +252,7 @@
 \end{align*}
 \]</span></p>
 <p>In other words, we can perform Backtracking Line Search for Proximal Gradient Descent as follows,</p>
-<div class="well">
+<div class="pseudocode">
   
 <p><strong>Input</strong>: iterate <span class="math">\(x^{(t)}\)</span>, initial step size <span class="math">\(\alpha_0\)</span>, step factor <span class="math">\(\beta\)</span></p>
 <ol style="list-style-type: decimal">
@@ -400,9 +400,9 @@ where <span class="math">\(x_{(i)}\)</span> is is the <span class="math">\(i\)</
   <span class="c">### PLOTTING ###</span>
 
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
-                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">)</span>
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
-                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">)</span>
 </code></pre></div>
     </article>
   </div>
