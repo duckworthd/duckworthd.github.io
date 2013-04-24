@@ -152,7 +152,7 @@ $d =$ the dimensionality of $x_i$, $c = $ the current number of clusters
 <p>Now let’s optimize the dual problem 1 <span class="math">\(\lambda_k\)</span> at a time. First, notice that <span class="math">\(\lambda_k\)</span> will only appear in 2 <span class="math">\(\Delta_i\)</span> terms – <span class="math">\(\Delta_{k_1}\)</span> and <span class="math">\(\Delta_{k_2}\)</span>. After dropping all terms independent of <span class="math">\(\lambda_k\)</span>, we now get the following problem,</p>
 <p><span class="math">\[
 \begin{align*}
-  &amp; \underset{\lambda_k}{\min}  &amp; &amp; \frac{1}{2} (\Delta_{k_1} + \Delta_{k_2})
+  &amp; \underset{\lambda_k}{\min}  &amp; &amp; \frac{1}{2} (||\Delta_{k_1}||_2^2 + ||\Delta_{k_2}||_2^2)
                                     + \lambda_k^T (x_{k_1} - x_{k_2}) \\
   &amp; \text{subject to}         &amp; &amp; ||\lambda_k||_{p^{*}} \le \gamma w_k \\
   &amp;                           &amp; &amp; \Delta_{k_1} = \sum_{l: l_1 = k_1} \lambda_l - \sum_{l : l_2 = k_1} \lambda_l \\
@@ -208,7 +208,10 @@ $d =$ the dimensionality of $x_i$, $c = $ the current number of clusters
 </ol>
 <p>Since we can easily construct the primal variables from the dual variables and can evaluate the primal and dual functions in closed form, we can use the duality gap to determine when we are converged.</p>
 <h1 id="performance">Performance</h1>
-<p>TODO compare again previous methods</p>
+<p>TODO compare again previous methods.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>In this post, I introduced a coordinate ascent algorithm for convex clustering. Empirically, the algorithm is quite quick, but it doesn’t share the parallelizability or convergence proofs of its siblings, ADMM and AMA. However, coordinate descent has an upside: there are no parameters to tune, and every iteration is guaranteed to improve the objective function. Within each iteration, updates are quick asymptotically and empirically.</p>
+<p>Unfortunately, like all algorithms based on the dual for this particular problem, the biggest burden is on memory. Whereas the primal formulation requires the number of variables grow linearly with the number of data points, the dual formulation can grow as high as quadratically. In addition, the primal variables allow for centers to be merged, allowing for potential space-savings as the algorithm is running. The dual seems to lack this property, requiring all dual variables to be fully instantiated.</p>
 <h1 id="references">References</h1>
 <p>The original formulation for convex clustering was introduced by <a href="http://www.control.isy.liu.se/research/reports/2011/2992.pdf">Lindsten et al.</a> and <a href="http://www.icml-2011.org/papers/419_icmlpaper.pdf">Hocking et al.</a>. <a href="http://arxiv.org/abs/1304.0499">Chi et al.</a> introduced ADMM and AMA-based algorithms specifically designed for convex clustering.</p>
     </article>
