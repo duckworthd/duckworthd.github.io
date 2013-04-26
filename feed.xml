@@ -7,6 +7,14 @@
 		<atom:link href="http://stronglyconvex.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Accelerated Proximal Gradient Descent</title>
+				<description>wut.</description>
+				<pubDate>Thu, 25 Apr 2013 00:00:00 -0400</pubDate>
+				<link>http://stronglyconvex.com/blog/accelerated-proximal-gradient.html</link>
+				<guid isPermaLink="true">http://stronglyconvex.com/blog/accelerated-proximal-gradient.html</guid>
+			</item>
+		
+			<item>
 				<title>A Coordinate Ascent Algorithm for Convex Clustering</title>
 				<description>wut.</description>
 				<pubDate>Tue, 23 Apr 2013 00:00:00 -0400</pubDate>
@@ -15,7 +23,7 @@
 			</item>
 		
 			<item>
-				<title>Why does \(L_1\) regularization produce sparse solution?</title>
+				<title>Why does \(L_1\) regularization produce sparse solutions?</title>
 				<description>wut.</description>
 				<pubDate>Mon, 22 Apr 2013 00:00:00 -0400</pubDate>
 				<link>http://stronglyconvex.com/blog/why-does-l1-produce-sparsity.html</link>
@@ -76,14 +84,6 @@
 				<pubDate>Sun, 24 Jun 2012 00:00:00 -0400</pubDate>
 				<link>http://stronglyconvex.com/blog/admm.html</link>
 				<guid isPermaLink="true">http://stronglyconvex.com/blog/admm.html</guid>
-			</item>
-		
-			<item>
-				<title>Stochastic Gradient Descent and Sparse \(L_2\) regularization</title>
-				<description>You don't have to trade sparsity for regularization</description>
-				<pubDate>Thu, 10 May 2012 00:00:00 -0400</pubDate>
-				<link>http://stronglyconvex.com/blog/sparse-l2.html</link>
-				<guid isPermaLink="true">http://stronglyconvex.com/blog/sparse-l2.html</guid>
 			</item>
 		
 	</channel>

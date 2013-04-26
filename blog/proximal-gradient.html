@@ -62,6 +62,7 @@
 </li>
 </ol></li>
 </ol>
+<p><a id="intuition"></a></p>
 <h1 id="intuition-for-the-prox-operator">Intuition for the <span class="math">\(\prox\)</span> Operator</h1>
 <p>At first sight, the <span class="math">\(\prox\)</span> operator looks suspicious. Where did it come from? Why did someone really think it would work? It ends up that we can derive the update for Gradient Descent and the update for Gradient Descent almost identically. First, notice that the Gradient Descent Update is the solution to the following quadratic approximation to <span class="math">\(f(x)\)</span>.</p>
 <p><span class="math">\[
@@ -400,9 +401,11 @@ where <span class="math">\(x_{(i)}\)</span> is is the <span class="math">\(i\)</
   <span class="c">### PLOTTING ###</span>
 
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
-                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">)</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span>
+                                     <span class="n">y_star</span><span class="o">=</span><span class="mf">0.69314718055994529</span><span class="p">)</span>
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
-                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">)</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span>
+                                      <span class="n">y_star</span><span class="o">=</span><span class="mf">0.69314718055994529</span><span class="p">)</span>
 </code></pre></div>
     </article>
   </div>
