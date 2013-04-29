@@ -7,6 +7,14 @@
 		<atom:link href="http://stronglyconvex.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Variational Inference</title>
+				<description>wut.</description>
+				<pubDate>Sun, 28 Apr 2013 00:00:00 -0400</pubDate>
+				<link>http://stronglyconvex.com/blog/variational-inference.html</link>
+				<guid isPermaLink="true">http://stronglyconvex.com/blog/variational-inference.html</guid>
+			</item>
+		
+			<item>
 				<title>Accelerated Proximal Gradient Descent</title>
 				<description>wut.</description>
 				<pubDate>Thu, 25 Apr 2013 00:00:00 -0400</pubDate>
@@ -76,14 +84,6 @@
 				<pubDate>Tue, 01 Jan 2013 00:00:00 -0500</pubDate>
 				<link>http://stronglyconvex.com/blog/beginnings.html</link>
 				<guid isPermaLink="true">http://stronglyconvex.com/blog/beginnings.html</guid>
-			</item>
-		
-			<item>
-				<title>ADMM: parallelizing convex optimization</title>
-				<description>Stochastic Gradient Descent isn't the only option</description>
-				<pubDate>Sun, 24 Jun 2012 00:00:00 -0400</pubDate>
-				<link>http://stronglyconvex.com/blog/admm.html</link>
-				<guid isPermaLink="true">http://stronglyconvex.com/blog/admm.html</guid>
 			</item>
 		
 	</channel>
