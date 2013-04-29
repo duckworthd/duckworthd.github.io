@@ -45,7 +45,7 @@
   &amp; = \arg\min_{\eta} \sum_{z} q(z|\eta) \log \frac{ q(z|\eta) }{ P(z|x) }
 \end{align*}
 \]</span></p>
-<p>Looking at this formulation, the first thing you should be thinking is, “We don’t even know how to calculate <span class="math">\(P(z|x)\)</span> much less take an expectation with respect to it. How can I possibly solve this problem?” The key is to restrict <span class="math">\(q(z|\eta)\)</span> to decompose into a product of independent distributions, 1 per for each hidden variable <span class="math">\(z_i\)</span>. In other words,</p>
+<p>Looking at this formulation, the first thing you should be thinking is, “We don’t even know how to calculate <span class="math">\(P(z|x)\)</span> much less take an expectation with respect to it. How can I possibly solve this problem?” The key is to restrict <span class="math">\(q(z|\eta)\)</span> to decompose into a product of independent distributions, 1 for each hidden variable <span class="math">\(z_i\)</span>. In other words,</p>
 <p><span class="math">\[
   q(z|\eta) = \prod_{i} q(z_i | \eta_i)
 \]</span></p>
