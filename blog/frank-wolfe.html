@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Frank-Wolfe Algorithm</title>
+
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="nav-div">
+      <a class="brand logo" href="#">
+        <img src="/assets/img/transmogrifier2.png"></img>
+      </a>
+      <ul class="nav pull-right">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/projects.html">Projects</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+        <li><a href="/feed.xml">
+          <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
+        </a></li>
+      </ul>
+    </div> <!-- span10 offset1 -->
+  </div> <!-- /navbar-inner -->
+</div> <!-- /navbar -->
+
+
+<div class="row-fluid">
+  <div class="post box-shadow">
+    <header>
+      <h1 class="header-title">Frank-Wolfe Algorithm</h1>
+      <p class="header-subtext">by Daniel Duckworth on May 04, 2013</p>
+    </header>
+    <article>
+      <p>In this post, we’ll take a look at the <a href="http://en.wikipedia.org/wiki/Frank%E2%80%93Wolfe_algorithm">Frank-Wolfe Algorithm</a> also known as the Conditional Gradient Method, an algorithm particularly suited for solving problems with compact domains. Like the <a href="/blog/proximal-gradient.html">Proximal Gradient</a> and <a href="/blog/accelerated-proximal-gradient.html">Accelerated Proximal Gradient</a> algorithms, Frank-Wolfe requires we exploit problem structure to quickly solve a mini-optimization problem. Our reward for doing so is a converge rate of <span class="math">\(O(1/\epsilon)\)</span> and the potential for <em>extremely sparse solutions</em>.</p>
+<p>Returning to my <a href="/blog/gradient-descent.html">valley-finding metaphor</a>, Frank-Wolfe is a bit like this,</p>
+<div class="pseudocode">
+  
+<ol style="list-style-type: decimal">
+<li>Look around you and see which way points the most downwards</li>
+<li>Walk as far as possible in that direction until you hit a wall</li>
+<li>Go back in the direction you started, stop part way along the path, then repeat.
+</div>
+
+</li>
+</ol>
+<h1 id="how-does-it-work">How does it work?</h1>
+<p>Frank-Wolfe is designed to solve problems of the form,</p>
+<p><span class="math">\[
+  \min_{x \in D} f(x)
+\]</span></p>
+<p>where <span class="math">\(D\)</span> is compact and <span class="math">\(f\)</span> is differentiable. For example, in <span class="math">\(R^n\)</span> any closed and bounded set is compact. The algorithm for Frank-Wolfe is then,</p>
+<div class="pseudocode">
+  
+<p><strong>Input</strong>: Initial iterate <span class="math">\(x^{(0)}\)</span></p>
+<ol style="list-style-type: decimal">
+<li>For <span class="math">\(t = 0, 1, 2, \ldots\)</span>
+<ol start="2" style="list-style-type: decimal">
+<li>Let <span class="math">\(s^{(t+1)} = \arg\min_{s \in D} \langle \nabla f(x^{(t)}), s \rangle\)</span></li>
+<li>If <span class="math">\(g(x) = \langle \nabla f(x^{(t)}), x - s^{(t+1)} \rangle \le \epsilon\)</span>, break</li>
+<li>Let <span class="math">\(x^{(t+1)} = (1 - \alpha^{(t)}) x^{(t)} + \alpha^{(t)} s^{(t+1)}\)</span>
+</div>
+</li>
+</ol></li>
+</ol>
+<p>The proof relies on <span class="math">\(\alpha^{(t)} = 2 / (t+2)\)</span>, but line search works as well. The intuition for the algorithm is that at each iteration, we minimize a linear approximation to <span class="math">\(f\)</span>,</p>
+<p><span class="math">\[
+  s^{(t+1)} = \arg\min_{s \in D} f(x^{(t)}) + \nabla f(x^{(t)})^T (s - x^{(t)})
+\]</span></p>
+<p>then take a step in that direction. We can immediately see that if <span class="math">\(D\)</span> weren’t compact, <span class="math">\(s^{(t)}\)</span> would go off to infinity.</p>
+<p><a id="upper_bound"></a> <strong>Upper Bound</strong> One nice property of Frank-Wolfe is that it comes with its own upper bound on <span class="math">\(f(x^{(t)}) - f(x^{*})\)</span> calculated during the course of the algorithm. Recall the linear upper bound on <span class="math">\(f\)</span> due to convexity,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{*})
+  &amp; \ge f(x) + \nabla f(x)^T (x^{*} - x) \\
+  f(x) - f(x^{*})
+  &amp; \le \nabla f(x)^T (x - x^{*}) \\
+\end{align*}
+\]</span></p>
+<p>Since,</p>
+<p><span class="math">\[
+  s^{(t+1)}
+  = \arg\min_{s} \nabla f(x^{(t)})^T s
+  = \arg\max_{s} \nabla f(x^{(t)})^T (x^{(t)} - s)
+\]</span> we know that <span class="math">\(\nabla f(x^{(t)})^T (x^{(t)} - x^{*}) \le \nabla f(x^{(t)})^T (x^{(t)} - s^{(t+1)})\)</span> and thus,</p>
+<p><span class="math">\[
+  f(x) - f(x^{*}) \le \nabla f(x^{(t)})^T (x^{(t)} - s^{(t+1)})
+\]</span></p>
+<p><a id="example"></a></p>
+<h1 id="a-small-example">A Small Example</h1>
+<p>For this example, we’ll minimize a simple univariate quadratic function constrained to lie in an interval,</p>
+<p><span class="math">\[
+  \min_{x \in [-1,2]} (x-0.5)^2 + 2x
+\]</span></p>
+<p>Its derivative is given by <span class="math">\(2(x-0.5) + 2\)</span>, and since we are dealing with real numbers, the minimizers of the linear approximation must be either <span class="math">\(-1\)</span> or <span class="math">\(2\)</span> if the gradient is positive or negative, respectively. We’ll use a stepsize of <span class="math">\(\alpha^{(t)} = 2 / (t+2)\)</span> as prescribed by the convergence proof in the next section.</p>
+<div class="img-center">
+  
+<img src="/assets/img/frank_wolfe/animation.gif"></img> <span class="caption"> Frank-Wolfe in action. The red circle is the current value for <span class="math">\(f(x^{(t)})\)</span>, and the green diamond is <span class="math">\(f(x^{(t+1)})\)</span>. The dotted line is the linear approximation to <span class="math">\(f\)</span> at <span class="math">\(x^{(t)}\)</span>. Notice that at each step, Frank-Wolfe stays closer and closer to <span class="math">\(x^{(t)}\)</span> when moving in the direction of <span class="math">\(s^{(t+1)}\)</span>. </span>
+</div>
+
+<div class="img-center">
+  
+<img src="/assets/img/frank_wolfe/convergence.png"></img> <span class="caption"> This plot shows how quickly the objective function decreases as the number of iterations increases. Notice that it does not monotonically decrease, as with Gradient Descent. </span>
+</div>
+
+<div class="img-center">
+  
+<img src="/assets/img/frank_wolfe/iterates.png"></img> <span class="caption"> This plot shows the actual iterates and the objective function evaluated at those points. More red indicates a higher iteration number. Since Frank-Wolfe uses linear combinations of <span class="math">\(s^{(t+1)}\)</span> and <span class="math">\(x^{(t)}\)</span>, it tends to “bounce around” a lot, especially in earlier iterations. </span>
+</div>
+
+<p><a id="proof"></a></p>
+<h1 id="why-does-it-work">Why does it work?</h1>
+<p>We begin by making the two assumptions given earlier,</p>
+<ol style="list-style-type: decimal">
+<li><span class="math">\(f\)</span> is convex, differentiable, and finite for all <span class="math">\(x \in D\)</span></li>
+<li><span class="math">\(D\)</span> is compact</li>
+</ol>
+<p><strong>Assumptions</strong> First, notice that we never needed to assume that a solution <span class="math">\(x^{*}\)</span> exists. This is because <span class="math">\(D\)</span> is compact and <span class="math">\(f\)</span> is finite, meaning <span class="math">\(x\)</span> cannot get bigger and bigger to make <span class="math">\(f(x)\)</span> arbitrarily small.</p>
+<p>Secondly, we never made a Lipschitz assumption on <span class="math">\(f\)</span> or its gradient. Since <span class="math">\(D\)</span> is compact, we don’t have to – instead, we get the following for free. Define <span class="math">\(C_f\)</span> as,</p>
+<p><span class="math">\[
+  C_f = \max_{\substack{
+                x,s \in D \\
+                \alpha \in [0,1] \\
+                y = x + \alpha (s-x)
+              }}
+          \frac{2}{\alpha^2} \left(
+            f(y) - f(x) - \langle \nabla f(x), y - x \rangle
+          \right)
+\]</span></p>
+<p>This immediate implies the following upper bound on <span class="math">\(f\)</span> for all <span class="math">\(x, y \in D\)</span> and <span class="math">\(\alpha \in [0,1]\)</span>,</p>
+<p><span class="math">\[
+  f(y) \le f(x) + \langle \nabla f(x), y-x \rangle + \frac{\alpha^2}{2} C_f
+\]</span></p>
+<p><strong>Proof Outline</strong> The proof for Frank-Wolfe is surprisingly simple. The idea is to first upper bound <span class="math">\(f(x^{(t+1)})\)</span> in terms of <span class="math">\(f(x^{(t)})\)</span>, <span class="math">\(g(x^{(t)})\)</span>, and <span class="math">\(C_f\)</span>. We then transform this per-iteration bound into a bound on <span class="math">\(f(x^{(t)}) - f(x^{*})\)</span> depending on <span class="math">\(t\)</span> using induction. That’s it!</p>
+<p><strong>Step 1</strong> Upper bound <span class="math">\(f(x^{(t+1)})\)</span>. As usual, we’ll denote <span class="math">\(x^{+} \triangleq x^{(t+1)}\)</span>, <span class="math">\(x \triangleq x^{(t)}\)</span>, <span class="math">\(s^{+} \triangleq s^{(t+1)}\)</span>, and <span class="math">\(\alpha \triangleq \alpha^{(t)}\)</span>. We begin by using the upper bound we just obtained for <span class="math">\(f\)</span> in terms of <span class="math">\(C_f\)</span>, substituting <span class="math">\(x^{+} = (1 - \alpha) x + \alpha s^{+}\)</span> and then <span class="math">\(g(x) = \nabla f(x)^T (x - s^{+})\)</span>,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{+}) 
+  &amp; \le f(x) + \nabla f(x)^T (x^{+} - x) + \frac{\alpha^2}{2} C_f \\
+  &amp; = f(x) + \nabla f(x)^T ( (1-\alpha) x + \alpha s^{+} - x ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = f(x) + \nabla f(x)^T ( \alpha s^{+} - \alpha x ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = f(x) - \alpha \nabla f(x)^T ( x - s^{+} ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = f(x) - \alpha g(x) + \frac{\alpha^2}{2} C_f \\
+\end{align*}
+\]</span></p>
+<p><strong>Step 2</strong> Use induction on <span class="math">\(t\)</span>. First, recall the upper bound on <span class="math">\(f(x) - f(x^{*}) \le g(x)\)</span> <a href="#upper_bound">we derived above</a>. Let’s add <span class="math">\(-f(x^{*})\)</span> into what we got from Step 1, then use the upper bound on <span class="math">\(f(x) - f(x^{*})\)</span> to get,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{+}) - f(x^{*})
+  &amp; = f(x) - f(x^{*}) - \alpha g(x) + \frac{\alpha^2}{2} C_f \\
+  &amp; \le f(x) - f(x^{*}) - \alpha ( f(x) - f(x^{*}) ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = (1 - \alpha) (f(x) - f(x^{*})) + \frac{\alpha^2}{2} C_f \\
+\end{align*}
+\]</span></p>
+<p>Now, we employ induction on <span class="math">\(t\)</span> to show that,</p>
+<p><span class="math">\[
+  f(x^{(t)}) - f(x^{*}) \le \frac{4 C_f / 2}{t+2}
+\]</span></p>
+<p>We’ll assume that the step size is <span class="math">\(\alpha^{(t)} = \frac{2}{t+2}\)</span>, giving us <span class="math">\(\alpha^{(0)} = 2 / (0+2) = 1\)</span> and the base case,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{(1)} - f(x^{*})
+  &amp; \le (1 - \alpha^{(0)}) ( f(x^{(0)}) - f(x^{*}) ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = (1 - 1) ( f(x^{(0)}) - f(x^{*}) ) + \frac{1}{2} C_f \\
+  &amp; \le \frac{4 C_f / 2}{(0 + 1) + 2}
+\end{align*}
+\]</span></p>
+<p>Next, for the recursive case, we use the inductive assumption on <span class="math">\(f(x) - f(x^{*})\)</span>, the definition of <span class="math">\(\alpha^{(t)}\)</span>, and some algebra,</p>
+<p><span class="math">\[
+\begin{align*}
+  f(x^{+}) - f(x^{*})
+  &amp; \le (1 - \alpha) ( f(x) - f(x^{*}) ) + \frac{ \alpha^2}{2} C_f \\
+  &amp; \le \left(1 - \frac{2}{t+2} \right) \frac{4 C_f / 2}{t + 2} + \left( \frac{2}{t+2} \right)^2 C_f / 2 \\
+  &amp; \le \frac{4 C_f / 2}{t + 2} \left( 1 - \frac{2}{t+2} + \frac{1}{t+2} \right) \\
+  &amp; = \frac{4 C_f / 2}{t + 2} \left( \frac{t+1}{t+2} \right) \\
+  &amp; \le \frac{4 C_f / 2}{t + 2} \left( \frac{t+2}{t+3} \right) \\
+  &amp; = \frac{4 C_f / 2}{(t + 1) + 2} \\
+\end{align*}
+\]</span></p>
+<p>Thus, if we want an error tolerance of <span class="math">\(\epsilon\)</span>, we need <span class="math">\(O(\frac{1}{\epsilon})\)</span> iterations to find it. This matches the convergence rate of Gradient Descent an Proximal Gradient Descent, but falls short of their accelerated brethren.</p>
+<h1 id="when-should-i-use-it">When should I use it?</h1>
+<p>Like Proximal Gradient, efficient use of Frank-Wolfe requires solving a mini-optimization problem at each iteration. Unlike Proximal Gradient, however, this mini-problem will lead to unbounded iterates if the input space is not compact – in other words, Frank-Wolfe cannot directly be applied when your domain is all of <span class="math">\(R^{n}\)</span>. However, there is a very special case wherein Frank-Wolfe shines.</p>
+<p><a id="sparsity"></a> <strong>Sparsity</strong> The primary reason machine learning researchers have recently taken an interest in Frank-Wolfe is because in certain problems the iterates <span class="math">\(x^{(t)}\)</span> will be extremely sparse. Suppose that <span class="math">\(D\)</span> is a polyhedron defined by a set of linear constraints. Then <span class="math">\(s^{(t)}\)</span> is a solution to a Linear Program, meaning that each <span class="math">\(s^{(t)}\)</span> lies on one of the vertices of the polyhedron. If these vertices have only a few non-zero entries, then <span class="math">\(x^{(t)}\)</span> will too, as <span class="math">\(x^{(t)}\)</span> is a linear combination of <span class="math">\(s^{(1)} \ldots s^{(t)}\)</span>. This is in direct contrast to gradient and proximal based methods, wherein <span class="math">\(x^{(t)}\)</span> is the linear combination of a set of non-sparse <em>gradients</em>.</p>
+<p><strong>Atomic Norms</strong> One particular case where Frank-Wolfe shines is when minimizing <span class="math">\(f(x)\)</span> subject to <span class="math">\(||x|| \le c\)</span> where <span class="math">\(|| \cdot ||\)</span> is an “atomic norm”. We say that <span class="math">\(||\cdot||\)</span> is an atomic norm if <span class="math">\(||x||\)</span> is the smallest <span class="math">\(t\)</span> such that <span class="math">\(x/t\)</span> is in the convex hull of a finite set of points <span class="math">\(\mathcal{A}\)</span>, that is,</p>
+<p><span class="math">\[
+  ||x|| = \inf \{ t : x \in t \, \text{Conv}(\mathcal{A}) \}
+\]</span></p>
+<p>For example, <span class="math">\(||x||_1\)</span> is an atomic norm with <span class="math">\(\mathcal{A}\)</span> being the set of all vectors with only one <span class="math">\(+1\)</span> or one <span class="math">\(-1\)</span> entry. In these cases, finding <span class="math">\(\arg\min_{||s|| \le c} \langle \nabla f(x), s \rangle\)</span> is tantamount to finding which element of <span class="math">\(\mathcal{A}\)</span> minimizes <span class="math">\(\langle \nabla f(x), s \rangle\)</span> (since <span class="math">\(\text{Conv}(\mathcal{A})\)</span> defines a polyhedron). For a whole lot more on Atomic Norms, see <a href="http://pages.cs.wisc.edu/~brecht/papers/2010-crpw_inverse_problems.pdf">this tome</a> by Chandrasekaranm et al.</p>
+<h1 id="extensions">Extensions</h1>
+<p><strong>Step Size</strong> The proof above relied on a step size of <span class="math">\(\alpha^{(t)} = \frac{2}{k+2}\)</span>, but as usual <a href="/blog/gradient-descent.html#line_search">Line Search</a> can be applied to accelerate convergence.</p>
+<p><strong>Approximate Linear Solutions</strong> Though not stated in the proof above, another cool point about Frank-Wolfe is that you don’t actually need to solve the linear mini-problem exactly, but you will still converge to the optimal solution (albet at a slightly slower rate). In particular, assume that each mini-problem can be solved approximately with additive error <span class="math">\(\frac{1}{2} \delta C_f\)</span>,</p>
+<p><span class="math">\[
+  \langle s^{(t+1)}, \nabla f(x^{(t)}) \rangle
+  \le \min_{s} \langle s, \nabla f(x^{(t)}) \rangle + \frac{1}{2} \delta C_f
+\]</span></p>
+<p>then Frank-Wolfe’s rate of convergence is</p>
+<p><span class="math">\[
+  f(x^{(t)}) - f(x^{*}) \le \frac{2 C_f}{k+2} (1 + \delta)
+\]</span></p>
+<p>The proof for this can be found in the supplement to <a href="http://jmlr.csail.mit.edu/proceedings/papers/v28/jaggi13-supp.pdf">Jaggi’s</a> excellent survey on Frank-Wolfe for machine learning.</p>
+<h1 id="linear-invariance">Linear Invariance</h1>
+<p>Another cool fact about Frank-Wolfe is that it’s <em>linearly invariant</em> – that is, if you rotate the space, nothing changes about the convergence rate. This is in directcontrast to many other methods which depend on the <a href="http://en.wikipedia.org/wiki/Condition_number">condition number</a> of a function (for functions with Hessians, this is the ratio between the largest and smallest eigenvalues, <span class="math">\(\sigma_{\max} / \sigma_{\min})\)</span>.</p>
+<p>Suppose we transform our input space with a surjective (that is, onto) linear transformation <span class="math">\(M: \hat{D} \rightarrow D\)</span>. Let’s now try to solve the problem,</p>
+<p><span class="math">\[
+  \min_{\hat{x} \in \hat{D}} \hat{f}(\hat{x}) = f(M \hat{x}) = f(x)
+\]</span></p>
+<p>Let’s look at the solution to the per-iteration mini-problem we need to solve for Frank-Wolfe,</p>
+<p><span class="math">\[
+\begin{align*}
+  \min_{\hat{s} \in \hat{D}} \langle \nabla \hat{f}(\hat{x}), \hat{s} \rangle
+  = \min_{\hat{s} \in \hat{D}} \langle M^T \nabla f( M \hat{x}), \hat{s} \rangle
+  = \min_{\hat{s} \in \hat{D}} \langle \nabla f( x ), M \hat{s} \rangle
+  = \min_{s \in D} \langle \nabla f( x ), s \rangle
+\end{align*}
+\]</span></p>
+<p>In other words, we will find the same <span class="math">\(s\)</span> if we solve in the original space, or if we find <span class="math">\(\hat{s}\)</span> and then map it back to <span class="math">\(s\)</span>. No matter how <span class="math">\(M\)</span> warps the space, Frank-Wolfe will do the same thing. This also means that if there’s a linear transformation you can do to make the points of your polyhedron sparse, you can do it with no penalty!</p>
+<h1 id="references">References</h1>
+<p><strong>Proof of Convergence, Linear Invariance</strong> Pretty much everything in this article comes from <a href="http://jmlr.csail.mit.edu/proceedings/papers/v28/jaggi13-supp.pdf">Jaggi’s</a> fantastic article on Frank-Wolfe for machine learning.</p>
+<h1 id="reference-implementation">Reference Implementation</h1>
+<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">frank_wolfe</span><span class="p">(</span><span class="n">minisolver</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Frank-Wolfe Algorithm</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  minisolver : function</span>
+<span class="sd">      minisolver(x) = argmin_{s \in D} &lt;x, s&gt;</span>
+<span class="sd">  gradient : function</span>
+<span class="sd">      gradient(x) = gradient[f](x)</span>
+<span class="sd">  alpha : function</span>
+<span class="sd">      learning rate</span>
+<span class="sd">  x0 : array</span>
+<span class="sd">      initial value for x</span>
+<span class="sd">  epsilon : float</span>
+<span class="sd">      desired accuracy</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+  <span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gradient</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">s_next</span> <span class="o">=</span> <span class="n">minisolver</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">s_next</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">epsilon</span><span class="p">:</span>
+      <span class="k">break</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">(</span><span class="n">iteration</span><span class="o">=</span><span class="n">iteration</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">s_next</span><span class="p">)</span>
+    <span class="n">x_next</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">s_next</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_next</span><span class="p">)</span>
+    <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">return</span> <span class="n">xs</span>
+
+
+<span class="k">def</span> <span class="nf">default_learning_rate</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+  <span class="k">return</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">iteration</span> <span class="o">+</span> <span class="mf">2.0</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">os</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
+
+  <span class="c">### FRANK WOLFE ALGORITHM ###</span>
+
+  <span class="c"># problem definition</span>
+  <span class="n">function</span>    <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
+  <span class="n">gradient</span>    <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span>
+  <span class="n">minisolver</span>  <span class="o">=</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">2</span> <span class="c"># D = [-1, 2]</span>
+  <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+  <span class="c"># run gradient descent</span>
+  <span class="n">iterates</span> <span class="o">=</span> <span class="n">frank_wolfe</span><span class="p">(</span><span class="n">minisolver</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">default_learning_rate</span><span class="p">,</span> <span class="n">x0</span><span class="p">)</span>
+
+  <span class="c">### PLOTTING ###</span>
+
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+  <span class="c"># make animation</span>
+  <span class="n">iterates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">iterates</span><span class="p">)</span>
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s">&#39;figures/animation&#39;</span><span class="p">)</span>
+  <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">iterates</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+    <span class="n">x_plus</span> <span class="o">=</span> <span class="n">iterates</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">s_plus</span> <span class="o">=</span> <span class="n">minisolver</span><span class="p">(</span><span class="n">gradient</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">function</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gradient</span>
+    <span class="n">f_hat</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">plotting</span><span class="o">.</span><span class="n">limits</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span>
+
+    <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span> <span class="p">,</span><span class="n">xmax</span><span class="p">),</span> <span class="n">function</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">)),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">])</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">])</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;f(x)&#39;</span><span class="p">)</span>
+
+    <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">],</span> <span class="p">[</span><span class="n">f_hat</span><span class="p">(</span><span class="n">xmin</span><span class="p">),</span> <span class="n">f_hat</span><span class="p">(</span><span class="n">xmax</span><span class="p">)],</span> <span class="s">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">vlines</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">&#39;solid&#39;</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;o&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_plus</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">x_plus</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">x_plus</span><span class="p">,</span> <span class="n">f_hat</span><span class="p">(</span><span class="n">x_plus</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span><span class="n">x_plus</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">&#39;dotted&#39;</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">s_plus</span><span class="p">,</span> <span class="n">f_hat</span><span class="p">(</span><span class="n">s_plus</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s">&#39;x&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+    <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">&#39;figures/animation/</span><span class="si">%02d</span><span class="s">.png&#39;</span> <span class="o">%</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+    </article>
+  </div>
+</div> <!-- row -->
+<!-- Disqus Comments -->
+<div class="row-fluid disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = 'duckworthd-blog'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+    </div> <!-- container -->
+    <!-- jquery -->
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+
+<!-- MathJax -->
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    TeX: {
+      //equationNumbers: {
+      //  autoNumber: "all"
+      //},
+      extensions: ["color.js"]
+    }
+  });
+</script>
+
+<!-- Bootstrap -->
+<script type="text/javascript"
+        src="/assets/js/bootstrap.min.js"></script>
+
+<!-- Lightbox -->
+<script type="text/javascript"
+        src="/assets/js/lightbox.js"></script>
+
+  </body>
+</html>
+
