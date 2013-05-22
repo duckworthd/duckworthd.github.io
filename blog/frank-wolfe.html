@@ -192,19 +192,19 @@
 \]</span></p>
 <p>For example, <span class="math">\(||x||_1\)</span> is an atomic norm with <span class="math">\(\mathcal{A}\)</span> being the set of all vectors with only one <span class="math">\(+1\)</span> or one <span class="math">\(-1\)</span> entry. In these cases, finding <span class="math">\(\arg\min_{||s|| \le c} \langle \nabla f(x), s \rangle\)</span> is tantamount to finding which element of <span class="math">\(\mathcal{A}\)</span> minimizes <span class="math">\(\langle \nabla f(x), s \rangle\)</span> (since <span class="math">\(\text{Conv}(\mathcal{A})\)</span> defines a polyhedron). For a whole lot more on Atomic Norms, see <a href="http://pages.cs.wisc.edu/~brecht/papers/2010-crpw_inverse_problems.pdf">this tome</a> by Chandrasekaranm et al.</p>
 <h1 id="extensions">Extensions</h1>
-<p><strong>Step Size</strong> The proof above relied on a step size of <span class="math">\(\alpha^{(t)} = \frac{2}{k+2}\)</span>, but as usual <a href="/blog/gradient-descent.html#line_search">Line Search</a> can be applied to accelerate convergence.</p>
-<p><strong>Approximate Linear Solutions</strong> Though not stated in the proof above, another cool point about Frank-Wolfe is that you don’t actually need to solve the linear mini-problem exactly, but you will still converge to the optimal solution (albet at a slightly slower rate). In particular, assume that each mini-problem can be solved approximately with additive error <span class="math">\(\frac{1}{2} \delta C_f\)</span>,</p>
+<p><strong>Step Size</strong> The proof above relied on a step size of <span class="math">\(\alpha^{(t)} = \frac{2}{t+2}\)</span>, but as usual <a href="/blog/gradient-descent.html#line_search">Line Search</a> can be applied to accelerate convergence.</p>
+<p><strong>Approximate Linear Solutions</strong> Though not stated in the proof above, another cool point about Frank-Wolfe is that you don’t actually need to solve the linear mini-problem exactly, but you will still converge to the optimal solution (albet at a slightly slower rate). In particular, assume that each mini-problem can be solved approximately with additive error <span class="math">\(\frac{\delta C_f}{t+2}\)</span> at iteration <span class="math">\(t\)</span>,</p>
 <p><span class="math">\[
   \langle s^{(t+1)}, \nabla f(x^{(t)}) \rangle
-  \le \min_{s} \langle s, \nabla f(x^{(t)}) \rangle + \frac{1}{2} \delta C_f
+  \le \min_{s} \langle s, \nabla f(x^{(t)}) \rangle + \frac{\delta C_f}{t+2}
 \]</span></p>
 <p>then Frank-Wolfe’s rate of convergence is</p>
 <p><span class="math">\[
-  f(x^{(t)}) - f(x^{*}) \le \frac{2 C_f}{k+2} (1 + \delta)
+  f(x^{(t)}) - f(x^{*}) \le \frac{2 C_f}{t+2} (1 + \delta)
 \]</span></p>
 <p>The proof for this can be found in the supplement to <a href="http://jmlr.csail.mit.edu/proceedings/papers/v28/jaggi13-supp.pdf">Jaggi’s</a> excellent survey on Frank-Wolfe for machine learning.</p>
 <h1 id="linear-invariance">Linear Invariance</h1>
-<p>Another cool fact about Frank-Wolfe is that it’s <em>linearly invariant</em> – that is, if you rotate the space, nothing changes about the convergence rate. This is in directcontrast to many other methods which depend on the <a href="http://en.wikipedia.org/wiki/Condition_number">condition number</a> of a function (for functions with Hessians, this is the ratio between the largest and smallest eigenvalues, <span class="math">\(\sigma_{\max} / \sigma_{\min})\)</span>.</p>
+<p>Another cool fact about Frank-Wolfe is that it’s <em>linearly invariant</em> – that is, if you rotate and scale the space, nothing changes about the convergence rate. This is in direct contrast to many other methods which depend on the <a href="http://en.wikipedia.org/wiki/Condition_number">condition number</a> of a function (for functions with Hessians, this is the ratio between the largest and smallest eigenvalues, <span class="math">\(\sigma_{\max} / \sigma_{\min})\)</span>.</p>
 <p>Suppose we transform our input space with a surjective (that is, onto) linear transformation <span class="math">\(M: \hat{D} \rightarrow D\)</span>. Let’s now try to solve the problem,</p>
 <p><span class="math">\[
   \min_{\hat{x} \in \hat{D}} \hat{f}(\hat{x}) = f(M \hat{x}) = f(x)
