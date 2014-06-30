@@ -14,7 +14,7 @@ MathJax.Hub.Config({
 			TagSide: "left",
 		},
 	"HTML-CSS": {
-    scale          : 50,
+    scale          : 100,
     availableFonts : ["TeX"],
   }
 });
