@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- stylesheets -->
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/assets/lightbox/css/lightbox.css">
+
+  <!-- fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+  <!-- RSS/ATOM feeds -->
+	<link href="/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+
+
+		<title>Strongly Convex</title>
+		<meta charset="utf-8" />
+</head>
+<body>
+	<section id="sidebar">
+		<figure id="user_logo">
+      <a href=""><div class="logo">&nbsp;</div></a>
+		</figure>
+
+		<div class="user_meta">
+      <h1 id="user">
+        <a  href="/"
+            class="sitename">
+          Strongly Convex
+        </a>
+      </h1>
+			<h2></h2>
+
+
+			<ul>
+        <hr></hr>
+					<li><a href="/">Words</a></li>
+          <hr></hr>
+					<li><a href="/code.html">Code</a></li>
+          <hr></hr>
+					<li><a href="/about.html">About</a></li>
+          <hr></hr>
+			</ul>
+		</div>
+		<footer>
+			<address>
+				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+			</address>
+		</footer>
+	</section>
+
+	<section id="posts">
+	<header>
+      <h1 class="title">
+			  <a  href="/blog/accelerated-proximal-gradient-descent.html"
+            rel="bookmark"
+			  	  title="Permalink to Accelerated Proximal Gradient Descent">
+          Accelerated Proximal Gradient Descent
+        </a>
+      </h1>
+		  <abbr class="published">Thu 25 April 2013</abbr>
+	</header>
+  <article>
+    <p><mathjax>$\def\prox{\text{prox}}$</mathjax>
+  In a <a href="/blog/proximal-gradient-descent.html">previous post</a>, I presented Proximal Gradient, a
+method for bypassing the <mathjax>$O(1 / \epsilon^2)$</mathjax> convergence rate of Subgradient
+Descent.  This method relied on assuming that the objective function could be
+expressed as the sum of 2 functions, <mathjax>$g(x)$</mathjax> and <mathjax>$h(x)$</mathjax>, with <mathjax>$g$</mathjax> being
+differentiable and <mathjax>$h$</mathjax> having an easy to compute <a href="/blog/proximal-gradient-descent.html#intuition"><mathjax>$\prox$</mathjax>
+function</a>,</p>
+<p><mathjax>$$
+  \prox_{\alpha h}(x) = \arg\min_{y} \alpha h(y) + \frac{1}{2}||y - x||_2^2
+$$</mathjax></p>
+<p>In the <a href="/blog/accelerated-gradient-descent.html">post before that</a>, I presented Accelerated
+Gradient Descent, a method that outperforms Gradient Descent while making the
+exact same assumptions. It is then natural to ask, "Can we combine Accelerated
+Gradient Descent and Proximal Gradient to obtain a new algorithm?"  Well if we
+couldn't, why the hell would I be writing about something called "Accelerated
+Proximal Gradient."  C'mon people, work with me.  Now let's get on with it!</p>
+<h1><a name="implementation" href="#implementation">How does it work?</a></h1>
+<p>As you might guess, the setup is precisely the same as Proximal Gradient. Let
+our objective be expressed as the sum of 2 functions,</p>
+<p><mathjax>$$
+  \min_{x} g(x) + h(x)
+$$</mathjax></p>
+<p>where <mathjax>$g$</mathjax> is differentiable and <mathjax>$h$</mathjax> is "simple" in the sense that its <mathjax>$\prox$</mathjax>
+function can cheaply be computed. Given that, the algorithm is pretty much what
+you would expect from the lovechild of Proximal Gradient and Accelerated
+Gradient Descent,</p>
+<div class="pseudocode">
+<p><strong>Input</strong>: initial iterate <mathjax>$x^{(0)}$</mathjax></p>
+<ol>
+<li>Let <mathjax>$y^{(0)} = x^{(0)}$</mathjax></li>
+<li>For <mathjax>$t = 1, 2, \ldots$</mathjax><ol>
+<li>Let <mathjax>$x^{(t)} = \prox_{\alpha^{(t)} h} (y^{(t-1)} - \alpha^{(t)} \nabla f(y^{(t-1)}) )$</mathjax></li>
+<li>if converged, return <mathjax>$x^{(t)}$</mathjax></li>
+<li>Let <mathjax>$y^{(t)} = x^{(t)} + \frac{t-1}{t+2} (x^{(t)} - x^{(t-1)})$</mathjax></li>
+</ol>
+</li>
+</ol>
+</div>
+<h1><a name="example" href="#example">A Small Example</a></h1>
+<p>To illustrate Accelerated Proximal Gradient, I'll use the same objective function as I did in illustrating Proximal Gradient Descent. Namely,</p>
+<p><mathjax>$$
+  \min_{x} \, \log(1 + \exp(-2x)) + ||x||_1
+$$</mathjax></p>
+<p>which has the following gradient for <mathjax>$g(x) = \log(1+\exp(-2x))$</mathjax> and <mathjax>$\prox$</mathjax>
+operator for <mathjax>$h(x) = ||x||_1$</mathjax>,</p>
+<p><mathjax>$$
+\begin{align*}
+  \nabla g(x) &amp;= \frac{1}{1 + \exp(-2x)} \left( \exp(-2x) \right) (-2) \\
+  \prox_{\alpha h}(x) &amp; = \text{sign}(x) \max(0, \text{abs}(x) - \alpha) \\
+\end{align*}
+$$</mathjax></p>
+<p>As before, we employ Backtracking Line Search to select the step size. In
+this example, regular Proximal Gradient seems to beat out Accelerated
+Proximal Gradient, but rest assured this is an artifact of the tiny problem
+size.</p>
+<div class="img-center">
+  <img src="/assets/img/accelerated_proximal_gradient_descent/convergence.png"></img>
+  <span class="caption">
+    This plot shows how quickly the objective function decreases as the
+    number of iterations increases. Notice how the objective function doesn't
+    necessarily decrease at each step.
+  </span>
+</div>
+
+<div class="img-center">
+  <img src="/assets/img/accelerated_proximal_gradient_descent/iterates.png"></img>
+  <span class="caption">
+    This plot shows the actual iterates and the objective function evaluated at
+    those points. More red indicates a higher iteration number.
+  </span>
+</div>
+
+<h1><a name="proof" href="#proof">Why does it work?</a></h1>
+<p>For the proof of Accelerated Proximal Gradient, we'll make the same
+assumptions we did in Proximal Gradient. Namely,</p>
+<ol>
+<li><mathjax>$g(x)$</mathjax> is convex, differentiable, and finite for all <mathjax>$x$</mathjax></li>
+<li>a finite solution <mathjax>$x^{*}$</mathjax> exists</li>
+<li><mathjax>$\nabla g(x)$</mathjax> is Lipschitz continuous with constant <mathjax>$L$</mathjax>. That is, there must
+   be an <mathjax>$L$</mathjax> such that,</li>
+</ol>
+<p><mathjax>$$
+  || \nabla g(x) - \nabla g(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
+$$</mathjax></p>
+<ol>
+<li><mathjax>$h(x)$</mathjax> is convex</li>
+</ol>
+<p><strong>Proof Outline</strong> In the same way that the proof for Proximal Gradient
+largely follows the proof for regular Gradient Descent, the proof for
+Accelerated Proximal Gradient follows the proof for Accelerated Gradient
+Descent. Our goal is to prove a statement of the form,</p>
+<p><mathjax>$$
+\begin{align*}
+    (g+h)(x^{+})
+    \le (1-\theta) (g+h)(x) + \theta (g+h)(x^{*}) + \frac{\theta^2}{2 \alpha^{+}} \left(
+        ||v - x^{*}||_2^2 - ||v^{+} - x^{*}||_2^2
+      \right) \\
+\end{align*}
+$$</mathjax></p>
+<p>Once we achieve this, the proof follows that of Accelerated Gradient with <mathjax>$f
+\rightarrow g+h$</mathjax> from Step 2 onwards.</p>
+<p>How will we do this? As with Accelerated Gradient, we define a new set of
+iterates <mathjax>$v^{(t)}$</mathjax> in terms of <mathjax>$x^{(t)}$</mathjax> and <mathjax>$x^{(t-1)}$</mathjax> and then define
+<mathjax>$y^{(t)}$</mathjax> in terms of <mathjax>$v^{(t)}$</mathjax> and <mathjax>$x^{(t)}$</mathjax>. We then exploit the Lipschitz bound
+on <mathjax>$g$</mathjax> and a particular subgradient bound on <mathjax>$h$</mathjax> to establish an upper bound
+on <mathjax>$(g+h)(x^{(t)})$</mathjax>. Finally, through algebraic manipulations we show the
+equation presented above, and we can simply copy-paste the Accelerated Gradient
+Descent proof to completion.</p>
+<p><strong>Step 1</strong> Define a new set of iterates <mathjax>$v^{(t)}$</mathjax>. As with Accelerated
+Gradient, we define a new set of iterates <mathjax>$v^{(t)}$</mathjax> and a particular
+<mathjax>$\theta^{(t)}$</mathjax> as follows,</p>
+<p><mathjax>$$
+\begin{align*}
+  v^{(t)}
+  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)}
+    = x^{(t-1)} + \frac{1}{\theta^{(t)}} (x^{(t)} - x^{(t-1)}) \\
+  \theta^{(t)}
+  &amp; = \frac{2}{t+1} \\
+\end{align*}
+$$</mathjax></p>
+<p>This definition also allows us to redefine <mathjax>$y^{(t)}$</mathjax>,</p>
+<p><mathjax>$$
+  y^{(t)}
+  = (1 - \theta^{(t)}) x^{(t)} + \theta^{(t)} v^{(t)} \\
+$$</mathjax></p>
+<p><strong>Step 2</strong> Use the Lipschitz property of <mathjax>$g$</mathjax> and subgradient property of <mathjax>$h$</mathjax>
+to upper bound <mathjax>$(g+h)(x^{(t+1)})$</mathjax>.  Let's begin by defining <mathjax>$x^{+} \triangleq
+x^{(t)}$</mathjax>, <mathjax>$x \triangleq x^{(t-1)}$</mathjax>, <mathjax>$y \triangleq y^{(t-1)}$</mathjax>, <mathjax>$\theta
+\triangleq \theta^{(t-1)}$</mathjax>, <mathjax>$v^{+} \triangleq v^{(t)}$</mathjax>, and <mathjax>$v \triangleq
+v^{(t-1)}$</mathjax>.  From the Lipschitz property of <mathjax>$g$</mathjax>, we immediately get,</p>
+<p><mathjax>$$
+  g(x^{+}) \le g(y) + \nabla g(y)^T (x^{+} - y) + \frac{L}{2} ||x^{+} - y||_2^2
+$$</mathjax></p>
+<p>Let's immediately assume <mathjax>$\alpha \le \frac{1}{L}$</mathjax>, so we can replace <mathjax>$\frac{L}{2}$</mathjax> with <mathjax>$\frac{1}{2 \alpha}$</mathjax>. Now let's derive the subgradient property of <mathjax>$h$</mathjax> we need.  Recall the subgradient definition,</p>
+<p><mathjax>$$
+  h(z) \ge h(\tilde{x}) + G^T (z-\tilde{x}) \qquad G \in \partial h(\tilde{x})
+$$</mathjax></p>
+<p>Now let <mathjax>$x^{+} = \prox_{\alpha h}(\tilde{x}) = \arg\min_{w} \alpha h(w) + \frac{1}{2}||w - \tilde{x}||_2^2$</mathjax>.  According to the KKT conditions, 0 must be in the subdifferential of <mathjax>$\alpha h(x^{+}) + \frac{1}{2} || x^{+} - \tilde{x} ||_2^2$</mathjax>.  Plugging this in, we see that,</p>
+<p><mathjax>$$
+\begin{align*}
+  0 &amp; \in \alpha \partial h(x^{+}) + (x^{+} - \tilde{x}) \\
+  \frac{1}{\alpha} \left( \tilde{x} - x^{+} \right) &amp; \in \partial h(x^{+})
+\end{align*}
+$$</mathjax></p>
+<p>We now have a subgradient for <mathjax>$h(x^{+})$</mathjax>.  Plugging this back into the
+subgradient condition with <mathjax>$\tilde{x} \rightarrow x^{+}$</mathjax>,</p>
+<p><mathjax>$$
+\begin{align*}
+  h(z)
+  &amp;\ge h(x^{+}) + \frac{1}{\alpha} \left( \tilde{x} - x^{+} \right)^T(z - x^{+}) \\
+  h(z) + \frac{1}{\alpha} \left( x^{+} - \tilde{x} \right)^T (z - x^{+})
+  &amp;\ge h(x^{+}) \\
+\end{align*}
+$$</mathjax></p>
+<p>Finally, substitute <mathjax>$\tilde{x} = y - \alpha \nabla g(y)$</mathjax> to obtain our
+desired upper bound on <mathjax>$h(x^{+})$</mathjax>,</p>
+<p><mathjax>$$
+\begin{align*}
+  h(x^{+})
+  &amp; \le h(z) + \frac{1}{\alpha} \left( x^{+} - \left(y - \alpha \nabla g(y) \right) \right)^T (z - x^{+}) \\
+  &amp; = h(z) + \nabla g(y)^T (z - x^{+}) + \frac{1}{\alpha} ( x^{+} - y )^T (z - x^{+})
+\end{align*}
+$$</mathjax></p>
+<p>Nice. Now add the Lipschitz bound on <mathjax>$g$</mathjax> and the subgradient bound on
+<mathjax>$h$</mathjax> to obtain an upper bound on <mathjax>$(g+h)(x^{+})$</mathjax>, then invoke convexity on <mathjax>$g(z)
+\ge g(y) + \nabla g(y)^T (z-y)$</mathjax> to get rid of the linear term involving <mathjax>$\nabla
+g(y)$</mathjax>,</p>
+<p><mathjax>$$
+\begin{align*}
+  (g+h)(x^{+})
+  &amp; \le g(y) + h(z) + \nabla g(y)^T (z-y) + \frac{1}{\alpha} (x^{+} - y)^T (z - x^{+}) + \frac{1}{2\alpha} ||x^{+} - y||_2^2 \\
+  &amp; \le g(z) + h(z) + \frac{1}{\alpha} (x^{+} - y)^T (z - x^{+}) + \frac{1}{2\alpha} ||x^{+} - y||_2^2
+\end{align*}
+$$</mathjax></p>
+<p><strong>Step 3</strong> Use the previous upper bound to obtain the equation necessary for
+invoking Accelerated Gradient Descent's proof. The core of this is to
+manipulate and bound the following statement,</p>
+<p><mathjax>$$
+  (g+h)(x^{+}) - \theta (g+h)(x^{*}) - (1-\theta) (g+h)(x)
+$$</mathjax></p>
+<p>First, upper bound <mathjax>$-(g+h)(x^{*})$</mathjax> and <mathjax>$-(g+h)(x)$</mathjax> with <mathjax>$z = x^{*}$</mathjax> and <mathjax>$z =
+x^{+}$</mathjax> using the result of Step 2, then add zero and factor the quadratic,</p>
+<p><mathjax>$$
+\begin{align*}
+  &amp; (g+h)(x^{+}) - \theta (g+h)(x^{*}) - (1-\theta) (g+h)(x) \\
+  &amp; \le (g+h)(x^{+}) + \theta \left(
+      - (g+h)(x^{+}) + \frac{1}{\alpha} (x^{+} - y)^T (x^{*} - x^{+}) + \frac{1}{2 \alpha} ||x^{+} - y||_2^2
+    \right) \\
+  &amp; \qquad + (1-\theta) \left(
+      - (g+h)(x    ) + \frac{1}{\alpha} (x^{+} - y)^T (x     - x^{+}) + \frac{1}{2 \alpha} ||x     - y||_2^2
+    \right) \\
+  &amp; = \frac{1}{\alpha} (x^{+} - y)^T ( \theta x^{*} + (1-\theta) x - x^{+} ) + \frac{1}{2 \alpha} ||x^{+} - y||_2^2 \pm \frac{1}{2 \alpha} ||\theta x^{*} + (1-\theta) x - x^{+} ||_2^2 \\
+  &amp; = \frac{1}{2 \alpha} \left(
+    ||x^{+} - y + \theta x^{*} + (1 - \theta) x - x^{+}||_2^2
+    - ||\theta x^{*} + (1 - \theta) x - x^{+}||_2^2
+  \right) \\
+  &amp; = \frac{1}{2 \alpha} \left(
+    ||y - \theta x^{*} - (1 - \theta) x||_2^2
+    - || x^{+} - \theta x^{*} - (1 - \theta) x||_2^2
+  \right) \\
+\end{align*}
+$$</mathjax></p>
+<p>Finally, use <mathjax>$y = (1 - \theta) x + \theta v$</mathjax> to get <mathjax>$y - (1-\theta) x =
+\theta v$</mathjax> and then <mathjax>$v^{+} = x + \frac{1}{\theta} ( x^{+} - x )$</mathjax> to obtain
+<mathjax>$\theta v^{+} = x^{+} - (1-\theta) x$</mathjax>. Substituting these in,</p>
+<p><mathjax>$$
+\begin{align*}
+  &amp; (g+h)(x^{+}) - \theta (g+h)(x^{*}) - (1-\theta) (g+h)(x) \\
+  &amp; \le \frac{1}{2 \alpha} \left(
+    ||\theta v - \theta x^{*}||_2^2 - || \theta v^{+} - \theta x^{*} ||_2^2
+  \right) \\
+  &amp; = \frac{\theta^2}{2 \alpha} \left(
+    || v - x^{*}||_2^2 - || v^{+} - x^{*} ||_2^2
+  \right) \\
+\end{align*}
+$$</mathjax></p>
+<p>Which was our original goal.  We then follow the proof for Accelerated
+Gradient Descent with <mathjax>$f \rightarrow g + h$</mathjax> starting from Step 2 to obtain
+the desired rate of convergence, <mathjax>$O(1 / \sqrt{\epsilon})$</mathjax>.</p>
+<p>As a final note, you'll notice that in this proof <mathjax>$\theta^{(t)} =
+\frac{2}{t+1}$</mathjax>, but in the original Accelerated Gradient proof <mathjax>$\theta^{(t)}
+= \frac{2}{t+2}$</mathjax>. This ends up no mattering, as the only property we need being
+<mathjax>$\frac{1 - \theta^{(t)}}{ (\theta^{(t)})^2 } \le \frac{1}{ (\theta^{(t)})^2 }$</mathjax>,
+which holds for either definition.</p>
+<h1><a name="usage" href="#usage">When should I use it?</a></h1>
+<p>As with <a href="/blog/accelerated-gradient-descent.html#usage">Accelerated Gradient</a>, the algorithm
+works well <em>as long as you get the step size right</em>. That means Backtracking
+Line Search is an absolute must if you don't know <mathjax>$g$</mathjax>'s Lipschitz constant
+analytically.  If Line Search is possible, you can only gain over Proximal
+Gradient by employing Accelerated Proximal Gradient; with that said, test a
+Proximal Gradient algorithm first, and advance to Accelerated Proximal Gradient
+only if you're sure you need the faster convergence rate.</p>
+<h1><a name="extensions" href="#extensions">Extensions</a></h1>
+<p><strong>Step Size</strong> As with Accelerated Gradient, getting the correct step size is
+of utmost importance. If <mathjax>$\alpha^{(t)} &gt; \frac{1}{L}$</mathjax>, <em>the algorithm will
+diverge</em>. With that said, Backtracking Line Search will guarantee convergence.
+You can find an implementation in <a href="/blog/proximal-gradient-descent.html#line_search">my previous post on Proximal
+Gradient</a>.</p>
+<h1><a name="references" href="#references">References</a></h1>
+<p><strong>Proof of convergence</strong> The proof of convergence is taken from Lieven
+Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures/fgrad.pdf">EE236c slides</a>.</p>
+<h1><a name="reference-impl" href="#reference-impl">Reference Implementation</a></h1>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">accelerated_proximal_gradient</span><span class="p">(</span><span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
+                                  <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Proximal Gradient Descent</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  g_gradient : function</span>
+<span class="sd">      Compute the gradient of `g(x)`</span>
+<span class="sd">  h_prox : function</span>
+<span class="sd">      Compute prox operator for h * alpha</span>
+<span class="sd">  x0 : array</span>
+<span class="sd">      initial value for x</span>
+<span class="sd">  alpha : function</span>
+<span class="sd">      function computing step sizes</span>
+<span class="sd">  n_iterations : int, optional</span>
+<span class="sd">      number of iterations to perform</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  xs : list</span>
+<span class="sd">      intermediate values for x</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+  <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">x0</span><span class="p">]</span>
+  <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">xs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">ys</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">g_gradient</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">x_plus</span> <span class="o">=</span> <span class="n">h_prox</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">step</span> <span class="o">*</span> <span class="n">g</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+    <span class="n">y_plus</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="mf">3.0</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_plus</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span>
+    <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_plus</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">xs</span>
+
+<span class="k">def</span> <span class="nf">backtracking_line_search</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">):</span>
+  <span class="n">alpha_0</span> <span class="o">=</span> <span class="mf">1.0</span>
+  <span class="n">beta</span>    <span class="o">=</span> <span class="mf">0.9</span>
+  <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_0</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="n">x_plus</span> <span class="o">=</span> <span class="n">h_prox</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">g_gradient</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">alpha</span><span class="p">)</span>
+      <span class="n">G</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x_plus</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">g</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span> <span class="o">+</span> <span class="n">h</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">g</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">h</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">G</span><span class="o">*</span><span class="n">G</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">alpha</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">beta</span>
+  <span class="k">return</span> <span class="n">search</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">os</span>
+
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
+
+  <span class="c">### ACCELERATED PROXIMAL GRADIENT ###</span>
+
+  <span class="c"># problem definition</span>
+  <span class="n">g</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+  <span class="n">h</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">h</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">g_gradient</span>  <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+  <span class="n">h_prox</span>      <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
+  <span class="n">alpha</span>       <span class="o">=</span> <span class="n">backtracking_line_search</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">)</span>
+  <span class="n">x0</span>          <span class="o">=</span> <span class="mf">5.0</span>
+  <span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">10</span>
+
+  <span class="c"># run gradient descent</span>
+  <span class="n">iterates</span> <span class="o">=</span> <span class="n">accelerated_proximal_gradient</span><span class="p">(</span>
+                  <span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span>
+                  <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span>
+             <span class="p">)</span>
+
+  <span class="c">### PLOTTING ###</span>
+
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span>
+                                     <span class="n">y_star</span><span class="o">=</span><span class="mf">0.69314718055994529</span><span class="p">)</span>
+  <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span>
+                                      <span class="n">y_star</span><span class="o">=</span><span class="mf">0.69314718055994529</span><span class="p">)</span>
+</pre></div>
+
+    <div id="article_meta">
+        Category:
+          <a href="/category/optimization.html">optimization</a>
+        <br />Tags:
+          <a href="/tag/optimization.html">optimization</a>
+,           <a href="/tag/first-order.html">first-order</a>
+,           <a href="/tag/accelerated.html">accelerated</a>
+,           <a href="/tag/proximal.html">proximal</a>
+    </div>
+  </article>
+
+  <footer>
+    <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
+  </footer>
+
+  <div id="comments">
+    <h2>Comments</h2>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_identifier = "blog/accelerated-proximal-gradient-descent.html";
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
+  </div>
+
+	</section>
+
+
+  <!-- scripts -->
+  <script
+    type= "text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    >
+  </script>
+  <script
+    type= "text/javascript"
+    src="/assets/js/MathJaxLocal.js"
+    >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/jquery-1.11.0.min.js"
+      >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/lightbox.min.js"
+      >
+  </script>
+</body>
+</html>

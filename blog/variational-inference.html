@@ -1,60 +1,114 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Variational Inference</title>
+<html lang="en">
+<head>
+  <!-- stylesheets -->
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/assets/lightbox/css/lightbox.css">
 
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-    <div class="container">
-    <div class="navbar">
-  <div class="navbar-inner">
-    <div class="nav-div">
-      <a class="brand logo" href="#">
-        <img src="/assets/img/transmogrifier2.png"></img>
-      </a>
-      <ul class="nav pull-right">
-        <li><a href="/index.html">Home</a></li>
-        <li><a href="/projects.html">Projects</a></li>
-        <li><a href="/blog.html">Blog</a></li>
-        <li><a href="/feed.xml">
-          <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
-        </a></li>
-      </ul>
-    </div> <!-- span10 offset1 -->
-  </div> <!-- /navbar-inner -->
-</div> <!-- /navbar -->
+  <!-- fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+  <!-- RSS/ATOM feeds -->
+	<link href="/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
 
 
-<div class="row-fluid">
-  <div class="post box-shadow">
-    <header>
-      <h1 class="header-title">Variational Inference</h1>
-      <p class="header-subtext">by Daniel Duckworth on Apr 28, 2013</p>
-    </header>
-    <article>
-      <p><a href="http://www.orchid.ac.uk/eprints/40/1/fox_vbtut.pdf">Variational Inference</a> and Monte Carlo Sampling are currently the two chief ways of doing approximate Bayesian inference. In the Bayesian setting, we typically have some observed variables <span class="math">\(x\)</span> and unobserved variables <span class="math">\(z\)</span>, and our goal is to calculate <span class="math">\(P(z|x)\)</span>. In all but the simplest cases, calculating <span class="math">\(P(z|x)\)</span> for all values of <span class="math">\(z\)</span> in closed form is impossible, so approximations must be made.</p>
-<p>Variational Inference’s approximation is made by choosing a family of distributions <span class="math">\(q(z|\eta)\)</span> parameterized by <span class="math">\(\eta\)</span> and choosing a setting for <span class="math">\(\eta\)</span> that brings <span class="math">\(q(z|\eta)\)</span> “close” to <span class="math">\(P(z|x)\)</span>. In particular, Variational Inference is about finding,</p>
-<p><span class="math">\[
+		<title>Strongly Convex</title>
+		<meta charset="utf-8" />
+</head>
+<body>
+	<section id="sidebar">
+		<figure id="user_logo">
+      <a href=""><div class="logo">&nbsp;</div></a>
+		</figure>
+
+		<div class="user_meta">
+      <h1 id="user">
+        <a  href="/"
+            class="sitename">
+          Strongly Convex
+        </a>
+      </h1>
+			<h2></h2>
+
+
+			<ul>
+        <hr></hr>
+					<li><a href="/">Words</a></li>
+          <hr></hr>
+					<li><a href="/code.html">Code</a></li>
+          <hr></hr>
+					<li><a href="/about.html">About</a></li>
+          <hr></hr>
+			</ul>
+		</div>
+		<footer>
+			<address>
+				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+			</address>
+		</footer>
+	</section>
+
+	<section id="posts">
+	<header>
+      <h1 class="title">
+			  <a  href="/blog/variational-inference.html"
+            rel="bookmark"
+			  	  title="Permalink to Variational Inference">
+          Variational Inference
+        </a>
+      </h1>
+		  <abbr class="published">Sun 28 April 2013</abbr>
+	</header>
+  <article>
+    <p><a href="http://www.orchid.ac.uk/eprints/40/1/fox_vbtut.pdf">Variational Inference</a> and Monte Carlo Sampling are
+currently the two chief ways of doing approximate Bayesian inference. In the
+Bayesian setting, we typically have some observed variables <mathjax>$x$</mathjax> and
+unobserved variables <mathjax>$z$</mathjax>, and our goal is to calculate <mathjax>$P(z|x)$</mathjax>. In all but
+the simplest cases, calculating <mathjax>$P(z|x)$</mathjax> for all values of <mathjax>$z$</mathjax> in closed form
+is impossible, so approximations must be made.</p>
+<p>Variational Inference's approximation is made by choosing a family of
+distributions <mathjax>$q(z|\eta)$</mathjax> parameterized by <mathjax>$\eta$</mathjax> and choosing a setting for
+<mathjax>$\eta$</mathjax> that brings <mathjax>$q(z|\eta)$</mathjax> "close" to <mathjax>$P(z|x)$</mathjax>.  In particular,
+Variational Inference is about finding,</p>
+<p><mathjax>$$
 \begin{align*}
   &amp; \arg\min_{\eta} KL \left[ q(z|\eta) || P(z|x) \right] \\
   &amp; = \arg\min_{\eta} \sum_{z} q(z|\eta) \log \frac{ q(z|\eta) }{ P(z|x) }
 \end{align*}
-\]</span></p>
-<p>Looking at this formulation, the first thing you should be thinking is, “We don’t even know how to calculate <span class="math">\(P(z|x)\)</span> much less take an expectation with respect to it. How can I possibly solve this problem?” The key is to restrict <span class="math">\(q(z|\eta)\)</span> to decompose into a product of independent distributions, 1 for each hidden variable <span class="math">\(z_i\)</span>. In other words,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Looking at this formulation, the first thing you should be thinking is, "We
+don't even know how to calculate <mathjax>$P(z|x)$</mathjax> much less take an expectation with
+respect to it. How can I possibly solve this problem?" The key is to restrict
+<mathjax>$q(z|\eta)$</mathjax> to decompose into a product of independent distributions, 1 for
+each hidden variable <mathjax>$z_i$</mathjax>. In other words,</p>
+<p><mathjax>$$
   q(z|\eta) = \prod_{i} q(z_i | \eta_i)
-\]</span></p>
-<p>This is the “mean field approximation” and will allow us to optimize each <span class="math">\(\eta_i\)</span> one at a time. The final key <span class="math">\(P(z_i|z_{-i},x)\)</span> must lie in the exponential family, and that <span class="math">\(q(z_i|\eta_i)\)</span> be of the same form. For example, if the former is a Dirichlet distribution, so should the latter. When this is the case, we can solve the Coordinate Ascent update in closed form.</p>
-<p>When all 3 conditions are met – the mean field approximation, the univariate posteriors lie in the exponential family, and that the individual variational distributions match – we can apply Coordinate Ascent to minimize the KL-divergence between the mean field distribution and the posterior.</p>
-<h1 id="derivation-of-the-objective">Derivation of the Objective</h1>
-<p>The original intuition for Variational Inference stems from lower bounding the marginal likelihood of the observed variables <span class="math">\(P(x)\)</span>, then maximizing that lower bound. For many choices of <span class="math">\(q(z|\eta)\)</span> doing this will be computationally infeasible, but we’ll see that if we make the mean field approximation and choose the right variational distributions, then we can efficiently do Coordinate Ascent.</p>
-<p>First, let’s derive a lower bound on the likelihood of the observed variables,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>This is the "mean field approximation" and will allow us to optimize each
+<mathjax>$\eta_i$</mathjax> one at a time. The final key <mathjax>$P(z_i|z_{-i},x)$</mathjax> must lie in the
+exponential family, and that <mathjax>$q(z_i|\eta_i)$</mathjax> be of the same form. For example,
+if the former is a Dirichlet distribution, so should the latter. When this is
+the case, we can solve the Coordinate Ascent update in closed form.</p>
+<p>When all 3 conditions are met -- the mean field approximation, the univariate
+posteriors lie in the exponential family, and that the individual variational
+distributions match -- we can apply Coordinate Ascent to minimize the
+KL-divergence between the mean field distribution and the posterior.</p>
+<h1><a name="derivation" href="#derivation">Derivation of the Objective</a></h1>
+<p>The original intuition for Variational Inference stems from lower bounding
+the marginal likelihood of the observed variables <mathjax>$P(x)$</mathjax>, then maximizing that
+lower bound. For many choices of <mathjax>$q(z|\eta)$</mathjax> doing this will be computationally
+infeasible, but we'll see that if we make the mean field approximation and
+choose the right variational distributions, then we can efficiently do
+Coordinate Ascent.</p>
+<p>First, let's derive a lower bound on the likelihood of the observed
+variables,</p>
+<p><mathjax>$$
 \begin{align*}
   \log P(x)
   &amp; = \log \left(
@@ -67,9 +121,11 @@
     \sum_{z} q(z | \eta) \frac{ P(z | x) } { q(z | \eta) }
   \right) + \log P(x) \\
 \end{align*}
-\]</span></p>
-<p>Since <span class="math">\(\log\)</span> is a concave function, we can apply Jensen’s inequality to see that <span class="math">\(\log(p x + (1-p)y) \ge p \log(x) + (1-p) \log y\)</span> for any <span class="math">\(p \in [0, 1]\)</span>.</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Since <mathjax>$\log$</mathjax> is a concave function, we can apply Jensen's inequality to see
+that <mathjax>$\log(p x + (1-p)y) \ge p \log(x) + (1-p) \log y$</mathjax> for any <mathjax>$p \in [0,
+1]$</mathjax>.</p>
+<p><mathjax>$$
 \begin{align*}
   \log P(x)
   &amp; = \log \left(
@@ -84,16 +140,30 @@
   &amp; = - \text{KL}[ q(z | \eta) || P(z | x) ] + \log P(x) \\
   &amp; = - \text{KL}[ q(z | \eta) || P(z , x) ] \\
 \end{align*}
-\]</span></p>
-<p>From this expression, we can see that minimizing the KL divergence over <span class="math">\(\eta\)</span>, we’re lower bounding the likelihood of the observed variables. In addition, if <span class="math">\(q(z|\eta)\)</span> has the same form as <span class="math">\(P(z|x)\)</span>, then the best choice for <span class="math">\(\eta\)</span> is one that lets <span class="math">\(q(z|\eta) = P(z|x)\)</span> for all <span class="math">\(z\)</span>.</p>
-<p>At this point, we still have an intractable problem. Even evaluating the KL divergence requires taking an expectation over all settings for <span class="math">\(z\)</span> (an exponential number in <span class="math">\(z\)</span>’s length!), so applying an iterative algorithm to choose <span class="math">\(\eta\)</span> is right out. However, we’ll soon see that by restricting the form of <span class="math">\(q(z|\eta)\)</span>, we can potentially decompose the KL divergence into more easily manageable bits.</p>
-<h1 id="the-mean-field-approximation">The Mean Field Approximation</h1>
-<p>The key to avoiding the massive sum of the previous equation is to assume that <span class="math">\(q(z|\eta)\)</span> decomposes into a product of independent distributions. This is known as the “Mean Field Approximation”. Mathematically, the approximation means that,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>From this expression, we can see that minimizing the KL divergence over
+<mathjax>$\eta$</mathjax>, we're lower bounding the likelihood of the observed variables.
+In addition, if <mathjax>$q(z|\eta)$</mathjax> has the same form as <mathjax>$P(z|x)$</mathjax>, then the best choice
+for <mathjax>$\eta$</mathjax> is one that lets <mathjax>$q(z|\eta) = P(z|x)$</mathjax> for all <mathjax>$z$</mathjax>.</p>
+<p>At this point, we still have an intractable problem. Even evaluating the KL
+divergence requires taking an expectation over all settings for <mathjax>$z$</mathjax> (an
+exponential number in <mathjax>$z$</mathjax>'s length!), so applying an iterative algorithm to
+choose <mathjax>$\eta$</mathjax> is right out. However, we'll soon see that by restricting the
+form of <mathjax>$q(z|\eta)$</mathjax>, we can potentially decompose the KL divergence into more
+easily manageable bits.</p>
+<h1><a name="mean-field" href="#mean-field">The Mean Field Approximation</a></h1>
+<p>The key to avoiding the massive sum of the previous equation is to assume that
+<mathjax>$q(z|\eta)$</mathjax> decomposes into a product of independent distributions. This is
+known as the "Mean Field Approximation". Mathematically, the approximation
+means that,</p>
+<p><mathjax>$$
   q(z|\eta) = \prod_{i} q(z_i | \eta_i)
-\]</span></p>
-<p>Suppose we make this assumption and that we want to perform coordinate ascent on a single index <span class="math">\(\eta_k\)</span>. By factoring <span class="math">\(P(z|x) = \prod_{i=1}^{k} P(z_i | z_{1:i-1}, x)\)</span> and dropping all terms that are constant with respect to <span class="math">\(\eta_k\)</span>,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Suppose we make this assumption and that we want to perform coordinate ascent
+on a single index <mathjax>$\eta_k$</mathjax>. By factoring <mathjax>$P(z|x) = \prod_{i=1}^{k} P(z_i |
+z_{1:i-1}, x)$</mathjax> and dropping all terms that are constant with respect to
+<mathjax>$\eta_k$</mathjax>,</p>
+<p><mathjax>$$
 \begin{align*}
   &amp; \arg\max_{\eta_k} -KL \left[ q(z|\eta) || p(z|x) \right] + \underbrace{\log P(x)}_{\text{constant wrt $\eta_k$}} \\
   &amp; = \arg\max_{\eta_k} \sum_{z} q(z|\eta) \log P(z|x) - \sum_{z} q(z|\eta) \log q(z|\eta) \\
@@ -108,19 +178,27 @@
   &amp; = \arg\max_{\eta_k} \mathbb{E}_{q(z|\eta)} \left[ \log P(z_k | z_{-k}, x) \right]
     - \mathbb{E}_{ q(z_k|\eta_k) } \left[ \log q(z_k|\eta_k) \right] \\
 \end{align*}
-\]</span></p>
-<p>At this point, we’ll make the assumption that <span class="math">\(P(z_k|z_{-k},x)\)</span> is an exponential family distribution (<span class="math">\(z_{-k}\)</span> is all <span class="math">\(z_i\)</span> with <span class="math">\(i \ne k\)</span>), and moreover that <span class="math">\(q(z_k|\eta_k)\)</span> and <span class="math">\(P(z_k|z_{-k},x)\)</span> lie in the same exponential family. Mathematically, this means that,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>At this point, we'll make the assumption that <mathjax>$P(z_k|z_{-k},x)$</mathjax> is an
+exponential family distribution (<mathjax>$z_{-k}$</mathjax> is all <mathjax>$z_i$</mathjax> with <mathjax>$i \ne k$</mathjax>), and
+moreover that <mathjax>$q(z_k|\eta_k)$</mathjax> and <mathjax>$P(z_k|z_{-k},x)$</mathjax> lie in the same exponential
+family.  Mathematically, this means that,</p>
+<p><mathjax>$$
 \begin{align*}
   q(z_k|\eta_k)
   &amp;= h(z_k) \exp( \eta_i^T t(z_k) - A(\eta_k) \\
   P(z_k|z_{-k},x)
   &amp;= h(z_k) \exp( g(z_{-k},x)^T t(z_k) - A(g(z_{-k},x)) \\
 \end{align*}
-\]</span></p>
-<p>Here <span class="math">\(t(\cdot)\)</span> are sufficient statistics, <span class="math">\(A(\cdot)\)</span> is the log of the normalizing constant, <span class="math">\(g(\cdot)\)</span> is a function of all other variables that determines the parameters for <span class="math">\(P(z_k|z_{-k},x)\)</span>, and <span class="math">\(h(\cdot)\)</span> is some function that doesn’t depend on the parameters of the distribution.</p>
-<p>Plugging this back into the previous equation (we define it to be <span class="math">\(L(\eta_k)\)</span>), applying the <span class="math">\(\log\)</span>, and using the linearity property of the expectation,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Here <mathjax>$t(\cdot)$</mathjax> are sufficient statistics, <mathjax>$A(\cdot)$</mathjax> is the log of the
+normalizing constant, <mathjax>$g(\cdot)$</mathjax> is a function of all other variables that
+determines the parameters for <mathjax>$P(z_k|z_{-k},x)$</mathjax>, and <mathjax>$h(\cdot)$</mathjax> is some
+function that doesn't depend on the parameters of the distribution.</p>
+<p>Plugging this back into the previous equation (we define it to be
+<mathjax>$L(\eta_k)$</mathjax>), applying the <mathjax>$\log$</mathjax>, and using the linearity property of the
+expectation,</p>
+<p><mathjax>$$
 \begin{align*}
 &amp; \arg\max_{\eta_k} &amp;&amp; L(\eta_k) \\
 = &amp; \arg\max_{\eta_k} &amp;&amp; \mathbb{E}_{q(z|\eta)} \left[ \log P(z_k | z_{-k}, x) \right]
@@ -145,9 +223,12 @@
     + \eta_k^T \left( \nabla_{\eta_k} A(\eta_k) \right)
     - A(\eta_k) \\
 \end{align*}
-\]</span></p>
-<p>On this last line, we use the property <span class="math">\(\nabla A_{\eta_k} (\eta_k) = \mathbb{E}_{q(z_k|\eta_k)} [ t(z_k) ]\)</span>, a fact that holds for the exponential family. Finally, let’s take the gradient of this expression and set it to zero to solve for <span class="math">\(\eta_k\)</span>,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>On this last line, we use the property <mathjax>$\nabla A_{\eta_k} (\eta_k) =
+\mathbb{E}_{q(z_k|\eta_k)} [ t(z_k) ]$</mathjax>, a fact that holds for the exponential
+family.  Finally, let's take the gradient of this expression and set it to
+zero to solve for <mathjax>$\eta_k$</mathjax>,</p>
+<p><mathjax>$$
 \begin{align*}
   0
   &amp; = \nabla_{\eta_k} L(\eta_k) \\
@@ -159,67 +240,100 @@
   \eta_k
   &amp; = \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right] \\
 \end{align*}
-\]</span></p>
-<p>So what is this expression? It says that in order to update <span class="math">\(\eta_k\)</span>, we need to be able to evaluate the expected parameters for <span class="math">\(P(z_k|z_{-k},x)\)</span> under our approximation to the posterior <span class="math">\(q(z_{-k}|\eta_{-k})\)</span>. How do we do this? Let’s take a look at an example to make this concrete.</p>
-<h1 id="example">Example</h1>
-<p>For this part, let’s take a look at the model defined by Latent Dirichlet Allocation (LDA),</p>
+$$</mathjax></p>
+<p>So what is this expression? It says that in order to update <mathjax>$\eta_k$</mathjax>, we need
+to be able to evaluate the expected parameters for <mathjax>$P(z_k|z_{-k},x)$</mathjax>
+under our approximation to the posterior <mathjax>$q(z_{-k}|\eta_{-k})$</mathjax>. How do we do
+this? Let's take a look at an example to make this concrete.</p>
+<h1><a name="example" href="#example">Example</a></h1>
+<p>For this part, let's take a look at the model defined by Latent Dirichlet
+Allocation (LDA),</p>
 <div class="img-center" style="max-width: 200px;">
-  
-<img src="/assets/img/variational_inference/graphical_model.png"></img>
+  <img src="/assets/img/variational_inference/graphical_model.png"></img>
 </div>
 
 <div class="pseudocode">
-  
-<p><strong>Input:</strong> document-topic prior <span class="math">\(\alpha\)</span>, topic-word prior <span class="math">\(\beta\)</span></p>
-<ol style="list-style-type: decimal">
-<li>For each topic <span class="math">\(k = 1 \ldots K\)</span>
-<ol start="2" style="list-style-type: decimal">
-<li>Sample topic-word parameters <span class="math">\(\phi_{k} \sim \text{Dirichlet}(\beta)\)</span></li>
-</ol></li>
-<li>For each document <span class="math">\(i = 1 \ldots M\)</span>
-<ol start="4" style="list-style-type: decimal">
-<li>Sample document-topic parameters <span class="math">\(\theta_i \sim \text{Dirichlet}(\alpha)\)</span></li>
-<li>For each token <span class="math">\(j = 1 \ldots N\)</span>
-<ol start="6" style="list-style-type: decimal">
-<li>Sample topic <span class="math">\(z_{i,j} \sim \text{Categorical}(\theta_i)\)</span></li>
-<li>Sample word <span class="math">\(x_{i,j} \sim \text{Categorical}(\phi_{z_{i,j}})\)</span>
-</div>
-</li>
-</ol></li>
-</ol></li>
+<p><strong>Input:</strong> document-topic prior <mathjax>$\alpha$</mathjax>, topic-word prior <mathjax>$\beta$</mathjax></p>
+<ol>
+<li>For each topic <mathjax>$k = 1 \ldots K$</mathjax><ol>
+<li>Sample topic-word parameters <mathjax>$\phi_{k} \sim \text{Dirichlet}(\beta)$</mathjax></li>
 </ol>
-<p>First, a short word on notation. In the following I’ll occasionally drop indices to denote all variables with the same prefix. For example, when I say <span class="math">\(\theta\)</span>, I mean <span class="math">\(\theta_{1:M}\)</span>, and when I say <span class="math">\(z_i\)</span>, I mean <span class="math">\(z_{i,1:N}\)</span>. I’ll also refer to <span class="math">\(q(\theta_i|\eta_i)\)</span> as “the variational distribution corresponding to <span class="math">\(P(\theta_i|\alpha,\theta_{-i},z,x)\)</span>”, and similarly for <span class="math">\(q(z_{i,j}|\gamma_{i,j})\)</span>. Oh, and <span class="math">\(z_{-i}\)</span> means all <span class="math">\(z_j\)</span> with <span class="math">\(j \ne i\)</span>, and <span class="math">\(\theta_{1:M}\)</span> means <span class="math">\((\theta_1, \ldots \theta_M)\)</span>.</p>
-<p>Our goal now is to derive the posterior distribution over the latent variables, given the hyperparameters and the observed variables, <span class="math">\(P(\theta, z, \phi| \alpha, x, \beta)\)</span>. We’ll approximate it via the mean field distribution,</p>
-<p><span class="math">\[
+</li>
+<li>For each document <mathjax>$i = 1 \ldots M$</mathjax><ol>
+<li>Sample document-topic parameters <mathjax>$\theta_i \sim \text{Dirichlet}(\alpha)$</mathjax></li>
+<li>For each token <mathjax>$j = 1 \ldots N$</mathjax><ol>
+<li>Sample topic <mathjax>$z_{i,j} \sim \text{Categorical}(\theta_i)$</mathjax></li>
+<li>Sample word <mathjax>$x_{i,j} \sim \text{Categorical}(\phi_{z_{i,j}})$</mathjax></li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+<p>First, a short word on notation. In the following I'll occasionally drop
+indices to denote all variables with the same prefix. For example, when I say
+<mathjax>$\theta$</mathjax>, I mean <mathjax>$\theta_{1:M}$</mathjax>, and when I say <mathjax>$z_i$</mathjax>, I mean <mathjax>$z_{i,1:N}$</mathjax>.
+I'll also refer to <mathjax>$q(\theta_i|\eta_i)$</mathjax> as "the variational distribution
+corresponding to <mathjax>$P(\theta_i|\alpha,\theta_{-i},z,x)$</mathjax>", and similarly for
+<mathjax>$q(z_{i,j}|\gamma_{i,j})$</mathjax>. Oh, and <mathjax>$z_{-i}$</mathjax> means all <mathjax>$z_j$</mathjax> with <mathjax>$j \ne i$</mathjax>, and
+<mathjax>$\theta_{1:M}$</mathjax> means <mathjax>$(\theta_1, \ldots \theta_M)$</mathjax>.</p>
+<p>Our goal now is to derive the posterior distribution over the latent
+variables, given the hyperparameters and the observed variables,
+<mathjax>$P(\theta, z, \phi| \alpha, x, \beta)$</mathjax>. We'll approximate it via the mean field
+distribution,</p>
+<p><mathjax>$$
   q(\theta,z,\phi | \eta,\gamma,\psi) = \left(
     \prod_{i} q(\theta_i | \eta_i) \prod_{j} q(z_{i,j} | \gamma_{i,j})
   \right) \left(
     \prod_{k} q(\phi_k | \psi_k)
   \right)
-\]</span></p>
-<p><strong>Outline</strong> Deriving the update rules for Variational Inference requires we do 3 things. First, we must derive the posterior distribution for each hidden variable given all other variables, hidden and observed. This distribution must lie in the exponential family, and the corresponding variational distribution for that variable must be of the same form. For example, if <span class="math">\(P(\theta_i|\alpha,\theta_{-i},z,x)\)</span> is a Dirichlet distribution, then <span class="math">\(q(\theta_i|\eta_i)\)</span> must also be Dirichlet.</p>
-<p>Second, we need to derive, for each hidden variable, the function that gives us the parameters for the posterior distribution over that variable given all others, hidden and observed.</p>
-<p>Finally, we’ll need to plug the functions we just derived into an expectation with respect to the mean field distribution. If we are able to calculate this expectation for a particular hidden variable, we can use it to update the matching variational distribution’s parameters.</p>
-<p>In the following, I’ll show you how to derive the update for the variational distribution of one of the hidden variables in LDA, <span class="math">\(\theta_i\)</span>.</p>
-<p><strong>Step 1</strong> First, we must show that the posterior distribution over each individual hidden variable lies in the exponential family. This is not always the case, but for models that employ <a href="http://lesswrong.com/lw/5sn/the_joys_of_conjugate_priors/">conjugate priors</a>, this can be guaranteed. A conjugate prior dictates that if <span class="math">\(P(z)\)</span> is a conjugate prior to <span class="math">\(P(x|z)\)</span>, then <span class="math">\(P(z|x)\)</span> is in the same family as <span class="math">\(P(z)\)</span> is. This is the case for Dirichlet/Categorical distributions such as those that appear in LDA. In other words, <span class="math">\(P(\theta_i|\alpha,\theta_{-i},z,x) = P(\theta_i|\alpha,z_{i})\)</span> (by conditional independence) is a Dirichlet distribution because <span class="math">\(P(\theta_i|\alpha)\)</span> is Dirichlet and <span class="math">\(P(z_{i,j}|\theta_i)\)</span> is Categorical.</p>
-<p><strong>Step 2</strong> Next, we derive the parameter function for each hidden variable as a function of all other variables, hidden and observed. Let’s see how this plays out for the Dirichlet distribution,</p>
+$$</mathjax></p>
+<p><strong>Outline</strong> Deriving the update rules for Variational Inference requires we
+do 3 things. First, we must derive the posterior distribution for each hidden
+variable given all other variables, hidden and observed. This distribution must
+lie in the exponential family, and the corresponding variational distribution for
+that variable must be of the same form. For example, if
+<mathjax>$P(\theta_i|\alpha,\theta_{-i},z,x)$</mathjax> is a Dirichlet distribution, then
+<mathjax>$q(\theta_i|\eta_i)$</mathjax> must also be Dirichlet.</p>
+<p>Second, we need to derive, for each hidden variable, the function that gives
+us the parameters for the posterior distribution over that variable given all
+others, hidden and observed.</p>
+<p>Finally, we'll need to plug the functions we just derived into an expectation
+with respect to the mean field distribution. If we are able to calculate this
+expectation for a particular hidden variable, we can use it to update the
+matching variational distribution's parameters.</p>
+<p>In the following, I'll show you how to derive the update for the variational
+distribution of one of the hidden variables in LDA, <mathjax>$\theta_i$</mathjax>.</p>
+<p><strong>Step 1</strong> First, we must show that the posterior distribution over each
+individual hidden variable lies in the exponential family. This is not always
+the case, but for models that employ <a href="http://lesswrong.com/lw/5sn/the_joys_of_conjugate_priors/">conjugate priors</a>, this
+can be guaranteed. A conjugate prior dictates that if <mathjax>$P(z)$</mathjax> is a conjugate
+prior to <mathjax>$P(x|z)$</mathjax>, then <mathjax>$P(z|x)$</mathjax> is in the same family as <mathjax>$P(z)$</mathjax> is. This is
+the case for Dirichlet/Categorical distributions such as those that appear in
+LDA. In other words, <mathjax>$P(\theta_i|\alpha,\theta_{-i},z,x) =
+P(\theta_i|\alpha,z_{i})$</mathjax> (by conditional independence) is a Dirichlet
+distribution because <mathjax>$P(\theta_i|\alpha)$</mathjax> is Dirichlet and
+<mathjax>$P(z_{i,j}|\theta_i)$</mathjax> is Categorical.</p>
+<p><strong>Step 2</strong> Next, we derive the parameter function for each hidden variable
+as a function of all other variables, hidden and observed. Let's see how this
+plays out for the Dirichlet distribution,</p>
 <p>The exponential family form of the Dirichlet distribution is,</p>
-<p><span class="math">\[
+<p><mathjax>$$
   P(\theta_i|\alpha) = \exp \left(
     \sum_{k} (\alpha_k - 1) \log (\theta_i)_k
     - \log \left(
       \frac{ \prod_{k} \Gamma(\alpha_k) }{ \Gamma( \sum_k \alpha_k ) }
     \right)
   \right)
-\]</span></p>
+$$</mathjax></p>
 <p>The exponential family form of a Categorical distribution is,</p>
-<p><span class="math">\[
+<p><mathjax>$$
   P(z_{i,j}|\theta_i) = \exp \left(
     \sum_{k} 1[z_{i,j} = k] \log (\theta_i)_k
   \right)
-\]</span></p>
-<p>Thus, the posterior distribution for <span class="math">\(\theta_i\)</span> is proportional to,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Thus, the posterior distribution for <mathjax>$\theta_i$</mathjax> is proportional to,</p>
+<p><mathjax>$$
 \begin{align*}
   P(\theta_i|\alpha,z_{i})
   &amp; \propto P(\theta_i, z_i | \alpha) \\
@@ -228,17 +342,22 @@
     \sum_{k} \left(\alpha_k - 1 + \sum_{j} 1[z_{i,j} = k] \right) \log (\theta_i)_k
   \right)
 \end{align*}
-\]</span></p>
-<p>Notice how <span class="math">\(\alpha_k - 1\)</span> changed to <span class="math">\(\alpha_k - 1 + \sum_{j} 1[z_{i,j} = k]\)</span>? These are the parameters for our posterior distribution over <span class="math">\(\theta_i\)</span>. Thus, the parameters for <span class="math">\(P(\theta_i|\alpha,z_i)\)</span> are,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Notice how <mathjax>$\alpha_k - 1$</mathjax> changed to <mathjax>$\alpha_k - 1 + \sum_{j} 1[z_{i,j} = k]$</mathjax>?
+These are the parameters for our posterior distribution over <mathjax>$\theta_i$</mathjax>. Thus,
+the parameters for <mathjax>$P(\theta_i|\alpha,z_i)$</mathjax> are,</p>
+<p><mathjax>$$
   g_{\theta_i}(\alpha,z_{i}) = \begin{pmatrix}
     \alpha_1 - 1 + \sum_{j} 1[z_{i,j} = 1] \\
     \alpha_2 - 1 + \sum_{j} 1[z_{i,j} = 2] \\
     \vdots \\
   \end{pmatrix}
-\]</span></p>
-<p><strong>Step 3</strong> Now we need to take the expectation over the parameter function we just derived with respect to the mean field distribution. For <span class="math">\(g_{\theta_i}(\alpha, z_i)\)</span>, this is particularly easy – all the indicators simply turn into probabilities. Thus the update for <span class="math">\(q(\theta_i|\eta_i)\)</span> is,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p><strong>Step 3</strong> Now we need to take the expectation over the parameter
+function we just derived with respect to the mean field distribution. For
+<mathjax>$g_{\theta_i}(\alpha, z_i)$</mathjax>, this is particularly easy -- all the indicators
+simply turn into probabilities. Thus the update for <mathjax>$q(\theta_i|\eta_i)$</mathjax> is,</p>
+<p><mathjax>$$
   \eta_i
   = E_{q(z_{i}|\gamma_i)} [ g_{\theta_i}(\alpha, z_i) ]
   = \begin{pmatrix}
@@ -246,13 +365,25 @@
     \alpha_2 - 1 + \sum_{j} q(z_{i,j} = 2 | \gamma_{i,j}) \\
     \vdots \\
   \end{pmatrix}
-\]</span></p>
-<p><strong>Conclusion</strong> We’ve now derived the update rule for one of the components of the mean field distribution, <span class="math">\(q(\theta_i|\eta_i)\)</span>. Left unexplained here is the updates for <span class="math">\(q(z_{i,j}|\gamma_{i,j})\)</span> and <span class="math">\(q(\phi_k|\psi_k)\)</span>, though you can find a (messier) derivation in the original paper on <a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf">Latent Dirichlet Allocation</a>.</p>
-<h1 id="aside-coordinate-ascent-is-gradient-ascent">Aside: Coordinate Ascent is Gradient Ascent</h1>
-<p>Coordinate Ascent on the Mean Field Approximation is the “traditional” way one does Variational Inference, but Coordinate Ascent is far from the only optimization method we know. What if we wanted to do Gradient Ascent? What would an update look like then?</p>
-<p>It ends up that for the Variational Inference objective, Coordinate Ascent <em>is</em> Gradient Ascent with step size equal to 1. Actually, that’s only half true – it’s Gradient Ascent using a “Natural Gradient” (rather than the usual gradient defined with respect to <span class="math">\(||\cdot||_2^2\)</span>).</p>
-<p><strong>Gradient Ascent</strong> First, recall the Gradient Ascent update for <span class="math">\(\eta_k\)</span> (we use the definition of <span class="math">\(\nabla_{\eta_k} L(\eta_k)\)</span> we found when deriving the Coordinate Ascent update).</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p><strong>Conclusion</strong> We've now derived the update rule for one of the components of
+the mean field distribution, <mathjax>$q(\theta_i|\eta_i)$</mathjax>. Left unexplained here is the
+updates for <mathjax>$q(z_{i,j}|\gamma_{i,j})$</mathjax> and <mathjax>$q(\phi_k|\psi_k)$</mathjax>, though you can
+find a (messier) derivation in the original paper on <a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf">Latent Dirichlet
+Allocation</a>.</p>
+<h1><a name="aside" href="#aside">Aside: Coordinate Ascent is Gradient Ascent</a></h1>
+<p>Coordinate Ascent on the Mean Field Approximation is the "traditional" way
+one does Variational Inference, but Coordinate Ascent is far from the only
+optimization method we know. What if we wanted to do Gradient Ascent? What
+would an update look like then?</p>
+<p>It ends up that for the Variational Inference objective, Coordinate Ascent
+<em>is</em> Gradient Ascent with step size equal to 1. Actually, that's only half true
+-- it's Gradient Ascent using a "Natural Gradient" (rather than the usual
+gradient defined with respect to <mathjax>$||\cdot||_2^2$</mathjax>).</p>
+<p><strong>Gradient Ascent</strong> First, recall the Gradient Ascent update for <mathjax>$\eta_k$</mathjax> (we
+use the definition of <mathjax>$\nabla_{\eta_k} L(\eta_k)$</mathjax> we found when deriving the
+Coordinate Ascent update).</p>
+<p><mathjax>$$
 \begin{align*}
   \eta_k^{(t+1)}
   &amp; = \eta_k^{(t)} + \alpha^{(t)} \nabla_{\eta_k} L(\eta_k^{(t)}) \\
@@ -264,31 +395,50 @@
       \right)
     \right] \\
 \end{align*}
-\]</span></p>
-<p><strong>Natural Gradient</strong> Hmm, that <span class="math">\(\nabla_{\eta_k}^2 A(\eta_k^{(t)})\)</span> term is a bit of a nuisance. Is there any way to make it just go away? In fact, we can – by replacing the concept of a gradient with a “natural gradient”. Whereas a regular gradient is the direction of steepest ascent with respect to Euclidean distance, a natural gradient is a direction of steepest ascent with respect to a function (in particular, one we want to minimize). The intuition is that for a given function, some input coordinates might be more important than others, and this should be taken into account when considering how far away 2 points are.</p>
-<p>So what do I mean “a direction of steepest ascent”? Let’s look at the gradient of a function as the solution to the following problem as <span class="math">\(\epsilon \rightarrow 0\)</span>,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p><strong>Natural Gradient</strong> Hmm, that <mathjax>$\nabla_{\eta_k}^2 A(\eta_k^{(t)})$</mathjax> term is a
+bit of a nuisance. Is there any way to make it just go away? In fact, we can --
+by replacing the concept of a gradient with a "natural gradient". Whereas a
+regular gradient is the direction of steepest ascent with respect to Euclidean
+distance, a natural gradient is a direction of steepest ascent with respect to
+a function (in particular, one we want to minimize). The intuition is that for
+a given function, some input coordinates might be more important than others,
+and this should be taken into account when considering how far away 2 points
+are.</p>
+<p>So what do I mean "a direction of steepest ascent"?  Let's look at the
+gradient of a function as the solution to the following problem as <mathjax>$\epsilon
+\rightarrow 0$</mathjax>,</p>
+<p><mathjax>$$
 \begin{align*}
   \nabla_{\eta_k} L(\eta_k)
   = &amp; \arg\min_{d \eta_k} L(\eta_k + d \eta_k) \\
     &amp; \text{s.t.} \quad   ||d \eta_k||_2^2 &lt; \epsilon
 \end{align*}
-\]</span></p>
-<p>A natural gradient with respect to <span class="math">\(L(\eta_k)\)</span> is defined much the same way, but with <span class="math">\(D_{E}(x,y) = || x-y ||_2^2\)</span> replaced with another squared metric. In our case, we’re going to use the symmetrized KL divergence,</p>
-<p><span class="math">\[
-  D_{KL}(\eta_k, \eta_k&#39;) = \text{KL} \left[ q(z_k|\eta_k) || q(z_k|\eta_k&#39;) \right]
-                          + \text{KL} \left[ q(z_k|\eta_k&#39;) || q(z_k|\eta_k) \right]
-\]</span></p>
-<p>Swapping the squared Euclidean metric <span class="math">\(D_{E}\)</span> with <span class="math">\(D_{KL}\)</span>, we have a definition for a “Natural Gradient”,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>A natural gradient with respect to <mathjax>$L(\eta_k)$</mathjax> is defined much the same way,
+but with <mathjax>$D_{E}(x,y) = || x-y ||_2^2$</mathjax> replaced with another squared metric.
+In our case, we're going to use the symmetrized KL divergence,</p>
+<p><mathjax>$$
+  D_{KL}(\eta_k, \eta_k') = \text{KL} \left[ q(z_k|\eta_k) || q(z_k|\eta_k') \right]
+                          + \text{KL} \left[ q(z_k|\eta_k') || q(z_k|\eta_k) \right]
+$$</mathjax></p>
+<p>Swapping the squared Euclidean metric <mathjax>$D_{E}$</mathjax> with <mathjax>$D_{KL}$</mathjax>, we have a
+definition for a "Natural Gradient",</p>
+<p><mathjax>$$
 \begin{align*}
   \hat{\nabla}_{\eta_k} L(\eta_k)
   = &amp; \arg\min_{d \eta_k}   L(\eta_k + d \eta_k) \\
     &amp; \text{s.t.} \quad D_{KL}(\eta_k, \eta_k + d \eta_k) &lt; \epsilon
 \end{align*}
-\]</span></p>
-<p>While at first the gradient and natural gradient may seem difficult to relate, suppose that <span class="math">\(D_{KL}(\eta_k, \eta_k + d \eta_k) = d \eta_k^T G(\eta_k) d \eta_k\)</span> for some matrix <span class="math">\(G(\eta_k)\)</span>. Then by plugging this into the previous optimization problem, replacing <span class="math">\(L(\eta_k + d \eta_k)\)</span> by its first order Taylor approximation (which holds when <span class="math">\(\epsilon\)</span> is small), and requiring the derivative of the problem’s Lagrangian be equal to 0, we see that,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>While at first the gradient and natural gradient may seem difficult to
+relate, suppose that <mathjax>$D_{KL}(\eta_k, \eta_k + d \eta_k) = d \eta_k^T
+G(\eta_k) d \eta_k$</mathjax> for some matrix <mathjax>$G(\eta_k)$</mathjax>. Then by plugging this into the
+previous optimization problem, replacing <mathjax>$L(\eta_k + d \eta_k)$</mathjax> by its first
+order Taylor approximation (which holds when <mathjax>$\epsilon$</mathjax> is small), and
+requiring the derivative of the problem's Lagrangian be equal to 0, we see
+that,</p>
+<p><mathjax>$$
 \begin{align*}
   0
   &amp; = \nabla_{d \eta_k} \left[
@@ -301,10 +451,15 @@
   d \eta_k
   &amp; \propto G(\eta_k)^{-1} \nabla_{\eta_k} L(\eta_k)
 \end{align*}
-\]</span></p>
-<p>As <span class="math">\(\epsilon \rightarrow 0\)</span>, <span class="math">\(d \eta_k\)</span> becomes <span class="math">\(\hat{\nabla}_{\eta_k} L(\eta_k)\)</span>, resulting in <span class="math">\(\hat{\nabla}_{\eta_k} L(\eta_k) \propto G(\eta_k)^{-1} \nabla_{\eta_k} L(\eta_k)\)</span>. In other words, we can obtain <span class="math">\(\hat{\nabla}_{\eta_k} L(\eta_k)\)</span> easily if we can simply compute <span class="math">\(G(\eta_k)\)</span>. Now let’s derive <span class="math">\(G(\eta_k)\)</span>.</p>
-<p>First, let’s take the first-order Taylor approximation to <span class="math">\(q(z|\eta_k + d \eta_k)\)</span> and its <span class="math">\(\log\)</span> about <span class="math">\(\eta_k\)</span>,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>As <mathjax>$\epsilon \rightarrow 0$</mathjax>, <mathjax>$d \eta_k$</mathjax> becomes <mathjax>$\hat{\nabla}_{\eta_k}
+L(\eta_k)$</mathjax>, resulting in <mathjax>$\hat{\nabla}_{\eta_k} L(\eta_k) \propto
+G(\eta_k)^{-1} \nabla_{\eta_k} L(\eta_k)$</mathjax>. In other words, we can obtain
+<mathjax>$\hat{\nabla}_{\eta_k} L(\eta_k)$</mathjax> easily if we can simply compute <mathjax>$G(\eta_k)$</mathjax>.
+Now let's derive <mathjax>$G(\eta_k)$</mathjax>.</p>
+<p>First, let's take the first-order Taylor approximation to <mathjax>$q(z|\eta_k + d
+\eta_k)$</mathjax> and its <mathjax>$\log$</mathjax> about <mathjax>$\eta_k$</mathjax>,</p>
+<p><mathjax>$$
 \begin{align*}
   q(z_k|\eta_k + d \eta_k)
   &amp; \approx q(z_k|\eta_k) + (\nabla q(z_k|\eta_k))^T (\eta_k + d \eta_k - \eta_k) \\
@@ -313,11 +468,12 @@
   &amp; \approx \log q(z_k|\eta_k) + (\nabla \log q(z_k|\eta_k))^T (\eta_k + d \eta_k - \eta_k) \\
   &amp; = \log q(z_k|\eta_k) + (\nabla \log q(z_k|\eta_k))^T d \eta_k \\
 \end{align*}
-\]</span></p>
-<p>Plugging this back into the definition of <span class="math">\(D_{KL}\)</span> and cancelling out terms, we get a nice expression for <span class="math">\(G(\eta_k)\)</span>,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Plugging this back into the definition of <mathjax>$D_{KL}$</mathjax> and cancelling out terms, we
+get a nice expression for <mathjax>$G(\eta_k)$</mathjax>,</p>
+<p><mathjax>$$
 \begin{align*}
-  D_{KL}(\eta, \eta&#39;)
+  D_{KL}(\eta, \eta')
   &amp; = \text{KL} \left[ q(z_k|\eta_k) || q(z_k|\eta_k + d\eta_k) \right] + \text{KL} \left[ q(z_k|\eta_k + d\eta_k) || q(z_k|\eta_k) \right] \\
   &amp; = \sum_{z} q(z|\eta_k) \log \frac{ q(z|\eta_k) }{ q(z|\eta_k+d\eta_k) }
       + \sum_{z} q(z|\eta_k+d\eta_k) \log \frac{ q(z|\eta_k+d\eta_k) }{ q(z|\eta_k) } \\
@@ -332,9 +488,15 @@
   &amp; = d \eta_k^T \mathbb{E}_{q(z|\eta_k)} \left[ (\nabla \log q(z_k|\eta_k)) (\nabla \log q(z_k|\eta_k))^T \right] d \eta_k \\
   &amp; = d \eta_k^T G(\eta_k) d \eta_k \\
 \end{align*}
-\]</span></p>
-<p>Looking at the expression for <span class="math">\(G(\eta_k)\)</span>, we can see that it is in fact the <a href="http://en.wikipedia.org/wiki/Fisher_information">Fisher Information Matrix</a>. Since we already assumed that <span class="math">\(q(z_k|\eta_k)\)</span> is in the exponential family, let’s plug in its exponential form <span class="math">\(q(z_k|\eta_k) = h(z_k) \exp \left( \eta_k^T t(z_k) - A(\eta_k) \right)\)</span> and apply the <span class="math">\(\log\)</span> to see that we are simply taking the covariance matrix of the sufficient statistics <span class="math">\(t(z_k)\)</span>. For exponential families, this also happens to be the second derivative of the log normalizing constant,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Looking at the expression for <mathjax>$G(\eta_k)$</mathjax>, we can see that it is in fact the
+<a href="http://en.wikipedia.org/wiki/Fisher_information">Fisher Information Matrix</a>. Since we already assumed that
+<mathjax>$q(z_k|\eta_k)$</mathjax> is in the exponential family, let's plug in its exponential
+form <mathjax>$q(z_k|\eta_k) = h(z_k) \exp \left( \eta_k^T t(z_k) - A(\eta_k) \right)$</mathjax>
+and apply the <mathjax>$\log$</mathjax> to see that we are simply taking the covariance matrix of
+the sufficient statistics <mathjax>$t(z_k)$</mathjax>. For exponential families, this also happens
+to be the second derivative of the log normalizing constant,</p>
+<p><mathjax>$$
 \begin{align*}
   G(\eta_k)
   &amp;= \mathbb{E}_{q(z_k|\eta_k)} \left[
@@ -348,9 +510,10 @@
     \right] \\
   &amp;= \nabla_{\eta_k}^2 A(\eta_k) \\
 \end{align*}
-\]</span></p>
-<p>Finally, let’s define a Gradient Ascent algorithm in terms of the Natural Gradient, rather than the regular gradient,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Finally, let's define a Gradient Ascent algorithm in terms of the Natural
+Gradient, rather than the regular gradient,</p>
+<p><mathjax>$$
 \begin{align*}
   \eta_k^{(t+1)}
   &amp; = \eta_k^{(t)} + \alpha^{(t)} \hat{\nabla}_{\eta_k} L(\eta_k^{(t)}) \\
@@ -367,67 +530,106 @@
   &amp; = (1 - \alpha^{(t)}) \eta_k^{(t)}
     + \alpha^{(t)} \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right] \\
 \end{align*}
-\]</span></p>
-<p>Look at that – <span class="math">\(G(\eta_k^{(t)})^{-1} = (\nabla_{\eta_k}^2 A(\eta_k))^{-1}\)</span> perfectly cancels out <span class="math">\(\nabla_{\eta_k}^2 A(\eta_k)\)</span>, and we’re left with a linear combination of the old parameters and the parameters Coordinate Ascent would recommend. If <span class="math">\(\alpha^{(t)} = 1\)</span>, then we just get the old Coordinate Ascent update!</p>
-<h1 id="extensions">Extensions</h1>
-<p>The Variational Inference method I described here, while general in concept, can only easily be applied to a very particular class models – ones where <span class="math">\(P(z_k | z_{-k}, x)\)</span> is in the exponential family. This more or less means that <span class="math">\(z_k\)</span> be a discrete variable or that <span class="math">\(P(z_k)\)</span> be a conjugate prior to all other variables depending on it.</p>
-<p>In addition, we restricted <span class="math">\(q(z | \eta)\)</span> to be a mean field approximation, meaning that each variable is independent with its own distribution <span class="math">\(q(z_k | \eta_k)\)</span>. This approximation has no hope of representing any interactions between variables, and perhaps surprisingly <span class="math">\(q(z_k|\eta_k)\)</span> does <em>not match the marginal distribution over <span class="math">\(z_k\)</span> at all.</em> This is a common source of confusion for first-time users, and makes debugging Variational Inference algorithms rather difficult.</p>
-<p>Third, the Coordinate Ascent algorithm described is not necessarily quick. I explained how Coordinate Ascent is really just Gradient Ascent on the natural gradient, so it’s easy to ask what other methods we might be able to apply.</p>
-<p>Here are a handful of papers that extend Variational Inference to faster optimization methods, different variational distribution, and non-conjugate models.</p>
-<p><a href="http://books.nips.cc/papers/files/nips25/NIPS2012_1314.pdf">“Fast Variational Inference in the Conjugate Exponential Family”</a> – Conjugate Gradient applied to the Marginalized Variational Bound. Shows that the Marginalized Variational Bound upper bounds the typical Variational Bound and that the former also has better curvature. That means second-order optimizers like Conjugate Gradient can take larger steps and render better performance.</p>
-<p><a href="http://arxiv.org/abs/1206.6679">“Fixed-Form Variational Posterior Approximation through Stochastic Linear Regression”</a> – fits a (potentially) non-decomposable exponential family distribution via Linear Regression. Involves looking at KL divergence between unnormalized variational distribution and joint distribution of model, taking derivative with respect to variational distribution’s parameters and setting to 0, then solving for the parameters. Can be applied to non-conjugate models due to sampling for estimating expectations.</p>
-<p><a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf">“Variational Inference in Nonconjugate Models”</a> – Getting away from conjugate priors via Laplace and the Delta Method.</p>
-<h1 id="references">References</h1>
-<p>The seminal work on the Natural Gradient is due to Shunichi Amari’s <a href="http://www.maths.tcd.ie/~mnl/store/Amari1998a.pdf">“Natural Gradient Works Efficiently in Learning”</a>. The derivation for the natural gradient is Theorem 1. Thanks to <a href="https://twitter.com/atpassos_ml">Alexandre Passos</a> for suggesting this and giving a short-hand intuition of the proof.</p>
-<p>The derivation for Variational Inference and the correspondence between Coordinate Ascent and Gradient Ascent is based on the introduction to Matt Hoffman et al.’s <a href="http://arxiv.org/abs/1206.7051">“Stochastic Variational Inference”</a>.</p>
-    </article>
-  </div>
-</div> <!-- row -->
-<!-- Disqus Comments -->
-<div class="row-fluid disqus">
-  <div id="disqus_thread"></div>
-  <script type="text/javascript">
-      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-      var disqus_shortname = 'duckworthd-blog'; // required: replace example with your forum shortname
+$$</mathjax></p>
+<p>Look at that -- <mathjax>$G(\eta_k^{(t)})^{-1} = (\nabla_{\eta_k}^2 A(\eta_k))^{-1}$</mathjax>
+perfectly cancels out <mathjax>$\nabla_{\eta_k}^2 A(\eta_k)$</mathjax>, and we're left with a
+linear combination of the old parameters and the parameters Coordinate Ascent
+would recommend. If <mathjax>$\alpha^{(t)} = 1$</mathjax>, then we just get the old Coordinate
+Ascent update!</p>
+<h1><a name="extensions" href="#extensions">Extensions</a></h1>
+<p>The Variational Inference method I described here, while general in concept,
+can only easily be applied to a very particular class models -- ones where
+<mathjax>$P(z_k | z_{-k}, x)$</mathjax> is in the exponential family. This more or less means that
+<mathjax>$z_k$</mathjax> be a discrete variable or that <mathjax>$P(z_k)$</mathjax> be a conjugate prior to all other
+variables depending on it.</p>
+<p>In addition, we restricted <mathjax>$q(z | \eta)$</mathjax> to be a mean field approximation,
+meaning that each variable is independent with its own distribution <mathjax>$q(z_k |
+\eta_k)$</mathjax>. This approximation has no hope of representing any interactions
+between variables, and perhaps surprisingly <mathjax>$q(z_k|\eta_k)$</mathjax> does <em>not match the
+marginal distribution over <mathjax>$z_k$</mathjax> at all.</em>  This is a common source of confusion
+for first-time users, and makes debugging Variational Inference algorithms
+rather difficult.</p>
+<p>Third, the Coordinate Ascent algorithm described is not necessarily quick. I
+explained how Coordinate Ascent is really just Gradient Ascent on the natural
+gradient, so it's easy to ask what other methods we might be able to apply.</p>
+<p>Here are a handful of papers that extend Variational Inference to faster
+optimization methods, different variational distribution, and non-conjugate
+models.</p>
+<p><a href="http://books.nips.cc/papers/files/nips25/NIPS2012_1314.pdf">"Fast Variational Inference in the Conjugate Exponential
+Family"</a> -- Conjugate Gradient applied to the Marginalized
+Variational Bound. Shows that the Marginalized Variational Bound upper bounds the
+typical Variational Bound and that the former also has better curvature. That
+means second-order optimizers like Conjugate Gradient can take larger steps and
+render better performance.</p>
+<p><a href="http://arxiv.org/abs/1206.6679">"Fixed-Form Variational Posterior Approximation through Stochastic Linear
+Regression"</a> -- fits a (potentially) non-decomposable
+exponential family distribution via Linear Regression. Involves looking at KL
+divergence between unnormalized variational distribution and joint distribution
+of model, taking derivative with respect to variational distribution's
+parameters and setting to 0, then solving for the parameters. Can be applied to
+non-conjugate models due to sampling for estimating expectations.</p>
+<p><a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf">"Variational Inference in Nonconjugate Models"</a> -- Getting
+away from conjugate priors via Laplace and the Delta Method.</p>
+<h1><a name="references" href="#references">References</a></h1>
+<p>The seminal work on the Natural Gradient is due to Shunichi Amari's <a href="http://www.maths.tcd.ie/~mnl/store/Amari1998a.pdf">"Natural
+Gradient Works Efficiently in Learning"</a>. The derivation for the natural
+gradient is Theorem 1. Thanks to <a href="https://twitter.com/atpassos_ml">Alexandre Passos</a> for suggesting
+this and giving a short-hand intuition of the proof.</p>
+<p>The derivation for Variational Inference and the correspondence between
+Coordinate Ascent and Gradient Ascent is based on the introduction to Matt
+Hoffman et al.'s <a href="http://arxiv.org/abs/1206.7051">"Stochastic Variational Inference"</a>.</p>
 
-      /* * * DON'T EDIT BELOW THIS LINE * * */
+    <div id="article_meta">
+        Category:
+          <a href="/category/optimization.html">optimization</a>
+        <br />Tags:
+          <a href="/tag/optimization.html">optimization</a>
+,           <a href="/tag/inference.html">inference</a>
+,           <a href="/tag/bayesian.html">bayesian</a>
+    </div>
+  </article>
+
+  <footer>
+    <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
+  </footer>
+
+  <div id="comments">
+    <h2>Comments</h2>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_identifier = "blog/variational-inference.html";
       (function() {
-          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
       })();
+    </script>
+    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
+  </div>
+
+	</section>
+
+
+  <!-- scripts -->
+  <script
+    type= "text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    >
   </script>
-  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-</div>
-
-    </div> <!-- container -->
-    <!-- jquery -->
-<script type="text/javascript"
-        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
-
-<!-- MathJax -->
-<script type="text/javascript"
-        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      //equationNumbers: {
-      //  autoNumber: "all"
-      //},
-      extensions: ["color.js"]
-    }
-  });
-</script>
-
-<!-- Bootstrap -->
-<script type="text/javascript"
-        src="/assets/js/bootstrap.min.js"></script>
-
-<!-- Lightbox -->
-<script type="text/javascript"
-        src="/assets/js/lightbox.js"></script>
-
-  </body>
+  <script
+    type= "text/javascript"
+    src="/assets/js/MathJaxLocal.js"
+    >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/jquery-1.11.0.min.js"
+      >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/lightbox.min.js"
+      >
+  </script>
+</body>
 </html>
-

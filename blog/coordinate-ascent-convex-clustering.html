@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- stylesheets -->
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/assets/lightbox/css/lightbox.css">
+
+  <!-- fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+  <!-- RSS/ATOM feeds -->
+	<link href="/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+
+
+		<title>Strongly Convex</title>
+		<meta charset="utf-8" />
+</head>
+<body>
+	<section id="sidebar">
+		<figure id="user_logo">
+      <a href=""><div class="logo">&nbsp;</div></a>
+		</figure>
+
+		<div class="user_meta">
+      <h1 id="user">
+        <a  href="/"
+            class="sitename">
+          Strongly Convex
+        </a>
+      </h1>
+			<h2></h2>
+
+
+			<ul>
+        <hr></hr>
+					<li><a href="/">Words</a></li>
+          <hr></hr>
+					<li><a href="/code.html">Code</a></li>
+          <hr></hr>
+					<li><a href="/about.html">About</a></li>
+          <hr></hr>
+			</ul>
+		</div>
+		<footer>
+			<address>
+				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+			</address>
+		</footer>
+	</section>
+
+	<section id="posts">
+	<header>
+      <h1 class="title">
+			  <a  href="/blog/coordinate-ascent-convex-clustering.html"
+            rel="bookmark"
+			  	  title="Permalink to Coordinate Ascent for Convex Clustering">
+          Coordinate Ascent for Convex Clustering
+        </a>
+      </h1>
+		  <abbr class="published">Tue 23 April 2013</abbr>
+	</header>
+  <article>
+    <p>Convex clustering is the reformulation of k-means clustering as a convex
+problem. While the two problems are not equivalent, the former can be seen as a
+relaxation of the latter that allows us to easily find globally optimal
+solutions (as opposed to only locally optimal ones).</p>
+<p>Suppose we have a set of points <mathjax>$\{ x_i : i = 1, \ldots, n\}$</mathjax>. Our goal is to
+partition these points into groups such that all the elements in each group are
+close to each other and are distant from points in other groups.</p>
+<p>In this post, I'll talk about an algorithm to do just that.</p>
+<div class="img-center" style="max-width: 400px;">
+  <img src="/assets/img/convex_clustering/clusters.png"></img>
+  <span class="caption">
+    8 clusters of points in 2D with their respective centers.  All points of
+    the same color belong to the same cluster.
+  </span>
+</div>
+
+<h1><a name="k-means" href="#k-means">K-Means</a></h1>
+<p>The original objective for k-means clustering is as follows. Suppose we want
+to find <mathjax>$k$</mathjax> sets <mathjax>$S_i$</mathjax> such that every <mathjax>$x_i$</mathjax> is in exactly 1 set <mathjax>$S_j$</mathjax>. Each <mathjax>$S_j$</mathjax>
+will then have a center <mathjax>$\theta_j$</mathjax>, which is simply the average of all <mathjax>$x_i$</mathjax> it
+contains. Putting it all together, we obtain the following optimization problme,</p>
+<p><mathjax>$$
+\begin{align*}
+  &amp; \underset{S}{\min}  &amp; &amp; \sum_{j=1}^{k} \sum_{i \in S_j} ||x_i - \theta_j||_2^2 \\
+  &amp; \text{subject to}   &amp; &amp; \theta_j = \frac{1}{|S_j|} \sum_{i \in S_j} x_i \\
+  &amp;                     &amp; &amp; \bigcup_{j} S_j = \{ 1 \ldots n \}
+\end{align*}
+$$</mathjax></p>
+<p>In 2009, <a href="http://dl.acm.org/citation.cfm?id=1519389">Aloise et al.</a> proved that solving this problem is
+NP-hard, meaning that short of enumerating every possible partition, we cannot
+say whether or not we've found an optimal solution <mathjax>$S^{*}$</mathjax>. In other words, we
+can approximately solve k-means, but actually solving it is very
+computationally intense (with the usual caveats about <mathjax>$P = NP$</mathjax>).</p>
+<h1><a name="convex-clustering" href="#convex-clustering">Convex Clustering</a></h1>
+<p>Convex clustering sidesteps this complexity result by proposing a new
+problem that we <em>can</em> solve quickly. The optimal solution for this new problem
+need not coincide with that of k-means, but <a href="http://www.control.isy.liu.se/research/reports/2011/2992.pdf">can be seen</a> a solution to
+the convex relaxation of the original problem.</p>
+<p>The idea of convex clustering is that each point <mathjax>$x_i$</mathjax> is paired with its
+associated center <mathjax>$u_i$</mathjax>, and the distance between the two is minimized. If this
+were nothing else, <mathjax>$u_i = x_i$</mathjax> would be the optimal solution, and no
+clustering would happen. Instead, a penalty term is added that brings the
+clusters centers close together,</p>
+<p><mathjax>$$
+\begin{align*}
+  \min_{u} \frac{1}{2} \sum_{i=1}^{n} ||x_i - u_i||_2^2
+            + \gamma \sum_{i &lt; j} w_{i,j} ||u_i - u_j||_p
+\end{align*}
+$$</mathjax></p>
+<p>Notice that the distance <mathjax>$||x_i - u_i||_2^2$</mathjax> is a squared 2-norm, but
+the distance between the centers <mathjax>$||u_i - u_j||_p$</mathjax> is a p-norm (<mathjax>$p \in \{1, 2,
+\infty \}$</mathjax>). This sum-of-norms type penalization brings about "group sparsity"
+and is used primarily because many of the elements in this sum will be 0 at the
+optimum. In convex clustering, that means <mathjax>$u_i = u_j$</mathjax> for some pairs <mathjax>$i$</mathjax> and
+<mathjax>$j$</mathjax> -- in other words, <mathjax>$i$</mathjax> and <mathjax>$j$</mathjax> are clustered together!</p>
+<h1><a name="algorithms" href="#algorithms">Algorithms for Convex Clustering</a></h1>
+<p>As the convex clustering formulation is a convex problem, we automatically
+get a variety of black-box algorithms capable of solving it. Unfortunately, the
+number of variables in the problem is rather large -- if <mathjax>$x_i \in
+\mathcal{R}^{d}$</mathjax>, then <mathjax>$u \in \mathcal{R}^{n \times d}$</mathjax>.  If <mathjax>$d = 5$</mathjax>, we cannot
+reasonably expect interior point solvers such as <a href="http://cvxr.com/cvx/">cvx</a> to handle any more
+than a few thousand points.</p>
+<p><a href="http://www.icml-2011.org/papers/419_icmlpaper.pdf">Hocking et al.</a> and <a href="http://arxiv.org/abs/1304.0499">Chi et al.</a> were the first to design
+algorithms specifically for convex clustering. The former designed one
+algorithm for each <mathjax>$p$</mathjax>-norm, employing active sets (<mathjax>$p \in \{1, 2\}$</mathjax>),
+subgradient descent (<mathjax>$p = 2$</mathjax>), and the Frank-Wolfe algorithm (<mathjax>$p = \infty$</mathjax>).
+The latter makes use of <a href="http://www.stanford.edu/~boyd/papers/admm_distr_stats.html">ADMM</a> and AMA, the latter of which reduces to
+proximal gradient on a dual objective.</p>
+<p>Here, I'll describe another method for solving the convex clustering problem
+based on coordinate ascent. The idea is to take the original formulation,
+substitute a new primal variable <mathjax>$z_l = u_{l_1} - u_{l_2}$</mathjax>, then update a dual
+variable <mathjax>$\lambda_l$</mathjax> corresponding to each equality constraint 1 at a time. For
+this problem, we can reconstruct the primal variables <mathjax>$u_i$</mathjax> in closed form
+given the dual variables, so it is easy to check how close we are to the
+optimum.</p>
+<!--
+  <table class="table table-hover table-bordered">
+    <tr>
+      <th>Name</th>
+      <th>Memory required</th>
+      <th>per-iteration complexity</th>
+      <th>number of iterations required</th>
+      <th>parallelizability</th>
+    </tr>
+    <tr>
+      <td>Clusterpath ($L_1$)</td>
+      <td></td>
+      <td></td>
+      <td>1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Clusterpath ($L_2$)</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Clusterpath ($L_{\infty}$)</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>ADMM</td>
+      <td>$O(pd)$</td>
+      <td>$O(pd)$</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>AMA (accelerated)</td>
+      <td>$O(pd)$</td>
+      <td>$O(pd)$</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Coordinate Ascent</td>
+      <td>$O(pd)$</td>
+      <td>$O(pd)$</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+
+  For $p =$ number of pairs with $w_l > 0$, $n =$ the number of points $x_i$,
+$d =$ the dimensionality of $x_i$, $c = $ the current number of clusters
+-->
+
+<h1><a name="reformulation" href="#reformulation">Problem Reformulation</a></h1>
+<p>To describe the dual problem being maximized, we first need to modify the
+primal problem. First, let <mathjax>$z_l = u_{l_1} - u_{l_2}$</mathjax>. Then we can write the
+objective function as,</p>
+<p><mathjax>$$
+\begin{align*}
+  &amp; \underset{S}{\min}  &amp; &amp; \frac{1}{2} \sum_{i=1}^{n} ||x_i - u_i||_2^2
+                            + \gamma \sum_{l} w_{l} ||z_l||_p \\
+  &amp; \text{subject to}   &amp; &amp; z_l = u_{l_1} - u_{l_2}
+\end{align*}
+$$</mathjax></p>
+<p><a href="http://arxiv.org/abs/1304.0499">Chi et al.</a> show on page 6 that the dual of this problem is then,</p>
+<p><mathjax>$$
+\begin{align*}
+  &amp; \underset{\lambda}{\max}  &amp; &amp; - \frac{1}{2} \sum_{i} ||\Delta_i||_2^2
+                                  - \sum_{l} \lambda_l^T (x_{l_1} - x_{l_2}) \\
+  &amp; \text{subject to}         &amp; &amp; ||\lambda_l||_{p^{*}} \le \gamma w_l \\
+  &amp;                           &amp; &amp; \Delta_{i} = \sum_{l: l_1 = i} \lambda_l - \sum_{l : l_2 = i} \lambda_l
+\end{align*}
+$$</mathjax></p>
+<p>In this notation, <mathjax>$||\cdot||_{p^{*}}$</mathjax> is the dual norm of <mathjax>$||\cdot||_p$</mathjax>. The
+primal variables <mathjax>$u$</mathjax> and dual variables <mathjax>$\lambda$</mathjax> are then related by the
+following equation,</p>
+<p><mathjax>$$
+  u_i = \Delta_i + x_i
+$$</mathjax></p>
+<h1><a name="coordinate-ascent" href="#coordinate-ascent">Coordinate Ascent</a></h1>
+<p>Now let's optimize the dual problem 1 <mathjax>$\lambda_k$</mathjax> at a time. First, notice
+that <mathjax>$\lambda_k$</mathjax> will only appear in 2 <mathjax>$\Delta_i$</mathjax> terms -- <mathjax>$\Delta_{k_1}$</mathjax> and
+<mathjax>$\Delta_{k_2}$</mathjax>. After dropping all terms independent of <mathjax>$\lambda_k$</mathjax>, we now get
+the following problem,</p>
+<p><mathjax>$$
+\begin{align*}
+  &amp; \underset{\lambda_k}{\min}  &amp; &amp; \frac{1}{2} (||\Delta_{k_1}||_2^2 + ||\Delta_{k_2}||_2^2)
+                                    + \lambda_k^T (x_{k_1} - x_{k_2}) \\
+  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||_{p^{*}} \le \gamma w_k \\
+  &amp;                           &amp; &amp; \Delta_{k_1} = \sum_{l: l_1 = k_1} \lambda_l - \sum_{l : l_2 = k_1} \lambda_l \\
+  &amp;                           &amp; &amp; \Delta_{k_2} = \sum_{l: l_1 = k_2} \lambda_l - \sum_{l : l_2 = k_2} \lambda_l
+\end{align*}
+$$</mathjax></p>
+<p>We can pull <mathjax>$\lambda_k$</mathjax> out of <mathjax>$\Delta_{k_1}$</mathjax> and <mathjax>$\Delta_{k_2}$</mathjax> to get,</p>
+<p><mathjax>$$
+\begin{align*}
+  ||\Delta_{k_1}||_2^2 &amp; = ||\lambda_k||_2^2 + ||\Delta_{k_1} - \lambda_k||_2^2 + 2 \lambda_k^T (\Delta_{k_1} - \lambda_k) \\
+  ||\Delta_{k_2}||_2^2 &amp; = ||\lambda_k||_2^2 + ||\Delta_{k_2} + \lambda_k||_2^2 - 2 \lambda_k^T (\Delta_{k_2} + \lambda_k)
+\end{align*}
+$$</mathjax></p>
+<p>Let's define <mathjax>$\tilde{\Delta_{k_1}} = \Delta_{k_1} - \lambda_k$</mathjax> and
+<mathjax>$\tilde{\Delta_{k_2}} = \Delta_{k_2} + \lambda_k$</mathjax> and add <mathjax>$||\frac{1}{2}
+(\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})||_2^2$</mathjax> to the
+objective.</p>
+<p><mathjax>$$
+\begin{align*}
+  &amp; \underset{\lambda_k}{\min}  &amp; &amp; ||\lambda_k||_2^2
+                                    + 2 \frac{1}{2} \lambda_k^T (\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})
+                                    + ||\frac{1}{2} (\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})||_2^2 \\
+  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||_{p^{*}} \le \gamma w_k \\
+  &amp;                           &amp; &amp; \tilde{\Delta_{k_1}} = \sum_{l: l_1 = k_1; l \ne k} \lambda_l - \sum_{l : l_2 = k_1; l \ne k} \lambda_l \\
+  &amp;                           &amp; &amp; \tilde{\Delta_{k_2}} = \sum_{l: l_1 = k_2; l \ne k} \lambda_l - \sum_{l : l_2 = k_2; l \ne k} \lambda_l
+\end{align*}
+$$</mathjax></p>
+<p>We can now factor the objective into a quadratic,</p>
+<p><mathjax>$$
+\begin{align*}
+  &amp; \underset{\lambda_k}{\min}  &amp; &amp; ||\lambda_k - \left( - \frac{1}{2}(\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2}) \right) ||_2^2 \\
+  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||_{p^{*}} \le \gamma w_k \\
+  &amp;                           &amp; &amp; \tilde{\Delta_{k_1}} = \sum_{l: l_1 = k_1; l \ne k} \lambda_l - \sum_{l : l_2 = k_1; l \ne k} \lambda_l \\
+  &amp;                           &amp; &amp; \tilde{\Delta_{k_2}} = \sum_{l: l_1 = k_2; l \ne k} \lambda_l - \sum_{l : l_2 = k_2; l \ne k} \lambda_l
+\end{align*}
+$$</mathjax></p>
+<p>This problem is simply a Euclidean projection onto the ball defined by
+<mathjax>$||\cdot||_{p^{*}}$</mathjax>. We're now ready to write the algorithm,</p>
+<div class="pseudocode">
+<p><strong>Input:</strong> Initial dual variables <mathjax>$\lambda^{(0)}$</mathjax>, weights <mathjax>$w_l$</mathjax>, and regularization parameter <mathjax>$\gamma$</mathjax></p>
+<ol>
+<li>Initialize <mathjax>$\Delta_i^{(0)} = \sum_{l: l_1 = i} \lambda_l^{(0)} - \sum_{l: l_2 = i} \lambda_l^{(0)}$</mathjax></li>
+<li>For each iteration <mathjax>$m = 0,1,2,\ldots$</mathjax> until convergence<ol>
+<li>Let <mathjax>$\Delta^{(m+1)} = \Delta^{(m)}$</mathjax></li>
+<li>For each pair of points <mathjax>$l = (i,j)$</mathjax> with <mathjax>$w_{l} &gt; 0$</mathjax><ol>
+<li>Let <mathjax>$\Delta_i^{(m+1)} \leftarrow \Delta_i^{(m+1)} - \lambda_l^{(m)}$</mathjax> and <mathjax>$\Delta_j^{(m+1)} \leftarrow \Delta_i^{(m+1)} + \lambda_l^{(m)}$</mathjax></li>
+<li><mathjax>$\lambda_l^{(m+1)} = \text{project}(- \frac{1}{2}(\Delta_i^{(m+1)} - \Delta_j^{(m+1)} + x_{i} - x_{j}),
+                                       \{ \lambda : ||\lambda||_{p^{*}} \le \gamma w_l \}$</mathjax>)</li>
+<li><mathjax>$\Delta_i^{(m+1)} \leftarrow \Delta_i^{(m+1)} + \lambda_l^{(m+1)}$</mathjax> and <mathjax>$\Delta_j^{(m+1)} \leftarrow \Delta_j^{(m+1)} - \lambda_l^{(m+1)}$</mathjax></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Return <mathjax>$u_i = \Delta_i + x_i$</mathjax> for all <mathjax>$i$</mathjax></li>
+</ol>
+</div>
+<p>Since we can easily construct the primal variables from the dual variables
+and can evaluate the primal and dual functions in closed form, we can use the
+duality gap to determine when we are converged.</p>
+<h1><a name="conclusion" href="#conclusion">Conclusion</a></h1>
+<p>In this post, I introduced a coordinate ascent algorithm for convex
+clustering. Empirically, the algorithm is quite quick, but it doesn't share the
+parallelizability or convergence proofs of its siblings, ADMM and AMA. However,
+coordinate descent has an upside: there are no parameters to tune, and every
+iteration is guaranteed to improve the objective function. Within each
+iteration, updates are quick asymptotically and empirically.</p>
+<p>Unfortunately, like all algorithms based on the dual for this particular
+problem, the biggest burden is on memory. Whereas the primal formulation
+requires the number of variables grow linearly with the number of data points,
+the dual formulation can grow as high as quadratically. In addition, the primal
+variables allow for centers to be merged, allowing for potential space-savings
+as the algorithm is running. The dual seems to lack this property, requiring
+all dual variables to be fully instantiated.</p>
+<h1><a name="references" href="#references">References</a></h1>
+<p>The original formulation for convex clustering was introduced by <a href="http://www.control.isy.liu.se/research/reports/2011/2992.pdf">Lindsten et
+al.</a> and <a href="http://www.icml-2011.org/papers/419_icmlpaper.pdf">Hocking et al.</a>. <a href="http://arxiv.org/abs/1304.0499">Chi et al.</a> introduced
+ADMM and AMA-based algorithms specifically designed for convex clustering.</p>
+
+    <div id="article_meta">
+        Category:
+          <a href="/category/optimization.html">optimization</a>
+        <br />Tags:
+          <a href="/tag/optimization.html">optimization</a>
+,           <a href="/tag/coordinate-descent.html">coordinate-descent</a>
+,           <a href="/tag/clustering.html">clustering</a>
+    </div>
+  </article>
+
+  <footer>
+    <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
+  </footer>
+
+  <div id="comments">
+    <h2>Comments</h2>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_identifier = "blog/coordinate-ascent-convex-clustering.html";
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
+  </div>
+
+	</section>
+
+
+  <!-- scripts -->
+  <script
+    type= "text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    >
+  </script>
+  <script
+    type= "text/javascript"
+    src="/assets/js/MathJaxLocal.js"
+    >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/jquery-1.11.0.min.js"
+      >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/lightbox.min.js"
+      >
+  </script>
+</body>
+</html>

@@ -1,200 +1,272 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Subgradient Descent</title>
+<html lang="en">
+<head>
+  <!-- stylesheets -->
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/assets/lightbox/css/lightbox.css">
 
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/syntax.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/blah.css" rel="stylesheet" type="text/css">
-    <link href="/assets/css/lightbox/lightbox.css" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-    <div class="container">
-    <div class="navbar">
-  <div class="navbar-inner">
-    <div class="nav-div">
-      <a class="brand logo" href="#">
-        <img src="/assets/img/transmogrifier2.png"></img>
-      </a>
-      <ul class="nav pull-right">
-        <li><a href="/index.html">Home</a></li>
-        <li><a href="/projects.html">Projects</a></li>
-        <li><a href="/blog.html">Blog</a></li>
-        <li><a href="/feed.xml">
-          <img src="/assets/img/glyphicons/glyphicons_417_rss.png"></img>
-        </a></li>
-      </ul>
-    </div> <!-- span10 offset1 -->
-  </div> <!-- /navbar-inner -->
-</div> <!-- /navbar -->
+  <!-- fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+  <!-- RSS/ATOM feeds -->
+	<link href="/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
 
 
-<div class="row-fluid">
-  <div class="post box-shadow">
-    <header>
-      <h1 class="header-title">Subgradient Descent</h1>
-      <p class="header-subtext">by Daniel Duckworth on Apr 11, 2013</p>
-    </header>
-    <article>
-      <p>Not far from <a href="/blog/gradient-descent.html">Gradient Descent</a> is another first-order descent algorithm (that is, an algorithm that only relies on the first derivative) is Subgradient Descent. In implementation, they are in fact identical. The only difference is on the assumptions placed on the objective function we wish to minimize, <span class="math">\(f(x)\)</span>. If you were to follow the Subgradient Descent algorithm to walk down a mountain, it would look something like this,</p>
+		<title>Strongly Convex</title>
+		<meta charset="utf-8" />
+</head>
+<body>
+	<section id="sidebar">
+		<figure id="user_logo">
+      <a href=""><div class="logo">&nbsp;</div></a>
+		</figure>
+
+		<div class="user_meta">
+      <h1 id="user">
+        <a  href="/"
+            class="sitename">
+          Strongly Convex
+        </a>
+      </h1>
+			<h2></h2>
+
+
+			<ul>
+        <hr></hr>
+					<li><a href="/">Words</a></li>
+          <hr></hr>
+					<li><a href="/code.html">Code</a></li>
+          <hr></hr>
+					<li><a href="/about.html">About</a></li>
+          <hr></hr>
+			</ul>
+		</div>
+		<footer>
+			<address>
+				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+			</address>
+		</footer>
+	</section>
+
+	<section id="posts">
+	<header>
+      <h1 class="title">
+			  <a  href="/blog/subgradient-descent.html"
+            rel="bookmark"
+			  	  title="Permalink to Subgradient Descent">
+          Subgradient Descent
+        </a>
+      </h1>
+		  <abbr class="published">Thu 11 April 2013</abbr>
+	</header>
+  <article>
+    <p>Not far from <a href="/blog/gradient-descent.html">Gradient Descent</a> is another first-order
+descent algorithm (that is, an algorithm that only relies on the first
+derivative) is Subgradient Descent. In implementation, they are in fact
+identical. The only difference is on the assumptions placed on the objective
+function we wish to minimize, <mathjax>$f(x)$</mathjax>.  If you were to follow the Subgradient
+Descent algorithm to walk down a mountain, it would look something like this,</p>
 <div class="pseudocode">
-  
-<ol style="list-style-type: decimal">
+<ol>
 <li>Look around you and see which way points the most downwards. If there are multiple directions that are equally downwards, just pick one.</li>
-<li>Take a step in that direction. Then repeat.
-</div>
-
-</li>
+<li>Take a step in that direction. Then repeat.</li>
 </ol>
-<h1 id="how-does-it-work">How does it work?</h1>
-<p>As before, we adopt the usual problem definition,</p>
-<p><span class="math">\[
-  \min_{x} \, f(x)
-\]</span></p>
-<p>But this time, we don’t assume <span class="math">\(f\)</span> is differentiable. Instead, we assume <span class="math">\(f\)</span> is convex, implying that for all <span class="math">\(x\)</span> there exists a <span class="math">\(g_{x}\)</span> such that,</p>
-<p><span class="math">\[
-  f(y) \ge f(x) + g_{x}^T (y - x)
-\]</span></p>
-<p>If <span class="math">\(f\)</span> is differentiable at <span class="math">\(x\)</span> and is convex, then <span class="math">\(\nabla f(x)\)</span> is the only value for <span class="math">\(g_{x}\)</span> that satisfies this property, but if <span class="math">\(f\)</span> is convex but non-differentiable at <span class="math">\(x\)</span>, there will be other options.</p>
-<p>The set of all <span class="math">\(g_x\)</span> that satisfies this property called the <strong>subdifferential</strong> of <span class="math">\(f\)</span> at <span class="math">\(x\)</span> and is denoted <span class="math">\(\partial f(x)\)</span>. Given that we have an algorithm for finding a point in the subdifferential, Subgradient Descent is</p>
-<div class="img-center">
-  
-<img src="/assets/img/subgradient_descent/subgradient.png"></img> <span class="caption"> <span class="math">\(f\)</span> is differentiable at <span class="math">\(x_1\)</span>, so there’s only one possible subgradient (the actual gradient). At <span class="math">\(x_2\)</span>, <span class="math">\(f\)</span> isn’t differentiable, so <span class="math">\(g_2\)</span> and <span class="math">\(g_3\)</span> are both in <span class="math">\(\partial f(x_2)\)</span>. Image taken from <a href="http://www.stanford.edu/class/ee392o/subgrad.pdf">EE392o slides</a>. </span>
 </div>
+<h1><a name="implementation" href="#implementation">How does it work?</a></h1>
+<p>As before, we adopt the usual problem definition,</p>
+<p><mathjax>$$
+  \min_{x} \, f(x)
+$$</mathjax></p>
+<p>But this time, we don't assume <mathjax>$f$</mathjax> is differentiable. Instead, we assume <mathjax>$f$</mathjax>
+is convex, implying that for all <mathjax>$x$</mathjax> there exists a <mathjax>$g_{x}$</mathjax> such that,</p>
+<p><mathjax>$$
+  f(y) \ge f(x) + g_{x}^T (y - x)
+$$</mathjax></p>
+<p>If <mathjax>$f$</mathjax> is differentiable at <mathjax>$x$</mathjax> and is convex, then <mathjax>$\nabla f(x)$</mathjax> is the only
+value for <mathjax>$g_{x}$</mathjax> that satisfies this property, but if <mathjax>$f$</mathjax> is convex but
+non-differentiable at <mathjax>$x$</mathjax>, there will be other options.</p>
+<p>The set of all <mathjax>$g_x$</mathjax> that satisfies this property called the
+<strong>subdifferential</strong> of <mathjax>$f$</mathjax> at <mathjax>$x$</mathjax> and is denoted <mathjax>$\partial f(x)$</mathjax>. Given that we
+have an algorithm for finding a point in the subdifferential, Subgradient
+Descent is</p>
+<figure>
+  <img src="/assets/img/subgradient_descent/subgradient.png"></img>
+  <figcaption>
+    $f$ is differentiable at $x_1$, so there's only one possible subgradient
+    (the actual gradient). At $x_2$, $f$ isn't differentiable, so $g_2$ and
+    $g_3$ are both in $\partial f(x_2)$. Image taken from [EE392o slides][subgradient].
+  </figcaption>
+</figure>
 
 <div class="pseudocode">
-  
-<p><strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
-<ol style="list-style-type: decimal">
-<li>For <span class="math">\(t = 0, 1, \ldots\)</span>
-<ol start="2" style="list-style-type: decimal">
-<li>if converged, return <span class="math">\(x^{(t)}\)</span></li>
-<li>Compute a <a href="http://www.stanford.edu/class/ee392o/subgrad.pdf">subgradient</a> of <span class="math">\(f\)</span> at <span class="math">\(x^{(t)}\)</span>, <span class="math">\(g^{(t)} \in \partial f(x^{(t)})\)</span></li>
-<li><span class="math">\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}\)</span>
-</div>
+<p><strong>Input</strong>: initial iterate <mathjax>$x^{(0)}$</mathjax></p>
+<ol>
+<li>For <mathjax>$t = 0, 1, \ldots$</mathjax><ol>
+<li>if converged, return <mathjax>$x^{(t)}$</mathjax></li>
+<li>Compute a <a href="http://www.stanford.edu/class/ee392o/subgrad.pdf">subgradient</a> of <mathjax>$f$</mathjax> at <mathjax>$x^{(t)}$</mathjax>, <mathjax>$g^{(t)} \in \partial f(x^{(t)})$</mathjax></li>
+<li><mathjax>$x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}$</mathjax></li>
+</ol>
 </li>
-</ol></li>
 </ol>
-<p>The initial iterate <span class="math">\(x^{(0)}\)</span> can be selected arbitrarily, but <span class="math">\(\alpha^{(t)}\)</span> must be selected more carefully than in Gradient Descent. A common choice is <span class="math">\(\frac{1}{t}\)</span>.</p>
+</div>
+<p>The initial iterate <mathjax>$x^{(0)}$</mathjax> can be selected arbitrarily, but <mathjax>$\alpha^{(t)}$</mathjax>
+must be selected more carefully than in Gradient Descent. A common choice is
+<mathjax>$\frac{1}{t}$</mathjax>.</p>
 <p><a id="example"></a></p>
-<h1 id="a-small-example">A Small Example</h1>
-<p>Let’s watch Subgradient Descent do its thing. We’ll use <span class="math">\(f(x) = |x|\)</span> as our objective function, giving us <span class="math">\(sign(x)\)</span> as a valid way to compute subgradients. We’ll use the <a href="#polyak">Polyak Step Size</a> and initialize with <span class="math">\(x^{(0)} = 0.75\)</span>.</p>
+<h1><a name="example" href="#example">A Small Example</a></h1>
+<p>Let's watch Subgradient Descent do its thing. We'll use <mathjax>$f(x) = |x|$</mathjax> as our
+objective function, giving us <mathjax>$sign(x)$</mathjax> as a valid way to compute subgradients.
+We'll use the <a href="#polyak">Polyak Step Size</a> and initialize with <mathjax>$x^{(0)} = 0.75$</mathjax>.</p>
 <div class="img-center">
-  
-<img src="/assets/img/subgradient_descent/convergence.png"></img> <span class="caption"> This plot shows how the objective value changes as the number of iterations increase. We can see that, unlike Gradient Descent, it isn’t strictly decreasing. This is expected! </span>
+  <img src="/assets/img/subgradient_descent/convergence.png"></img>
+  <span class="caption">
+    This plot shows how the objective value changes as the number of iterations
+    increase. We can see that, unlike Gradient Descent, it isn't strictly
+    decreasing. This is expected!
+  </span>
 </div>
 
 <div class="img-center">
-  
-<img src="/assets/img/subgradient_descent/iterates.png"></img> <span class="caption"> This plot shows the actual iterates and the objective function evaluated at those points. More red indicates a higher iteration number. </span>
+  <img src="/assets/img/subgradient_descent/iterates.png"></img>
+  <span class="caption">
+    This plot shows the actual iterates and the objective function evaluated at
+    those points. More red indicates a higher iteration number.
+  </span>
 </div>
 
-
-<p><a id="proof"></a></p>
-<h1 id="why-does-it-work">Why does it work?</h1>
-<p>Now let’s prove that Subgradient Descent can find <span class="math">\(x^{*} = \arg\min_x f(x)\)</span>. We begin by making the following assumptions,</p>
-<ol style="list-style-type: decimal">
-<li><span class="math">\(f\)</span> is convex and finite for all <span class="math">\(x\)</span></li>
-<li>a finite solution <span class="math">\(x^{*}\)</span> exists</li>
-<li><span class="math">\(f\)</span> is Lipschitz with constant <span class="math">\(G\)</span>. That is,</li>
+<h1><a name="proof" href="#proof">Why does it work?</a></h1>
+<p>Now let's prove that Subgradient Descent can find <mathjax>$x^{*} = \arg\min_x f(x)$</mathjax>.
+We begin by making the following assumptions,</p>
+<ol>
+<li><mathjax>$f$</mathjax> is convex and finite for all <mathjax>$x$</mathjax></li>
+<li>a finite solution <mathjax>$x^{*}$</mathjax> exists</li>
+<li><mathjax>$f$</mathjax> is Lipschitz with constant <mathjax>$G$</mathjax>. That is,</li>
 </ol>
-<p><span class="math">\[
+<p><mathjax>$$
   || f(x) - f(y) ||_2 \le G || x - y ||_2 \qquad \forall x,y
-\]</span></p>
-<ol start="4" style="list-style-type: decimal">
-<li>The initial distance to <span class="math">\(x^{*}\)</span> is bounded by <span class="math">\(R\)</span></li>
+$$</mathjax></p>
+<ol>
+<li>The initial distance to <mathjax>$x^{*}$</mathjax> is bounded by <mathjax>$R$</mathjax></li>
 </ol>
-<p><span class="math">\[
+<p><mathjax>$$
   || x^{(0)} - x^{*} || \le R
-\]</span></p>
-<p><strong>Assumptions</strong> Looking back at the convergence proof of Gradient Descent, we see that the main difference is in assumption 3. Before, we assumed that the <span class="math">\(\nabla f\)</span> was Lipschitz, but now we assume that <span class="math">\(f\)</span> is Lipschitz. The reason for this is because non-smooth functions cannot have a Lipschitz Subgradient function (Imagine 2 different subgradients for <span class="math">\(f\)</span>, <span class="math">\(g_x\)</span> and <span class="math">\(g_y\)</span>, such that <span class="math">\(g_x \ne g_y\)</span> and <span class="math">\(x = y\)</span>. Then <span class="math">\(||x-y||_2 = 0\)</span> but <span class="math">\(||g_x - g_y||_2 &gt; 0\)</span>). However, this assumption does guarantee one thing: that <span class="math">\(g_x \le G\)</span> for all <span class="math">\(x\)</span>.</p>
-<p>Assumption 4 isn’t really a condition at all. It’s just a notational convenience for later.</p>
-<p><strong>Proof Outline</strong> The proof for Gradient Descent relied on <span class="math">\(f(x^{(t)}) - f(x^{*})\)</span> decreasing with each iteration, but the proof for Subgradient Descent relies on decreasing the (upper bound on) Euclidean distance between <span class="math">\(x^{(t)}\)</span> and the set of all possible <span class="math">\(x^{*}\)</span>.</p>
-<p>We begin by upper bounding the current distance to the optimal point by the previous distance (<span class="math">\(||x^{(t)} - x^{*}||_2\)</span>), the previous error (<span class="math">\(f(x^{(t)}) - f(x^{*})\)</span>), and the norm of the subgradient (<span class="math">\(||g^{(t)}||_2\)</span>). Next, we recursively apply the previous finding across all <span class="math">\(t\)</span> to bound the sum of errors by the <em>initial</em> distance to <span class="math">\(x^{*}\)</span> and the sum of all subgradient norms. Then, we lower bound the sum of all errors with a minimum over <span class="math">\(t\)</span>, giving us an upper bound on our error at iteration <span class="math">\(t+1\)</span>. Finally, we use Assumption 4. to make that bound go to zero.</p>
-<p><strong>Step 1</strong> Upper bound <span class="math">\(||x^{(t+1)} - x^{*}||\)</span>. Let <span class="math">\(x^{*}\)</span> be any point in <span class="math">\(\arg\min_{x} f(x)\)</span>. Then,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p><strong>Assumptions</strong> Looking back at the convergence proof of Gradient Descent, we
+see that the main difference is in assumption 3. Before, we assumed that the
+<mathjax>$\nabla f$</mathjax> was Lipschitz, but now we assume that <mathjax>$f$</mathjax> is Lipschitz. The
+reason for this is because non-smooth functions cannot have a Lipschitz
+Subgradient function (Imagine 2 different subgradients for <mathjax>$f$</mathjax>, <mathjax>$g_x$</mathjax> and
+<mathjax>$g_y$</mathjax>, such that <mathjax>$g_x \ne g_y$</mathjax> and <mathjax>$x = y$</mathjax>. Then <mathjax>$||x-y||_2 = 0$</mathjax> but <mathjax>$||g_x -
+g_y||_2 &gt; 0$</mathjax>).  However, this assumption does guarantee one thing: that <mathjax>$g_x
+\le G$</mathjax> for all <mathjax>$x$</mathjax>.</p>
+<p>Assumption 4 isn't really a condition at all.  It's just a notational
+convenience for later.</p>
+<p><strong>Proof Outline</strong> The proof for Gradient Descent relied on <mathjax>$f(x^{(t)}) -
+f(x^{*})$</mathjax> decreasing with each iteration, but the proof for Subgradient Descent
+relies on decreasing the (upper bound on) Euclidean distance between <mathjax>$x^{(t)}$</mathjax>
+and the set of all possible <mathjax>$x^{*}$</mathjax>.</p>
+<p>We begin by upper bounding the current distance to the optimal point by the
+previous distance (<mathjax>$||x^{(t)} - x^{*}||_2$</mathjax>), the previous error (<mathjax>$f(x^{(t)}) -
+f(x^{*})$</mathjax>), and the norm of the subgradient (<mathjax>$||g^{(t)}||_2$</mathjax>).  Next, we
+recursively apply the previous finding across all <mathjax>$t$</mathjax> to bound the sum of
+errors by the <em>initial</em> distance to <mathjax>$x^{*}$</mathjax> and the sum of all subgradient
+norms.  Then, we lower bound the sum of all errors with a minimum over <mathjax>$t$</mathjax>,
+giving us an upper bound on our error at iteration <mathjax>$t+1$</mathjax>. Finally, we use
+Assumption 4. to make that bound go to zero.</p>
+<p><strong>Step 1</strong> Upper bound <mathjax>$||x^{(t+1)} - x^{*}||$</mathjax>. Let <mathjax>$x^{*}$</mathjax> be any point in
+<mathjax>$\arg\min_{x} f(x)$</mathjax>. Then,</p>
+<p><mathjax>$$
 \begin{align*}
   ||x^{(t+1)} - x^{*}||_2^2
-  = &amp; ||x^{(t)} - \alpha^{(t)} g^{(t)} - x^{*}||_2^2 
+  = &amp; ||x^{(t)} - \alpha^{(t)} g^{(t)} - x^{*}||_2^2
     &amp;&amp; \text{# Definition of $x^{(t+1)}$} \\
-  = &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} \langle g^{(t)}, x^{(t)} - x^{*} \rangle + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2  
+  = &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} \langle g^{(t)}, x^{(t)} - x^{*} \rangle + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
     \\
-  \le &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{*}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2  
+  \le &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{*}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
     \\
 \end{align*}
-\]</span></p>
-<p>Our last step uses <span class="math">\(f(x^{*}) \ge f(x^{(t)}) + \langle g^{(t)}, x^{*} - x^{(t)} \rangle\)</span></p>
-<p><strong>Step 2</strong> Upper bound <span class="math">\(||x^{(t+1)} - x^{*}||\)</span> by <span class="math">\(||x^{(0)} - x^{*}||\)</span>. First, we apply Step 1 recursively to bound the current distance to <span class="math">\(x^{*}\)</span></p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Our last step uses <mathjax>$f(x^{*}) \ge f(x^{(t)}) + \langle g^{(t)}, x^{*} - x^{(t)} \rangle$</mathjax></p>
+<p><strong>Step 2</strong> Upper bound <mathjax>$||x^{(t+1)} - x^{*}||$</mathjax> by <mathjax>$||x^{(0)} - x^{*}||$</mathjax>.
+First, we apply Step 1 recursively to bound the current distance to <mathjax>$x^{*}$</mathjax></p>
+<p><mathjax>$$
 \begin{align*}
   ||x^{(t+1)} - x^{*}||_2^2
-  \le &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{*}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2  
+  \le &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{*}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
     \\
   \le &amp; \left( ||x^{(t-1)} - x^{*}||_2^2 - 2 \alpha^{(t-1)} ( f(x^{(t-1)}) - f(x^{*}) ) + ( \alpha^{(t-1)} )^2 ||g^{(t-1)}||_2^2 \right) \\
       &amp; \quad - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{*}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
       &amp;&amp; \text{# Apply recursion}\\
-    = &amp; ||x^{(t-1)} - x^{*}||_2^2 
-        - 2 \sum_{\tau=t-1}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) ) 
+    = &amp; ||x^{(t-1)} - x^{*}||_2^2
+        - 2 \sum_{\tau=t-1}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
         + \sum_{\tau=t-1}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
   \vdots \\
-  \le &amp; ||x^{(0)} - x^{*}||_2^2 
-        - 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) ) 
+  \le &amp; ||x^{(0)} - x^{*}||_2^2
+        - 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
         + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
 \end{align*}
-\]</span></p>
-<p>Then we drop <span class="math">\(||x^{(t+1)} - x^{*}||_2^2\)</span> from the left side it’s lower bounded by zero,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Then we drop <mathjax>$||x^{(t+1)} - x^{*}||_2^2$</mathjax> from the left side it's lower bounded by zero,</p>
+<p><mathjax>$$
 \begin{align*}
   0
-  \le &amp; ||x^{(0)} - x^{*}||_2^2 
-        - 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) ) 
+  \le &amp; ||x^{(0)} - x^{*}||_2^2
+        - 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
         + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
-  2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) ) 
-  \le &amp; ||x^{(0)} - x^{*}||_2^2 
+  2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
+  \le &amp; ||x^{(0)} - x^{*}||_2^2
         + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
 \end{align*}
-\]</span></p>
-<p><strong>Step 3</strong> Upper bound current error. First, notice that we can lower bound the contents of the sum on the left with the minimum across <span class="math">\(\tau\)</span>,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p><strong>Step 3</strong> Upper bound current error. First, notice that we can lower bound the
+contents of the sum on the left with the minimum across <mathjax>$\tau$</mathjax>,</p>
+<p><mathjax>$$
 \begin{align*}
   \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
   \ge &amp; \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) - f(x^{*}) \right) \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
 \end{align*}
-\]</span></p>
-<p>Then divide by <span class="math">\(2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )\)</span>,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Then divide by <mathjax>$2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )$</mathjax>,</p>
+<p><mathjax>$$
 \begin{align*}
   2 \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) - f(x^{*}) \right) \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
   \le &amp; 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) ) \\
-  \le &amp; ||x^{(0)} - x^{*}||_2^2 
+  \le &amp; ||x^{(0)} - x^{*}||_2^2
           + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
   \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) \right) - f(x^{*})
-  \le &amp; \frac{ 
-          ||x^{(0)} - x^{*}||_2^2 
+  \le &amp; \frac{
+          ||x^{(0)} - x^{*}||_2^2
           + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2
         }{
           2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
         } \\
   \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) \right) - f(x^{*})
-  \le &amp; \frac{ 
+  \le &amp; \frac{
           R^2
           + G^2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2
         }{
           2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
         } \\
 \end{align*}
-\]</span></p>
-<p><strong>Step 4</strong> Making the bound go to zero. Let <span class="math">\(\alpha^{(\tau)} = \frac{R}{G \sqrt{t}}\)</span> (this is the minimizer of the right hand side for constant <span class="math">\(\alpha^{(\tau)}\)</span>). Then,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p><strong>Step 4</strong> Making the bound go to zero.  Let <mathjax>$\alpha^{(\tau)} = \frac{R}{G
+\sqrt{t}}$</mathjax> (this is the minimizer of the right hand side for constant
+<mathjax>$\alpha^{(\tau)}$</mathjax>). Then,</p>
+<p><mathjax>$$
 \begin{align*}
   \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) \right) - f(x^{*})
-  \le &amp; \frac{ 
+  \le &amp; \frac{
           R^2 + G^2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2
         }{
           2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
         } \\
-    = &amp; \frac{ 
+    = &amp; \frac{
           R^2 + G^2 \frac{R^2}{G^2} \sum_{\tau=0}^{t} \frac{1}{t+1}
         }{
           2 \frac{R}{G} \sum_{\tau=0}^{t} \frac{1}{\sqrt{t+1}}
@@ -203,30 +275,58 @@
         + \frac{ RG } { 2 \sqrt{t+1} }
     = \frac{ RG }{ \sqrt{t+1} }
 \end{align*}
-\]</span></p>
-<p>Thus, we can conclude that if we want <span class="math">\(f(x^{(t)}) - f(x^{*}) \le \epsilon\)</span>, we need <span class="math">\(O(\frac{1}{\epsilon^2})\)</span> iterations. Compared to Gradient Descent’s <span class="math">\(O(\frac{1}{\epsilon})\)</span> convergence rate, Subgradient Descent looks pretty bad!</p>
-<h1 id="when-should-i-use-it">When should I use it?</h1>
-<p><a id="usage"></a> As the implementation of Gradient Descent and Subgradient Descent are essentially the same, ease of use is always the first reason to use Subgradient Descent. Similarly, Subgradient Descent requires a minimal memory footprint, and has thus found a large following in the large scale machine learning community.</p>
-<p>As far as black box, first-order for non-differentiable convex problems go, it can be shown that Subgradient Descent is as (asymptotically) fast as we can hope for. That doesn’t mean Subgradient Descent is as fast as you can get for your specific problem. Proximal Gradient methods, for example, are one such family of algorithms that allow you to exploit the properties of differentiable problems even if your problem isn’t.</p>
-<h1 id="extensions">Extensions</h1>
-<p><strong>Step Size</strong> As stated previously, a common choice of step size is <span class="math">\(\alpha^{(t)} = \frac{1}{t}\)</span>, but that’s far from your only choice. Indeed, any step rule that satisfies the following conditions works when inserted into the above proof,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>Thus, we can conclude that if we want <mathjax>$f(x^{(t)}) - f(x^{*}) \le \epsilon$</mathjax>,
+we need <mathjax>$O(\frac{1}{\epsilon^2})$</mathjax> iterations. Compared to Gradient
+Descent's <mathjax>$O(\frac{1}{\epsilon})$</mathjax> convergence rate, Subgradient Descent looks
+pretty bad!</p>
+<h1><a name="usage" href="#usage">When should I use it?</a></h1>
+<p>As the implementation of Gradient Descent and Subgradient Descent are
+essentially the same, ease of use is always the first reason to use Subgradient
+Descent. Similarly, Subgradient Descent requires a minimal memory footprint,
+and has thus found a large following in the large scale machine learning
+community.</p>
+<p>As far as black box, first-order for non-differentiable convex problems go,
+it can be shown that Subgradient Descent is as (asymptotically) fast as we can
+hope for. That doesn't mean Subgradient Descent is as fast as you can get for
+your specific problem. Proximal Gradient methods, for example, are one such
+family of algorithms that allow you to exploit the properties of differentiable
+problems even if your problem isn't.</p>
+<h1><a name="extensions" href="#extensions">Extensions</a></h1>
+<p><strong>Step Size</strong> As stated previously, a common choice of step size is
+<mathjax>$\alpha^{(t)} = \frac{1}{t}$</mathjax>, but that's far from your only choice. Indeed, any
+step rule that satisfies the following conditions works when inserted into the
+above proof,</p>
+<p><mathjax>$$
   \sum_{t=0}^{\infty} \alpha^{(t)} = \infty \qquad
   \sum_{t=0}^{\infty} ( \alpha^{(t)} )^2 &lt; \infty
-\]</span></p>
-<p>For example, <span class="math">\(\alpha^{(t)} = \frac{a}{b + t^{c}}\)</span> for positive constants <span class="math">\(a\)</span> and <span class="math">\(b\)</span> and <span class="math">\(c \in (0.5, 1]\)</span> also works. These conditions are referred to as being square-summable but not summable.</p>
-<p>If <span class="math">\(f(x^{*})\)</span> is known ahead of time, another choice is <a href="http://www.stanford.edu/class/ee364b/lectures/subgrad_method_slides.pdf">Polyak’s Step Size</a>,</p>
-<p><span class="math">\[
+$$</mathjax></p>
+<p>For example, <mathjax>$\alpha^{(t)} = \frac{a}{b + t^{c}}$</mathjax> for positive constants <mathjax>$a$</mathjax>
+and <mathjax>$b$</mathjax> and <mathjax>$c \in (0.5, 1]$</mathjax> also works. These conditions are referred to as
+being square-summable but not summable.</p>
+<p>If <mathjax>$f(x^{*})$</mathjax> is known ahead of time, another choice is <a href="http://www.stanford.edu/class/ee364b/lectures/subgrad_method_slides.pdf">Polyak's Step
+Size</a>,</p>
+<p><mathjax>$$
 \alpha^{(t)} = \frac{ f(x^{(t)}) - f(x^{*}) }
                     { ||g^{(t)}||_2^2 }
-\]</span></p>
-<p>If <span class="math">\(f(x^{*})\)</span> isn’t know, then <span class="math">\(\alpha^{(t)} = \frac{ f(x^{(t)}) - f^{(t)}_{best} + \gamma^{(t)} }{ ||g^{(t)}||_2^2 }\)</span> is also valid for <span class="math">\(f^{(t)}_{best} = \min_{\tau \in 0\ldots t} f(x^{(t)})\)</span> and <span class="math">\(\gamma^{(t)}\)</span> being square-summable and not summable.</p>
-<p><strong>Checking Convergence</strong> In short, there are no easy ways to know when to stop with Subgradient Descent. Checking if <span class="math">\(\nabla f(x)\)</span> is small doesn’t make sense because <span class="math">\(\nabla f(x)\)</span> isn’t defined at some points and <span class="math">\(g_x\)</span> doesn’t necessarily get small near <span class="math">\(x \triangleq x^{*}\)</span>. Instead, a fixed number of iterations is typically used.</p>
-<h1 id="references">References</h1>
-<p><strong>Proof of Convergence</strong> The proof of convergence for Subgradient Descent is taken nearly verbatim from Stephen Boyd’s <a href="http://www.stanford.edu/class/ee392o/subgrad_method.pdf">lecture notes for EE392o</a> course in 2003.</p>
-<p><strong>Polyak Step Size</strong> The algorithm for the Polyak step size was taken from page 23 of Stephen Boyd’s <a href="http://www.stanford.edu/class/ee364b/lectures/subgrad_method_slides.pdf">lecture slides for EE364b</a>.</p>
-<h1 id="reference-implementation">Reference Implementation</h1>
-<div class="highlight"><pre><code class="python"><span class="k">def</span> <span class="nf">subgradient_descent</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">subgradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+$$</mathjax></p>
+<p>If <mathjax>$f(x^{*})$</mathjax> isn't know, then <mathjax>$\alpha^{(t)} = \frac{ f(x^{(t)}) -
+f^{(t)}_{best} + \gamma^{(t)} }{ ||g^{(t)}||_2^2 }$</mathjax> is also valid for
+<mathjax>$f^{(t)}_{best} = \min_{\tau \in 0\ldots t} f(x^{(t)})$</mathjax> and <mathjax>$\gamma^{(t)}$</mathjax>
+being square-summable and not summable.</p>
+<p><strong>Checking Convergence</strong> In short, there are no easy ways to know when to stop
+with Subgradient Descent. Checking if <mathjax>$\nabla f(x)$</mathjax> is small doesn't make sense
+because <mathjax>$\nabla f(x)$</mathjax> isn't defined at some points and <mathjax>$g_x$</mathjax> doesn't
+necessarily get small near <mathjax>$x \triangleq x^{*}$</mathjax>. Instead, a fixed number of
+iterations is typically used.</p>
+<h1><a name="references" href="#references">References</a></h1>
+<p><strong>Proof of Convergence</strong> The proof of convergence for Subgradient Descent is
+taken nearly verbatim from Stephen Boyd's <a href="http://www.stanford.edu/class/ee392o/subgrad_method.pdf">lecture notes for
+EE392o</a> course in 2003.</p>
+<p><strong>Polyak Step Size</strong> The algorithm for the Polyak step size was taken from
+page 23 of Stephen Boyd's <a href="http://www.stanford.edu/class/ee364b/lectures/subgrad_method_slides.pdf">lecture slides for EE364b</a>.</p>
+<h1><a name="reference-impl" href="#reference-impl">Reference Implementation</a></h1>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">subgradient_descent</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">subgradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;Subgradient Descent</span>
 
 <span class="sd">  Parameters</span>
@@ -289,55 +389,59 @@
                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
                                       <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-</code></pre></div>
-    </article>
-  </div>
-</div> <!-- row -->
-<!-- Disqus Comments -->
-<div class="row-fluid disqus">
-  <div id="disqus_thread"></div>
-  <script type="text/javascript">
-      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-      var disqus_shortname = 'duckworthd-blog'; // required: replace example with your forum shortname
+</pre></div>
 
-      /* * * DON'T EDIT BELOW THIS LINE * * */
+    <div id="article_meta">
+        Category:
+          <a href="/category/optimization.html">optimization</a>
+        <br />Tags:
+          <a href="/tag/optimization.html">optimization</a>
+,           <a href="/tag/first-order.html">first-order</a>
+,           <a href="/tag/subgradient.html">subgradient</a>
+    </div>
+  </article>
+
+  <footer>
+    <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
+  </footer>
+
+  <div id="comments">
+    <h2>Comments</h2>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_identifier = "blog/subgradient-descent.html";
       (function() {
-          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
       })();
+    </script>
+    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
+  </div>
+
+	</section>
+
+
+  <!-- scripts -->
+  <script
+    type= "text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    >
   </script>
-  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-  <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-</div>
-
-    </div> <!-- container -->
-    <!-- jquery -->
-<script type="text/javascript"
-        src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
-
-<!-- MathJax -->
-<script type="text/javascript"
-        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      //equationNumbers: {
-      //  autoNumber: "all"
-      //},
-      extensions: ["color.js"]
-    }
-  });
-</script>
-
-<!-- Bootstrap -->
-<script type="text/javascript"
-        src="/assets/js/bootstrap.min.js"></script>
-
-<!-- Lightbox -->
-<script type="text/javascript"
-        src="/assets/js/lightbox.js"></script>
-
-  </body>
+  <script
+    type= "text/javascript"
+    src="/assets/js/MathJaxLocal.js"
+    >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/jquery-1.11.0.min.js"
+      >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/lightbox.min.js"
+      >
+  </script>
+</body>
 </html>
-

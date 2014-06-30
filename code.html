@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- stylesheets -->
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/assets/lightbox/css/lightbox.css">
+
+  <!-- fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+  <!-- RSS/ATOM feeds -->
+	<link href="/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+
+
+		<title>Code</title>
+		<meta charset="utf-8" />
+</head>
+<body>
+	<section id="sidebar">
+		<figure id="user_logo">
+      <a href=""><div class="logo">&nbsp;</div></a>
+		</figure>
+
+		<div class="user_meta">
+      <h1 id="user">
+        <a  href="/"
+            class="sitename">
+          Strongly Convex
+        </a>
+      </h1>
+			<h2></h2>
+
+
+			<ul>
+        <hr></hr>
+					<li><a href="/">Words</a></li>
+          <hr></hr>
+					<li><a href="/code.html">Code</a></li>
+          <hr></hr>
+					<li><a href="/about.html">About</a></li>
+          <hr></hr>
+			</ul>
+		</div>
+		<footer>
+			<address>
+				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+			</address>
+		</footer>
+	</section>
+
+	<section id="posts">
+	<header>
+      <h1 class="title">
+			  <a  href="/code.html"
+            rel="bookmark"
+			  	  title="Permalink to Code">
+          Code
+        </a>
+      </h1>
+	</header>
+	<article>
+		
+    <!-- CSS for this page only -->
+    <style>
+      // clearfix...?
+      .row:before {
+        display: table;
+        content: " ";
+      }
+
+      .project {
+        box-sizing    : border-box;
+        width         : 48%;
+        float         : left;
+
+        padding       : 5%;
+        margin-left   : 2%;
+        margin-bottom : 2%;
+
+        box-shadow    : 2px 2px 8px #aaa;
+        background    : white;
+        padding       : 1em 3em 1em 3em;
+      }
+
+      .project h1  {
+        font-size: 150%;
+        text-align: center;
+      }
+
+      .project .logo {
+        height: 150px;
+      }
+
+      .project img {
+        max-width    : 100%;
+        max-height   : 100%;
+        display      : block;
+        margin-left  : auto;
+        margin-right : auto;
+      }
+
+      .project p {
+        height: 250px;
+      }
+    </style>
+
+    <!-- actual content -->
+    <div class="row">
+      <div class="project">
+        <div class="logo">
+          <img src="/assets/img/projects/pr2robot.png"></img>
+        </div>
+
+        <a href="http://pykalman.github.com">
+          <h1>pykalman</h1>
+        </a>
+
+        <p>
+          Kalman Filters and their extensions are basic tools for tracking
+          robots. While the standard Kalman Filter is quite simple, the flurry
+          of extensions offering better numerical stability and increased
+          applicability can be quite daunting. This library takes care of that
+          for you.
+        </p>
+      </div>
+
+      <div class="project">
+        <div class="logo">
+          <img src="/assets/img/projects/vim.png"></img>
+        </div>
+
+        <a href="https://github.com/duckworthd/vim-config">
+          <h1>Vim Config</h1>
+        </a>
+
+        <p>
+          I use Vim. A lot. This config contains all of my settings (350
+          lines!) and addons I use every day.  Give it a try, you might be
+          surprised how much better Vim can be!
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="project">
+        <div class="logo">
+          <img src="/assets/img/yannopt.jpg"></img>
+        </div>
+
+        <a href="http://github.com/duckworthd/yannopt">
+          <h1>yannopt</h1>
+        </a>
+
+        <p>
+          There are a lot of optimization algorithms out there, but finding one
+          place where you can try them all out is tough. `yannopt` lets you
+          define an optimization problem throw every tool in the box at it.
+          Mirror Descent? Newton's Method? Accelerated Proximal Gradient?
+          It's all here.
+        </p>
+      </div>
+
+      <div class="project">
+        <div class="logo">
+          <img src="http://placehold.it/350x150"></img>
+        </div>
+
+        <a href="http://github.com/duckworthd/mirai">
+          <h1>mirai</h1>
+        </a>
+
+        <p>
+          Asynchronous programming is already difficult enough without having
+          to consider callbacks, threads, and all that other bally-hoo. `mirai`
+          is a library modeled after Twitter's amazing Futures implementation
+          for Python, making life unimaginably easier to work with.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="project">
+        <div class="logo">
+          <img src="http://placehold.it/350x150"></img>
+        </div>
+
+        <a href="http://github.com/duckworthd/chainmail">
+          <h1>chainmail</h1>
+        </a>
+
+        <p>
+          Why is sending an email in Python so hard? Chainmail is a method
+          chaining-based interface for composing email messages and sending
+          them with support for unicode, attachments, and SMTP.
+        </p>
+      </div>
+
+      <div class="project">
+        <div class="logo">
+          <img src="http://placehold.it/350x150"></img>
+        </div>
+
+        <a href="https://github.com/duckworthd/sqlrest">
+          <h1>sqlrest</h1>
+        </a>
+
+        <p>
+          Too many times have men written REST APIs for SQL stores. No more!
+          sqlrest provides a single command for generating a simple REST API
+          for your MySQL, SQLite, PostgreSQL, or other SQL-based data store
+          that in addition to the usual create/update/delete operations, allows
+          for single-table analytic queries including group by, filtering,
+          aggregation, ordering, and paging.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="project">
+        <div class="logo">
+          <img src="http://placehold.it/350x150"></img>
+        </div>
+
+        <a href="http://github.com/duckworthd/configurati">
+          <h1>configurati</h1>
+        </a>
+
+        <p>
+          The line between configuration files and command line arguments is
+          tenuous at best. Haven't you ever wanted to say, "run this command,
+          but with this one configuration parameter changed?" Or maybe you were
+          trying to combine multiple projects, each with their own config data
+          format. Wouldn't it be easier to choose the format you're most
+          comfortable with? configurati is a Python library for just that.
+        </p>
+      </div>
+
+      <div class="project">
+        <div class="logo">
+          <img src="http://placehold.it/350x150"></img>
+        </div>
+
+        <a href="https://github.com/duckworthd/brickrake">
+          <h1>BrickRake</h1>
+        </a>
+
+        <p>
+          A Lego obsession gone wrong. Brickrake is a suite of tools for
+          finding the cheapest way to buy Lego parts from BrickLink, the eBay
+          of Lego parts. By scraping inventories and solving an Integer Linear
+          Program, BrickRake will tell you precisely where and from whom to buy
+          the parts you need to build that next big project. Moreover,
+          BrickRake's bookmarklet automatically fills in purchase orders
+          directly from your BrickLink wishlist.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="project">
+        <div class="logo">
+          <img src="http://placehold.it/350x150"></img>
+        </div>
+
+        <a href="http://github.com/duckworthd/cvxcluster">
+          <h1>cvxcluster</h1>
+        </a>
+
+        <p>
+          Implementations of proximal gradient ascent, accelerated proximal
+          gradient ascent,  and coordinate ascent for solving convex clustering
+          problems as described in
+          <a href="/coordinate-ascent-convex-clustering.html">
+            this blog post
+          </a>.
+        </p>
+      </div>
+
+      <!--
+      <div class="project">
+        <div class="logo">
+          <img src="http://placehold.it/350x150"></img>
+        </div>
+
+        <a href="https://github.com/duckworthd/???">
+          <h1>PROJECT NAME HERE</h1>
+        </a>
+
+        <p>
+          PROJECT DESCRIPTION HERE
+        </p>
+      </div>
+      -->
+    </div>
+  
+	</article>
+
+	<footer>
+		<a  href="/"
+        class="button_accent">
+      &larr;&nbsp;&nbsp;&nbsp;Back to blog
+    </a>
+	</footer>
+	</section>
+
+
+  <!-- scripts -->
+  <script
+    type= "text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    >
+  </script>
+  <script
+    type= "text/javascript"
+    src="/assets/js/MathJaxLocal.js"
+    >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/jquery-1.11.0.min.js"
+      >
+  </script>
+  <script
+      type="text/javascript"
+      src="/assets/lightbox/js/lightbox.min.js"
+      >
+  </script>
+</body>
+</html>
