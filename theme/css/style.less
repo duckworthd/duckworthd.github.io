@@ -588,4 +588,11 @@ section#posts {
   line-height : initial;
   font-family : 'Inconsolata', monospace;
   font-weight : normal;
+
+  > ol {
+    list-style-type: decimal;
+    > li > ol {
+      list-style-type: upper-alpha;
+    }
+  }
 }

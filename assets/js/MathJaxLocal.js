@@ -12,6 +12,11 @@ MathJax.Hub.Config({
 		{
 			equationNumbers: { autoNumber: "AMS" },
 			TagSide: "left",
+      Macros: {
+        norm: ['\\left\\lVert#1\\right\\rVert', 1],
+				argmin: ['\\mathop{\\mathrm{arg\\,min}}'],
+				argmax: ['\\mathop{\\mathrm{arg}\\,\\max}']
+      }
 		},
 	"HTML-CSS": {
     scale          : 100,
