@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- stylesheets -->
+	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/assets/lightbox/css/lightbox.css">
+
+  <!-- fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+  <!-- RSS/ATOM feeds -->
+	<link href="http://stronglyconvex.com/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+
+
+		<title>Strongly Convex</title>
+		<meta charset="utf-8" />
+</head>
+<body>
+	<section id="sidebar">
+		<figure id="user_logo">
+      <a href="http://stronglyconvex.com"><div class="logo">&nbsp;</div></a>
+		</figure>
+
+		<div class="user_meta">
+      <h1 id="user">
+        <a  href="http://stronglyconvex.com/"
+            class="sitename">
+          Strongly Convex
+        </a>
+      </h1>
+			<h2></h2>
+
+
+			<ul>
+        <hr></hr>
+					<li><a href="/">Words</a></li>
+          <hr></hr>
+					<li><a href="/code.html">Code</a></li>
+          <hr></hr>
+					<li><a href="/about.html">About</a></li>
+          <hr></hr>
+			</ul>
+		</div>
+		<footer>
+			<address>
+				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+			</address>
+		</footer>
+	</section>
+
+	<section id="posts">
+	<header>
+      <h1 class="title">
+			  <a  href="http://stronglyconvex.com/blog/admm-to-prox-grad.html"
+            rel="bookmark"
+			  	  title="Permalink to From ADMM to Proximal Gradient Descent">
+          From ADMM to Proximal Gradient Descent
+        </a>
+      </h1>
+		  <abbr class="published">Sat 26 July 2014</abbr>
+	</header>
+  <article>
+    <p>At first blush, <a href="http://stronglyconvex.com/blog/admm.html">ADMM</a> and <a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html">Proximal Gradient Descent</a>
+(ProxGrad) appear to have very little in common. The convergence analyses for
+these two methods are unrelated, and the former operates on an Augmented
+Lagrangian while the latter directly minimizes the primal objective. In this
+post, we'll show that after a slight modification to ADMM, we recover the
+proximal gradient algorithm applied to Lagrangian <em>dual</em> of the ADMM objective.</p>
+<p>To be precise, we'll first make a slight modification to ADMM to construct
+another algorithm known as the <a href="http://dspace.mit.edu/bitstream/handle/1721.1/3103/P-1836-19477130.pdf">Alternating Minimization Algorithm</a> (AMA).
+We'll then show this algorithm is an instance of a more general technique for
+<a href="http://supernet.isenberg.umass.edu/austria_lectures/fvisli.pdf">Variational Inequality problems</a> called
+<a href="http://machinelearning.wustl.edu/mlpapers/paper_files/jmlr10_duchi09a.pdf">Forward-Backward Splitting</a> (FOBOS). Finally, we'll show that ProxGrad
+is also an instance of FOBOS with the exact same form. We conclude that these
+two algorithms are equivalent.</p>
+<h1><a name="ama" href="#ama">Alternating Minimization Algorithm</a></h1>
+<p>The <a href="http://dspace.mit.edu/bitstream/handle/1721.1/3103/P-1836-19477130.pdf">Alternating Minimization Algorithm</a> (AMA), originally proposed by
+Paul Tseng in 1988, is an algorithm very similar to ADMM. In fact, the only
+difference between these two methods is in the first step of each iteration.
+Recall the pseudocode for ADMM; whereas ADMM minimizes the <em>Augmented</em>
+Lagrangian with respect to <mathjax>$x$</mathjax>, AMA minimizes the <em>Non-Augmented</em> Lagrangian,</p>
+<div class="pseudocode">
+<p><strong>Input</strong> Step size <mathjax>$\rho$</mathjax>, initial primal iterates <mathjax>$x^{(0)}$</mathjax> and <mathjax>$z^{(0)}$</mathjax>,
+            initial dual iterate <mathjax>$y^{(0)}$</mathjax></p>
+<ol>
+<li>For <mathjax>$t = 0, 1, \ldots$</mathjax><ol>
+<li>Let <mathjax>$x^{(t+1)} = \underset{x}{\text{argmin}} \quad L_{   0}( x        , z^{(t)}, y^{(t)} )$</mathjax></li>
+<li>Let <mathjax>$z^{(t+1)} = \underset{z}{\text{argmin}} \quad L_{\rho}( x^{(t+1)}, z      , y^{(t)} )$</mathjax></li>
+<li>Let <mathjax>$y^{(t+1)} = y^{(t)} + \rho ( Ax^{(t+1)} + Bz^{(t+1)} - c )$</mathjax></li>
+</ol>
+</li>
+</ol>
+</div>
+<p>Notice the <mathjax>$0$</mathjax> instead of <mathjax>$\rho$</mathjax> in the definition of <mathjax>$x^{(t+1)}$</mathjax>. This tiny
+change, we'll see, is all that's necessary to turn ADMM into ProxGrad.</p>
+<h1><a name="vi" href="#vi">Variational Inequalties</a></h1>
+<p>To show the similarity between AMA and ProxGrad, we'll show that both
+algorithms are instances of Forward-Backward Splitting (FOBOS). Unlike other
+algorithms we've considered, FOBOS isn't about minimizing a real-valued
+objective function subject to constraints. Instead, FOBOS solves Variational
+Inequality problems, which we'll now describe.</p>
+<p>Variational Inequality (VI) problems involve a vector-to-vector function
+<mathjax>$F: \mathbb{R}^n \rightarrow \mathbb{R}^n$</mathjax> and a convex set <mathjax>$\mathcal{C}$</mathjax>. The
+goal is to find an input <mathjax>$w^{*}$</mathjax> such that,</p>
+<p><mathjax>$$
+\begin{equation*}
+  \forall w \in \mathcal{C} \quad
+  \langle F(w^{*}), w - w^{*} \rangle \ge 0
+\end{equation*}
+$$</mathjax></p>
+<p>If <mathjax>$\mathcal{C} = \mathcal{R}^n$</mathjax>, then this inequality can only hold when
+<mathjax>$F(w^{*}) = 0$</mathjax>. For example, if <mathjax>$F = \nabla f$</mathjax> for a differentiable convex
+objective function <mathjax>$f$</mathjax>, then finding <mathjax>$F(w^{*}) = 0$</mathjax> is the same as a finding
+<mathjax>$f$</mathjax>'s unconstrained global minimum. Incorporating constraints is as simple as
+letting <mathjax>$F(w) = [\nabla_x L(x,y); -\nabla_y L(x,y)]$</mathjax> for Lagrangian <mathjax>$L(x,y)$</mathjax>
+with primal variable <mathjax>$x$</mathjax> and dual variable <mathjax>$y$</mathjax> and <mathjax>$w = [x; y]$</mathjax>.</p>
+<p>What is not covered in this setup, however, is the case when <mathjax>$L$</mathjax> is not
+differentiable with respect to all parameters. We can expand on the concept of
+Variational Inequalties a bit by letting <mathjax>$F(w)$</mathjax> be a <em>subset</em> of
+<mathjax>$\mathcal{R}^{n}$</mathjax> instead of a single value (that is,
+<mathjax>$F: \mathcal{R}^n \rightarrow 2^{\mathcal{R}^{n}}$</mathjax>). We'll say that <mathjax>$F$</mathjax> is
+a <em>monotone operator</em> if,</p>
+<p><mathjax>$$
+\begin{align*}
+  \forall w,w' \in \mathcal{C}; \,
+  \forall u \in F(w);           \,
+  \forall v \in F(w')           \quad
+  \langle u-v, w-w' \rangle \ge 0
+\end{align*}
+$$</mathjax></p>
+<p>Now if <mathjax>$\mathcal{C} = \mathcal{R}^n$</mathjax> and
+<mathjax>$F = [\partial_x L(x,y); -\partial_y L(x,y)]$</mathjax>, we can see that finding
+<mathjax>$0 \in F(w^{*})$</mathjax> is the same as solving the optimization described by <mathjax>$L$</mathjax> for
+non-smooth objective and constraint functions.</p>
+<h1><a name="fobos" href="#fobos">Forward-Backward Splitting</a></h1>
+<p><a href="http://machinelearning.wustl.edu/mlpapers/paper_files/jmlr10_duchi09a.pdf">Forward-Backward Splitting</a> FOBOS is an algorithm for finding
+a <mathjax>$w^{*}$</mathjax> that solves VI problems for particular choices of <mathjax>$F$</mathjax>. Namely,
+we'll make the following assumptions.</p>
+<ol>
+<li><mathjax>$F(w) = \Psi(w) + \Theta(w)$</mathjax> for <a href="http://web.stanford.edu/class/ee364b/lectures/monotone_slides.pdf">monotone operators</a> <mathjax>$\Psi$</mathjax> and
+  <mathjax>$\Theta$</mathjax>.</li>
+<li><mathjax>$\Psi(w)$</mathjax> has exactly one value for each <mathjax>$w$</mathjax> in its domain.</li>
+</ol>
+<p>Given this, FOBOS will converge to a <mathjax>$w^{*}$</mathjax> such that <mathjax>$0 \in F(w^{*})$</mathjax>. The
+algorithm itself is,</p>
+<div class="pseudocode">
+<p><strong>Input</strong> Step sizes <mathjax>$\{ \rho_t \}_{t=1}^{\infty}$</mathjax>, initial iterate <mathjax>$w^{(0)}$</mathjax></p>
+<ol>
+<li>For <mathjax>$t = 0, 1, \ldots$</mathjax><ol>
+<li>Let <mathjax>$w^{(t+1/2)} = w^{(t)} - \rho_t \Psi(w^{(t)})$</mathjax></li>
+<li>Let <mathjax>$w^{(t+1)}$</mathjax> be such that <mathjax>$w^{(t+1)} + \rho_t \Theta(w^{(t+1)}) = w^{(t+1/2)}$</mathjax></li>
+</ol>
+</li>
+</ol>
+</div>
+<p>An equivalent, more concise way to describe FOBOS is with
+<mathjax>$w^{(t+1)} = (I + \rho_t \Theta)^{-1} (I - \rho_t \Psi) (w^{(t)})$</mathjax>. With this
+formulation in mind, we'll now show that both AMA and ProxGrad are instances of
+FOBOS performing the same set of operations.</p>
+<h1><a name="reductions" href="#reductions">Reductions to FOBOS</a></h1>
+<p>We'll now show that for the specific optimization problem tackled by ADMM,
+AMA is the same as Proximal Gradient Descent on the dual problem. First, recall
+the problem ADMM is solving,</p>
+<p><mathjax>$$
+\begin{align}
+\begin{split}
+  \underset{x,z}{\text{minimize}} \qquad
+    &amp; f(x) + g(z) \\
+  \text{s.t.}                     \qquad
+    &amp; Ax + Bz = c \\
+\end{split} \label{eqn:primal}
+\end{align}
+$$</mathjax></p>
+<p>The dual problem to this is then,</p>
+<p><mathjax>$$
+\begin{align}
+\begin{split}
+  - \underset{y}{\text{minimize}} \qquad
+    &amp; f^{*}(A^{T} y) + g^{*}(B^{T} z) - \langle y, c \rangle \\
+\end{split} \label{eqn:dual}
+\end{align}
+$$</mathjax></p>
+<p>where <mathjax>$f^{*}$</mathjax> and <mathjax>$g^{*}$</mathjax> are the <a href="http://en.wikipedia.org/wiki/Convex_conjugate">convex conjugates</a> to
+<mathjax>$f$</mathjax> and <mathjax>$g$</mathjax>, respectively. We'll now show that both AMA and Proximal Gradient
+Descent are optimizing this same dual.</p>
+<h2><a name="prox-grad-to-fobos" href="#prox-grad-to-fobos">Proximal Gradient Descent to FOBOS</a></h2>
+<p>Suppose we want to minimize <mathjax>$f^{*}(A^T y) + g^{*}(B^T y)$</mathjax>. If the problem is
+unconstrained, this is equivalent to finding</p>
+<p><mathjax>$$
+\begin{align*}
+  0 \in F(y)
+  &amp;= \partial_y \left( f^{*}(A^T y) + g(B^T y) - \langle y, c \rangle \right) \\
+  &amp;= A (\nabla_y f^{*})(A^T y) + B (\partial_y g^{*})(B^T y) - c
+  \end{align*}
+$$</mathjax></p>
+<p>Let's now define,</p>
+<p><mathjax>$$
+\begin{align}
+  \Psi(y)   &amp;= A (\nabla_y   f^{*})(A^T y)     &amp;
+  \Theta(y) &amp;= B (\partial_y g^{*})(B^T y) - c
+  \label{eqn:fobos-def}
+\end{align}
+$$</mathjax></p>
+<p>Clearly, <mathjax>$(I - \rho_{t} \Psi)(y) = y - \rho_{t} A (\nabla_y f^{*})(A^T y)$</mathjax>
+matches the first part of FOBOS and the "gradient step" part of ProxGrad, but
+we also need to show that,</p>
+<p><mathjax>$$
+\begin{align*}
+  \text{prox}_{\rho_t g^{*}(B^T \cdot) - \langle \cdot, c \rangle}(y)
+  &amp; = (I + \rho_{t} \Theta)^{-1}(y)
+\end{align*}
+$$</mathjax></p>
+<p>To do this, let's recall the definition of the prox operator,</p>
+<p><mathjax>$$
+\begin{align*}
+  \bar{y}
+  &amp; = \text{prox}_{\rho_t g^{*}(B^T \cdot) - \langle \cdot, c \rangle}(y) \\
+  &amp; = \argmin_{y'}  g^{*}(B^T y')
+                    - \langle y', c \rangle
+                    + \frac{1}{2\rho_t}\norm{y'-y}_2^2
+\end{align*}
+$$</mathjax></p>
+<p>Since this is an unconstrained minimization problem, we know that <mathjax>$0$</mathjax> must be
+in the subgradient of this expression at <mathjax>$\bar{y}$</mathjax>.</p>
+<p><mathjax>$$
+\begin{align*}
+  0
+  &amp; \in B (\partial_{\bar{y}} g^{*})(B^T \bar{y}) - c + \frac{1}{\rho_t} (\bar{y}-y)  \\
+  y
+  &amp; \in \bar{y} + \rho_t \left( B (\partial_{\bar{y}} g^{*})(B^T \bar{y}) - c \right) \\
+  &amp; = (I + \rho_t \Theta)(\bar{y})
+\end{align*}
+$$</mathjax></p>
+<p>Apply <mathjax>$(I + \rho_t \Theta)^{-1}$</mathjax> to both sides gives us the desired result,
+We now have that for the above choices of <mathjax>$\Psi$</mathjax> and <mathjax>$\Theta$</mathjax>, ProxGrad can
+be reframed as identical to FOBOS,</p>
+<p><mathjax>$$
+\begin{align*}
+  y^{(t+1)} = (I + \rho_t \Theta)^{-1} (I - \rho_t \Psi) (y^{(t)})
+\end{align*}
+$$</mathjax></p>
+<h2><a name="ama-to-fobos" href="#ama-to-fobos">AMA to FOBOS</a></h2>
+<p>We'll now show that AMA as applied to the ADMM objective is
+simply an instance of FOBOS. Similar to the <a href="#prox-grad-to-fobos">ProxGrad
+reduction</a>, we'll use the following definitions for
+<mathjax>$\Psi$</mathjax> and <mathjax>$\Theta$</mathjax>,</p>
+<p><mathjax>$$
+\begin{align*}
+  \Psi(y)   &amp;= A (\nabla   f^{*})(A^T y)      &amp;
+  \Theta(y) &amp;= B (\partial g^{*})(B^T y) - c
+\end{align*}
+$$</mathjax></p>
+<p>First, recall the subgradient optimality condition as applied to Step B of
+ADMM (same as AMA). In particular, for <mathjax>$z^{(t+1)}$</mathjax> to be the argmin of
+<mathjax>$L(x^{(t+1)}, z, y^{(t)})$</mathjax>, it must be the case that,</p>
+<p><mathjax>$$
+\begin{align*}
+  0
+  &amp;\in \partial g(z^{(t+1)}) - B^T y^{(t)} - \rho B^T (c - Ax^{(t+1)} - Bz^{(t+1)}) \\
+  B^T ( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
+  &amp;\in \partial g(z^{(t+1)})
+\end{align*}
+$$</mathjax></p>
+<p>Using <mathjax>$y \in \partial f(x) \Rightarrow x \in \partial f^{*}(y)$</mathjax>, we obtain,</p>
+<p><mathjax>$$
+\begin{align*}
+  z^{(t+1)}
+  &amp; \in \partial g^{*}(B^T ( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) ))
+\end{align*}
+$$</mathjax></p>
+<p>We now left-multiply by <mathjax>$B$</mathjax>, subtract <mathjax>$c$</mathjax> from both sides to obtain, and use
+the definition of <mathjax>$\Theta$</mathjax> to obtain,</p>
+<p><mathjax>$$
+\begin{align*}
+  B z^{(t+1)} - c
+  &amp; \in \Theta( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
+\end{align*}
+$$</mathjax></p>
+<p>Now we multiply both sides by <mathjax>$\rho$</mathjax> and add,
+<mathjax>$y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)})$</mathjax>,</p>
+<p><mathjax>$$
+\begin{align*}
+  y^{(t)} - \rho Ax^{(t+1)}
+  &amp; \in (I + \rho \Theta)( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
+\end{align*}
+$$</mathjax></p>
+<p>We can invert <mathjax>$I + \rho \Theta$</mathjax> and notice that the other side is
+single-valued to obtain,</p>
+<p><mathjax>$$
+\begin{align}
+  (I + \rho \Theta)^{-1} (y^{(t)} - \rho Ax^{(t+1)})
+  &amp; = y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)})   \notag \\
+  (I + \rho \Theta)^{-1} (y^{(t)} - \rho Ax^{(t+1)})
+  &amp; = y^{(t+1)}                                                 \label{eqn:ama1} \\
+\end{align}
+$$</mathjax></p>
+<p>Now, let's apply the same subgradient optimality to Step A of AMA.</p>
+<p><mathjax>$$
+\begin{align*}
+  0
+  &amp;\in \partial f(x^{(t+1)}) - A^T y^{(t)} \\
+  A^T y^{(t)}
+  &amp;= \nabla f(x^{(t+1)})
+\end{align*}
+$$</mathjax></p>
+<p>Using <mathjax>$y = \nabla f(x) \Rightarrow x = \nabla f^{*}(y)$</mathjax> for strongly convex
+<mathjax>$f$</mathjax> and multiplying both sides by <mathjax>$A$</mathjax>,</p>
+<p><mathjax>$$
+\begin{align}
+  A f^{*} (A^T y^{(t)}) &amp;= A f(x^{(t+1)}) \notag            \\
+  \Psi(y^{(t)})         &amp;= A x^{(t+1)}    \label{eqn:ama2}
+\end{align}
+$$</mathjax></p>
+<p>Substituting in equation <mathjax>$\ref{eqn:ama2}$</mathjax> into <mathjax>$\ref{eqn:ama1}$</mathjax>, we obtain,</p>
+<p><mathjax>$$
+\begin{align*}
+  y^{(t+1)} = (I + \rho \Theta)^{-1} (I - \rho \Psi) (y^{(t)})
+\end{align*}
+$$</mathjax></p>
+<p>Notice that this is exactly the same thing we concluded in the reduction from
+ProxGrad to FOBOS. Thus, we have shown that both AMA and ProxGrad are the same
+algorithm for the ADMM objective.</p>
+<h1><a name="references" href="#references">References</a></h1>
+<p><strong>Proximal Gradient Descent and ADMM</strong> I was first made aware of the
+relationship between AMA and ADMM in <a href="http://arxiv.org/abs/1304.0499">Chi</a>'s article on
+convex clustering via ADMM and AMA. The relationship between Proximal Gradient
+Descent and FoBoS is taken from <a href="http://www.eecs.berkeley.edu/~elghaoui/Teaching/EE227A/lecture18.pdf">Berkeley's EE227a slides</a> and
+the relationship between FoBoS and AMA from <a href="ftp://ftp.math.ucla.edu/pub/camreport/cam12-35.pdf">Goldstein et
+al</a>'s work on Accelerated ADMM and AMA.</p>
+<!-- internal references -->
+
+<!-- papers -->
+
+    <div id="article_meta">
+        Category:
+          <a href="http://stronglyconvex.com/category/optimization.html">optimization</a>
+        <br />Tags:
+          <a href="http://stronglyconvex.com/tag/optimization.html">optimization</a>
+,           <a href="http://stronglyconvex.com/tag/fobos.html">fobos</a>
+,           <a href="http://stronglyconvex.com/tag/admm.html">admm</a>
+,           <a href="http://stronglyconvex.com/tag/ama.html">ama</a>
+,           <a href="http://stronglyconvex.com/tag/proximal.html">proximal</a>
+    </div>
+  </article>
+
+  <footer>
+    <a href="http://stronglyconvex.com/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
+  </footer>
+
+  <div id="comments">
+    <h2>Comments</h2>
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_identifier = "blog/admm-to-prox-grad.html";
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
+  </div>
+
+	</section>
+
+
+  <!-- scripts -->
+  <script
+    type= "text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    >
+  </script>
+  <script
+    type= "text/javascript"
+    src="http://stronglyconvex.com/assets/js/MathJaxLocal.js"
+    >
+  </script>
+  <script
+      type="text/javascript"
+      src="http://stronglyconvex.com/assets/lightbox/js/jquery-1.11.0.min.js"
+      >
+  </script>
+  <script
+      type="text/javascript"
+      src="http://stronglyconvex.com/assets/lightbox/js/lightbox.min.js"
+      >
+  </script>
+</body>
+</html>

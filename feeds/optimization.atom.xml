@@ -1,5 +1,274 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Strongly Convex</title><link href="http://stronglyconvex.com/" rel="alternate"></link><link href="http://stronglyconvex.com/feeds/optimization.atom.xml" rel="self"></link><id>http://stronglyconvex.com/</id><updated>2014-07-20T00:00:00-07:00</updated><entry><title>ADMM revisited</title><link href="http://stronglyconvex.com/blog/admm-revisited.html" rel="alternate"></link><updated>2014-07-20T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2014-07-20:blog/admm-revisited.html</id><summary type="html">&lt;p&gt;When I originally wrote about the &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;Alternating Direction Method of
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Strongly Convex</title><link href="http://stronglyconvex.com/" rel="alternate"></link><link href="http://stronglyconvex.com/feeds/optimization.atom.xml" rel="self"></link><id>http://stronglyconvex.com/</id><updated>2014-07-26T00:00:00-07:00</updated><entry><title>From ADMM to Proximal Gradient Descent</title><link href="http://stronglyconvex.com/blog/admm-to-prox-grad.html" rel="alternate"></link><updated>2014-07-26T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2014-07-26:blog/admm-to-prox-grad.html</id><summary type="html">&lt;p&gt;At first blush, &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
+(ProxGrad) appear to have very little in common. The convergence analyses for
+these two methods are unrelated, and the former operates on an Augmented
+Lagrangian while the latter directly minimizes the primal objective. In this
+post, we'll show that after a slight modification to ADMM, we recover the
+proximal gradient algorithm applied to Lagrangian &lt;em&gt;dual&lt;/em&gt; of the ADMM objective.&lt;/p&gt;
+&lt;p&gt;To be precise, we'll first make a slight modification to ADMM to construct
+another algorithm known as the &lt;a href="http://dspace.mit.edu/bitstream/handle/1721.1/3103/P-1836-19477130.pdf"&gt;Alternating Minimization Algorithm&lt;/a&gt; (AMA).
+We'll then show this algorithm is an instance of a more general technique for
+&lt;a href="http://supernet.isenberg.umass.edu/austria_lectures/fvisli.pdf"&gt;Variational Inequality problems&lt;/a&gt; called
+&lt;a href="http://machinelearning.wustl.edu/mlpapers/paper_files/jmlr10_duchi09a.pdf"&gt;Forward-Backward Splitting&lt;/a&gt; (FOBOS). Finally, we'll show that ProxGrad
+is also an instance of FOBOS with the exact same form. We conclude that these
+two algorithms are equivalent.&lt;/p&gt;
+&lt;h1&gt;&lt;a name="ama" href="#ama"&gt;Alternating Minimization Algorithm&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;The &lt;a href="http://dspace.mit.edu/bitstream/handle/1721.1/3103/P-1836-19477130.pdf"&gt;Alternating Minimization Algorithm&lt;/a&gt; (AMA), originally proposed by
+Paul Tseng in 1988, is an algorithm very similar to ADMM. In fact, the only
+difference between these two methods is in the first step of each iteration.
+Recall the pseudocode for ADMM; whereas ADMM minimizes the &lt;em&gt;Augmented&lt;/em&gt;
+Lagrangian with respect to &lt;mathjax&gt;$x$&lt;/mathjax&gt;, AMA minimizes the &lt;em&gt;Non-Augmented&lt;/em&gt; Lagrangian,&lt;/p&gt;
+&lt;div class="pseudocode"&gt;
+&lt;p&gt;&lt;strong&gt;Input&lt;/strong&gt; Step size &lt;mathjax&gt;$\rho$&lt;/mathjax&gt;, initial primal iterates &lt;mathjax&gt;$x^{(0)}$&lt;/mathjax&gt; and &lt;mathjax&gt;$z^{(0)}$&lt;/mathjax&gt;,
+            initial dual iterate &lt;mathjax&gt;$y^{(0)}$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;For &lt;mathjax&gt;$t = 0, 1, \ldots$&lt;/mathjax&gt;&lt;ol&gt;
+&lt;li&gt;Let &lt;mathjax&gt;$x^{(t+1)} = \underset{x}{\text{argmin}} \quad L_{   0}( x        , z^{(t)}, y^{(t)} )$&lt;/mathjax&gt;&lt;/li&gt;
+&lt;li&gt;Let &lt;mathjax&gt;$z^{(t+1)} = \underset{z}{\text{argmin}} \quad L_{\rho}( x^{(t+1)}, z      , y^{(t)} )$&lt;/mathjax&gt;&lt;/li&gt;
+&lt;li&gt;Let &lt;mathjax&gt;$y^{(t+1)} = y^{(t)} + \rho ( Ax^{(t+1)} + Bz^{(t+1)} - c )$&lt;/mathjax&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;p&gt;Notice the &lt;mathjax&gt;$0$&lt;/mathjax&gt; instead of &lt;mathjax&gt;$\rho$&lt;/mathjax&gt; in the definition of &lt;mathjax&gt;$x^{(t+1)}$&lt;/mathjax&gt;. This tiny
+change, we'll see, is all that's necessary to turn ADMM into ProxGrad.&lt;/p&gt;
+&lt;h1&gt;&lt;a name="vi" href="#vi"&gt;Variational Inequalties&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;To show the similarity between AMA and ProxGrad, we'll show that both
+algorithms are instances of Forward-Backward Splitting (FOBOS). Unlike other
+algorithms we've considered, FOBOS isn't about minimizing a real-valued
+objective function subject to constraints. Instead, FOBOS solves Variational
+Inequality problems, which we'll now describe.&lt;/p&gt;
+&lt;p&gt;Variational Inequality (VI) problems involve a vector-to-vector function
+&lt;mathjax&gt;$F: \mathbb{R}^n \rightarrow \mathbb{R}^n$&lt;/mathjax&gt; and a convex set &lt;mathjax&gt;$\mathcal{C}$&lt;/mathjax&gt;. The
+goal is to find an input &lt;mathjax&gt;$w^{*}$&lt;/mathjax&gt; such that,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{equation*}
+  \forall w \in \mathcal{C} \quad
+  \langle F(w^{*}), w - w^{*} \rangle \ge 0
+\end{equation*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;If &lt;mathjax&gt;$\mathcal{C} = \mathcal{R}^n$&lt;/mathjax&gt;, then this inequality can only hold when
+&lt;mathjax&gt;$F(w^{*}) = 0$&lt;/mathjax&gt;. For example, if &lt;mathjax&gt;$F = \nabla f$&lt;/mathjax&gt; for a differentiable convex
+objective function &lt;mathjax&gt;$f$&lt;/mathjax&gt;, then finding &lt;mathjax&gt;$F(w^{*}) = 0$&lt;/mathjax&gt; is the same as a finding
+&lt;mathjax&gt;$f$&lt;/mathjax&gt;'s unconstrained global minimum. Incorporating constraints is as simple as
+letting &lt;mathjax&gt;$F(w) = [\nabla_x L(x,y); -\nabla_y L(x,y)]$&lt;/mathjax&gt; for Lagrangian &lt;mathjax&gt;$L(x,y)$&lt;/mathjax&gt;
+with primal variable &lt;mathjax&gt;$x$&lt;/mathjax&gt; and dual variable &lt;mathjax&gt;$y$&lt;/mathjax&gt; and &lt;mathjax&gt;$w = [x; y]$&lt;/mathjax&gt;.&lt;/p&gt;
+&lt;p&gt;What is not covered in this setup, however, is the case when &lt;mathjax&gt;$L$&lt;/mathjax&gt; is not
+differentiable with respect to all parameters. We can expand on the concept of
+Variational Inequalties a bit by letting &lt;mathjax&gt;$F(w)$&lt;/mathjax&gt; be a &lt;em&gt;subset&lt;/em&gt; of
+&lt;mathjax&gt;$\mathcal{R}^{n}$&lt;/mathjax&gt; instead of a single value (that is,
+&lt;mathjax&gt;$F: \mathcal{R}^n \rightarrow 2^{\mathcal{R}^{n}}$&lt;/mathjax&gt;). We'll say that &lt;mathjax&gt;$F$&lt;/mathjax&gt; is
+a &lt;em&gt;monotone operator&lt;/em&gt; if,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  \forall w,w' \in \mathcal{C}; \,
+  \forall u \in F(w);           \,
+  \forall v \in F(w')           \quad
+  \langle u-v, w-w' \rangle \ge 0
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Now if &lt;mathjax&gt;$\mathcal{C} = \mathcal{R}^n$&lt;/mathjax&gt; and
+&lt;mathjax&gt;$F = [\partial_x L(x,y); -\partial_y L(x,y)]$&lt;/mathjax&gt;, we can see that finding
+&lt;mathjax&gt;$0 \in F(w^{*})$&lt;/mathjax&gt; is the same as solving the optimization described by &lt;mathjax&gt;$L$&lt;/mathjax&gt; for
+non-smooth objective and constraint functions.&lt;/p&gt;
+&lt;h1&gt;&lt;a name="fobos" href="#fobos"&gt;Forward-Backward Splitting&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;a href="http://machinelearning.wustl.edu/mlpapers/paper_files/jmlr10_duchi09a.pdf"&gt;Forward-Backward Splitting&lt;/a&gt; FOBOS is an algorithm for finding
+a &lt;mathjax&gt;$w^{*}$&lt;/mathjax&gt; that solves VI problems for particular choices of &lt;mathjax&gt;$F$&lt;/mathjax&gt;. Namely,
+we'll make the following assumptions.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;mathjax&gt;$F(w) = \Psi(w) + \Theta(w)$&lt;/mathjax&gt; for &lt;a href="http://web.stanford.edu/class/ee364b/lectures/monotone_slides.pdf"&gt;monotone operators&lt;/a&gt; &lt;mathjax&gt;$\Psi$&lt;/mathjax&gt; and
+  &lt;mathjax&gt;$\Theta$&lt;/mathjax&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;mathjax&gt;$\Psi(w)$&lt;/mathjax&gt; has exactly one value for each &lt;mathjax&gt;$w$&lt;/mathjax&gt; in its domain.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Given this, FOBOS will converge to a &lt;mathjax&gt;$w^{*}$&lt;/mathjax&gt; such that &lt;mathjax&gt;$0 \in F(w^{*})$&lt;/mathjax&gt;. The
+algorithm itself is,&lt;/p&gt;
+&lt;div class="pseudocode"&gt;
+&lt;p&gt;&lt;strong&gt;Input&lt;/strong&gt; Step sizes &lt;mathjax&gt;$\{ \rho_t \}_{t=1}^{\infty}$&lt;/mathjax&gt;, initial iterate &lt;mathjax&gt;$w^{(0)}$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;For &lt;mathjax&gt;$t = 0, 1, \ldots$&lt;/mathjax&gt;&lt;ol&gt;
+&lt;li&gt;Let &lt;mathjax&gt;$w^{(t+1/2)} = w^{(t)} - \rho_t \Psi(w^{(t)})$&lt;/mathjax&gt;&lt;/li&gt;
+&lt;li&gt;Let &lt;mathjax&gt;$w^{(t+1)}$&lt;/mathjax&gt; be such that &lt;mathjax&gt;$w^{(t+1)} + \rho_t \Theta(w^{(t+1)}) = w^{(t+1/2)}$&lt;/mathjax&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;p&gt;An equivalent, more concise way to describe FOBOS is with
+&lt;mathjax&gt;$w^{(t+1)} = (I + \rho_t \Theta)^{-1} (I - \rho_t \Psi) (w^{(t)})$&lt;/mathjax&gt;. With this
+formulation in mind, we'll now show that both AMA and ProxGrad are instances of
+FOBOS performing the same set of operations.&lt;/p&gt;
+&lt;h1&gt;&lt;a name="reductions" href="#reductions"&gt;Reductions to FOBOS&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;We'll now show that for the specific optimization problem tackled by ADMM,
+AMA is the same as Proximal Gradient Descent on the dual problem. First, recall
+the problem ADMM is solving,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align}
+\begin{split}
+  \underset{x,z}{\text{minimize}} \qquad
+    &amp;amp; f(x) + g(z) \\
+  \text{s.t.}                     \qquad
+    &amp;amp; Ax + Bz = c \\
+\end{split} \label{eqn:primal}
+\end{align}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;The dual problem to this is then,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align}
+\begin{split}
+  - \underset{y}{\text{minimize}} \qquad
+    &amp;amp; f^{*}(A^{T} y) + g^{*}(B^{T} z) - \langle y, c \rangle \\
+\end{split} \label{eqn:dual}
+\end{align}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;mathjax&gt;$f^{*}$&lt;/mathjax&gt; and &lt;mathjax&gt;$g^{*}$&lt;/mathjax&gt; are the &lt;a href="http://en.wikipedia.org/wiki/Convex_conjugate"&gt;convex conjugates&lt;/a&gt; to
+&lt;mathjax&gt;$f$&lt;/mathjax&gt; and &lt;mathjax&gt;$g$&lt;/mathjax&gt;, respectively. We'll now show that both AMA and Proximal Gradient
+Descent are optimizing this same dual.&lt;/p&gt;
+&lt;h2&gt;&lt;a name="prox-grad-to-fobos" href="#prox-grad-to-fobos"&gt;Proximal Gradient Descent to FOBOS&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Suppose we want to minimize &lt;mathjax&gt;$f^{*}(A^T y) + g^{*}(B^T y)$&lt;/mathjax&gt;. If the problem is
+unconstrained, this is equivalent to finding&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  0 \in F(y)
+  &amp;amp;= \partial_y \left( f^{*}(A^T y) + g(B^T y) - \langle y, c \rangle \right) \\
+  &amp;amp;= A (\nabla_y f^{*})(A^T y) + B (\partial_y g^{*})(B^T y) - c
+  \end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Let's now define,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align}
+  \Psi(y)   &amp;amp;= A (\nabla_y   f^{*})(A^T y)     &amp;amp;
+  \Theta(y) &amp;amp;= B (\partial_y g^{*})(B^T y) - c
+  \label{eqn:fobos-def}
+\end{align}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Clearly, &lt;mathjax&gt;$(I - \rho_{t} \Psi)(y) = y - \rho_{t} A (\nabla_y f^{*})(A^T y)$&lt;/mathjax&gt;
+matches the first part of FOBOS and the "gradient step" part of ProxGrad, but
+we also need to show that,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  \text{prox}_{\rho_t g^{*}(B^T \cdot) - \langle \cdot, c \rangle}(y)
+  &amp;amp; = (I + \rho_{t} \Theta)^{-1}(y)
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;To do this, let's recall the definition of the prox operator,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  \bar{y}
+  &amp;amp; = \text{prox}_{\rho_t g^{*}(B^T \cdot) - \langle \cdot, c \rangle}(y) \\
+  &amp;amp; = \argmin_{y'}  g^{*}(B^T y')
+                    - \langle y', c \rangle
+                    + \frac{1}{2\rho_t}\norm{y'-y}_2^2
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Since this is an unconstrained minimization problem, we know that &lt;mathjax&gt;$0$&lt;/mathjax&gt; must be
+in the subgradient of this expression at &lt;mathjax&gt;$\bar{y}$&lt;/mathjax&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  0
+  &amp;amp; \in B (\partial_{\bar{y}} g^{*})(B^T \bar{y}) - c + \frac{1}{\rho_t} (\bar{y}-y)  \\
+  y
+  &amp;amp; \in \bar{y} + \rho_t \left( B (\partial_{\bar{y}} g^{*})(B^T \bar{y}) - c \right) \\
+  &amp;amp; = (I + \rho_t \Theta)(\bar{y})
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Apply &lt;mathjax&gt;$(I + \rho_t \Theta)^{-1}$&lt;/mathjax&gt; to both sides gives us the desired result,
+We now have that for the above choices of &lt;mathjax&gt;$\Psi$&lt;/mathjax&gt; and &lt;mathjax&gt;$\Theta$&lt;/mathjax&gt;, ProxGrad can
+be reframed as identical to FOBOS,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  y^{(t+1)} = (I + \rho_t \Theta)^{-1} (I - \rho_t \Psi) (y^{(t)})
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;h2&gt;&lt;a name="ama-to-fobos" href="#ama-to-fobos"&gt;AMA to FOBOS&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;We'll now show that AMA as applied to the ADMM objective is
+simply an instance of FOBOS. Similar to the &lt;a href="#prox-grad-to-fobos"&gt;ProxGrad
+reduction&lt;/a&gt;, we'll use the following definitions for
+&lt;mathjax&gt;$\Psi$&lt;/mathjax&gt; and &lt;mathjax&gt;$\Theta$&lt;/mathjax&gt;,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  \Psi(y)   &amp;amp;= A (\nabla   f^{*})(A^T y)      &amp;amp;
+  \Theta(y) &amp;amp;= B (\partial g^{*})(B^T y) - c
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;First, recall the subgradient optimality condition as applied to Step B of
+ADMM (same as AMA). In particular, for &lt;mathjax&gt;$z^{(t+1)}$&lt;/mathjax&gt; to be the argmin of
+&lt;mathjax&gt;$L(x^{(t+1)}, z, y^{(t)})$&lt;/mathjax&gt;, it must be the case that,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  0
+  &amp;amp;\in \partial g(z^{(t+1)}) - B^T y^{(t)} - \rho B^T (c - Ax^{(t+1)} - Bz^{(t+1)}) \\
+  B^T ( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
+  &amp;amp;\in \partial g(z^{(t+1)})
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Using &lt;mathjax&gt;$y \in \partial f(x) \Rightarrow x \in \partial f^{*}(y)$&lt;/mathjax&gt;, we obtain,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  z^{(t+1)}
+  &amp;amp; \in \partial g^{*}(B^T ( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) ))
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;We now left-multiply by &lt;mathjax&gt;$B$&lt;/mathjax&gt;, subtract &lt;mathjax&gt;$c$&lt;/mathjax&gt; from both sides to obtain, and use
+the definition of &lt;mathjax&gt;$\Theta$&lt;/mathjax&gt; to obtain,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  B z^{(t+1)} - c
+  &amp;amp; \in \Theta( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Now we multiply both sides by &lt;mathjax&gt;$\rho$&lt;/mathjax&gt; and add,
+&lt;mathjax&gt;$y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)})$&lt;/mathjax&gt;,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  y^{(t)} - \rho Ax^{(t+1)}
+  &amp;amp; \in (I + \rho \Theta)( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;We can invert &lt;mathjax&gt;$I + \rho \Theta$&lt;/mathjax&gt; and notice that the other side is
+single-valued to obtain,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align}
+  (I + \rho \Theta)^{-1} (y^{(t)} - \rho Ax^{(t+1)})
+  &amp;amp; = y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)})   \notag \\
+  (I + \rho \Theta)^{-1} (y^{(t)} - \rho Ax^{(t+1)})
+  &amp;amp; = y^{(t+1)}                                                 \label{eqn:ama1} \\
+\end{align}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Now, let's apply the same subgradient optimality to Step A of AMA.&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  0
+  &amp;amp;\in \partial f(x^{(t+1)}) - A^T y^{(t)} \\
+  A^T y^{(t)}
+  &amp;amp;= \nabla f(x^{(t+1)})
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Using &lt;mathjax&gt;$y = \nabla f(x) \Rightarrow x = \nabla f^{*}(y)$&lt;/mathjax&gt; for strongly convex
+&lt;mathjax&gt;$f$&lt;/mathjax&gt; and multiplying both sides by &lt;mathjax&gt;$A$&lt;/mathjax&gt;,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align}
+  A f^{*} (A^T y^{(t)}) &amp;amp;= A f(x^{(t+1)}) \notag            \\
+  \Psi(y^{(t)})         &amp;amp;= A x^{(t+1)}    \label{eqn:ama2}
+\end{align}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Substituting in equation &lt;mathjax&gt;$\ref{eqn:ama2}$&lt;/mathjax&gt; into &lt;mathjax&gt;$\ref{eqn:ama1}$&lt;/mathjax&gt;, we obtain,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  y^{(t+1)} = (I + \rho \Theta)^{-1} (I - \rho \Psi) (y^{(t)})
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;Notice that this is exactly the same thing we concluded in the reduction from
+ProxGrad to FOBOS. Thus, we have shown that both AMA and ProxGrad are the same
+algorithm for the ADMM objective.&lt;/p&gt;
+&lt;h1&gt;&lt;a name="references" href="#references"&gt;References&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Proximal Gradient Descent and ADMM&lt;/strong&gt; I was first made aware of the
+relationship between AMA and ADMM in &lt;a href="http://arxiv.org/abs/1304.0499"&gt;Chi&lt;/a&gt;'s article on
+convex clustering via ADMM and AMA. The relationship between Proximal Gradient
+Descent and FoBoS is taken from &lt;a href="http://www.eecs.berkeley.edu/~elghaoui/Teaching/EE227A/lecture18.pdf"&gt;Berkeley's EE227a slides&lt;/a&gt; and
+the relationship between FoBoS and AMA from &lt;a href="ftp://ftp.math.ucla.edu/pub/camreport/cam12-35.pdf"&gt;Goldstein et
+al&lt;/a&gt;'s work on Accelerated ADMM and AMA.&lt;/p&gt;
+&lt;!-- internal references --&gt;
+
+&lt;!-- papers --&gt;</summary><category term="optimization"></category><category term="fobos"></category><category term="admm"></category><category term="ama"></category><category term="proximal"></category></entry><entry><title>ADMM revisited</title><link href="http://stronglyconvex.com/blog/admm-revisited.html" rel="alternate"></link><updated>2014-07-20T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2014-07-20:blog/admm-revisited.html</id><summary type="html">&lt;p&gt;When I originally wrote about the &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;Alternating Direction Method of
 Multipliers&lt;/a&gt; algorithm, the community's understanding of its
 convergence properties was light to say the least. While it has long been
 known (See &lt;a href="http://web.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf"&gt;Boyd's excellent article&lt;/a&gt;, Appendix A) that ADMM &lt;em&gt;will&lt;/em&gt;
