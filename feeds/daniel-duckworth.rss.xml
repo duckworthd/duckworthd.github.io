@@ -1,5 +1,531 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Strongly Convex</title><link>http://stronglyconvex.com/</link><description></description><atom:link href="http://stronglyconvex.com/feeds/daniel-duckworth.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 26 Jul 2014 00:00:00 -0700</lastBuildDate><item><title>From ADMM to Proximal Gradient Descent</title><link>http://stronglyconvex.com/blog/admm-to-prox-grad.html</link><description>&lt;p&gt;At first blush, &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Strongly Convex</title><link>http://stronglyconvex.com/</link><description></description><atom:link href="http://stronglyconvex.com/feeds/daniel-duckworth.rss.xml" rel="self"></atom:link><lastBuildDate>Fri, 01 Aug 2014 00:00:00 -0700</lastBuildDate><item><title>The Big Table of Convergence Rates</title><link>http://stronglyconvex.com/blog/big-table-of-convergence-rates.html</link><description>&lt;p&gt;In the past 50+ years of convex optimization research, a great many
+algorithms have been developed, each with slight nuances to their assumptions,
+implementations, and guarantees. In this article, I'll give a shorthand
+comparison of these methods in terms of the number of iterations required
+to reach a desired accuracy &lt;mathjax&gt;$\epsilon$&lt;/mathjax&gt; for convex and strongly convex objective
+functions.&lt;/p&gt;
+&lt;p&gt;Below, methods are grouped according to what "order" of information they
+require about the objective function. In general, the more information you
+have, the faster you can converge; but beware, you will also need more memory
+and computation. Zeroth and first order methods are typically appropriate for
+large scale problems, whereas second order methods are limited to
+small-to-medium scale problems that require a high degree of precision.&lt;/p&gt;
+&lt;p&gt;At the bottom, you will find algorithms aimed specifically at minimizing
+supervised learning problems and other meta-algorithms useful for distributing
+computation across multiple nodes.&lt;/p&gt;
+&lt;p&gt;Unless otherwise stated, all objectives are assumed to be Lipschitz
+continuous (though not necssarily differentiable) and the domain convex. The
+variable being optimized is &lt;mathjax&gt;$x \in \mathbb{R}^n$&lt;/mathjax&gt;.&lt;/p&gt;
+&lt;h1&gt;Zeroth Order Methods&lt;/h1&gt;
+&lt;p&gt;Zeroth order methods are characterized by not requiring any gradients or
+subgradients for their objective functions. In exchange, however, it is
+assumed that the objective is "simple" in the sense that a subset of variables
+(a "block") can be minimized exactly while holding all other variables fixed.&lt;/p&gt;
+&lt;table class="table table-bordered table-centered"&gt;
+&lt;p&gt;&lt;colgroup&gt;
+    &lt;col style="width:20%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:40%"&gt;
+  &lt;/colgroup&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Algorithm          &lt;/th&gt;
+      &lt;th&gt;Problem Formulation&lt;/th&gt;
+      &lt;th&gt;Convex             &lt;/th&gt;
+      &lt;th&gt;Strongly Convex    &lt;/th&gt;
+      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+      &lt;th&gt;Notes              &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;&lt;/p&gt;
+&lt;p&gt;&lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Randomized Block Coordinate Descent&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathcal{R}^{n}} f(x) + g(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon)$&lt;/mathjax&gt;&lt;sup id="fnref:richtarik-2011"&gt;&lt;a class="footnote-ref" href="#fn:richtarik-2011" rel="footnote"&gt;8&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log (1 / \epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:richtarik-2011"&gt;&lt;a class="footnote-ref" href="#fn:richtarik-2011" rel="footnote"&gt;8&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is differentiable and &lt;mathjax&gt;$g(x)$&lt;/mathjax&gt; is separable in
+        each block. &lt;mathjax&gt;$g(x)$&lt;/mathjax&gt; may be a barrier function.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;&lt;/p&gt;
+&lt;/table&gt;
+&lt;h1&gt;First Order Methods&lt;/h1&gt;
+&lt;p&gt;First order methods typically require access to an objective function's
+gradient or subgradient. The algorithms typically take the form &lt;mathjax&gt;$x^{(t+1)}
+= x^{(t)} - \alpha^{(t)} g^{(t)}$&lt;/mathjax&gt; for some step size &lt;mathjax&gt;$\alpha^{(t)}$&lt;/mathjax&gt; and descent
+direction &lt;mathjax&gt;$g^{(t)}$&lt;/mathjax&gt;. As such, each iteration takes approximately &lt;mathjax&gt;$O(n)$&lt;/mathjax&gt; time.&lt;/p&gt;
+&lt;table class="table table-bordered table-centered"&gt;
+&lt;p&gt;&lt;colgroup&gt;
+    &lt;col style="width:20%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:40%"&gt;
+  &lt;/colgroup&gt;&lt;/p&gt;
+&lt;p&gt;&lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Algorithm          &lt;/th&gt;
+      &lt;th&gt;Problem Formulation&lt;/th&gt;
+      &lt;th&gt;Convex             &lt;/th&gt;
+      &lt;th&gt;Strongly Convex    &lt;/th&gt;
+      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+      &lt;th&gt;Notes              &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;&lt;/p&gt;
+&lt;p&gt;&lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Subgradient Descent&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle  \min_{x \in \mathbb{R}^n} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon^{2})$&lt;/mathjax&gt;&lt;sup id="fnref:blog-sd"&gt;&lt;a class="footnote-ref" href="#fn:blog-sd" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Cannot be improved upon without further assumptions.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Mirror Descent&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon^{2} )$&lt;/mathjax&gt;&lt;sup id="fnref:ee381-md"&gt;&lt;a class="footnote-ref" href="#fn:ee381-md" rel="footnote"&gt;9&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Different parameterizations result in gradient descent and
+        exponentiated gradient descent.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Gradient Descent&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon)$&lt;/mathjax&gt;&lt;sup id="fnref:blog-gd"&gt;&lt;a class="footnote-ref" href="#fn:blog-gd" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log (1 / \epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:ee381-gd"&gt;&lt;a class="footnote-ref" href="#fn:ee381-gd" rel="footnote"&gt;10&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is differentiable.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Accelerated Gradient Descent&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \sqrt{\epsilon})$&lt;/mathjax&gt;&lt;sup id="fnref:blog-agd"&gt;&lt;a class="footnote-ref" href="#fn:blog-agd" rel="footnote"&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log (1 / \epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:bubeck-agd"&gt;&lt;a class="footnote-ref" href="#fn:bubeck-agd" rel="footnote"&gt;11&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is differentiable.
+        Cannot be improved upon without further assumptions.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Proximal Gradient Descent&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon)$&lt;/mathjax&gt;&lt;sup id="fnref:blog-pgd"&gt;&lt;a class="footnote-ref" href="#fn:blog-pgd" rel="footnote"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log (1 / \epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:mairal-2013"&gt;&lt;a class="footnote-ref" href="#fn:mairal-2013" rel="footnote"&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is differentiable and
+        &lt;mathjax&gt;$\text{prox}_{\tau_t g}(x)$&lt;/mathjax&gt; is easily computable.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Proximal Accelerated Gradient Descent&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \sqrt{\epsilon})$&lt;/mathjax&gt;&lt;sup id="fnref:blog-apgd"&gt;&lt;a class="footnote-ref" href="#fn:blog-apgd" rel="footnote"&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log (1 / \epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:mairal-2013"&gt;&lt;a class="footnote-ref" href="#fn:mairal-2013" rel="footnote"&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is differentiable and
+        &lt;mathjax&gt;$\text{prox}_{\tau_t g}(x)$&lt;/mathjax&gt; is easily computable.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Frank-Wolfe Algorithm / Conditional Gradient Algorithm&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1/\epsilon)$&lt;/mathjax&gt;&lt;sup id="fnref:blog-fw"&gt;&lt;a class="footnote-ref" href="#fn:blog-fw" rel="footnote"&gt;6&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1/\sqrt{\epsilon})$&lt;/mathjax&gt;&lt;sup id="fnref:garber-2014"&gt;&lt;a class="footnote-ref" href="#fn:garber-2014" rel="footnote"&gt;12&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$\mathcal{C}$&lt;/mathjax&gt; is bounded. Most useful when
+        &lt;mathjax&gt;$\mathcal{C}$&lt;/mathjax&gt; is a polytope in a very high dimensional space with
+        sparse extrema.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;&lt;/p&gt;
+&lt;/table&gt;
+&lt;h1&gt;Second Order Methods&lt;/h1&gt;
+&lt;p&gt;Second order methods either use or approximate the hessian (&lt;mathjax&gt;$\nabla^2 f(x)$&lt;/mathjax&gt;)
+of the objective function to result in better-than-linear rates of convergence.
+As such, each iteration typically requires &lt;mathjax&gt;$O(n^2)$&lt;/mathjax&gt; memory and between &lt;mathjax&gt;$O(n^2)$&lt;/mathjax&gt;
+and &lt;mathjax&gt;$O(n^3)$&lt;/mathjax&gt; computation per iteration.&lt;/p&gt;
+&lt;table class="table table-bordered table-centered"&gt;
+&lt;p&gt;&lt;colgroup&gt;
+    &lt;col style="width:20%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:40%"&gt;
+  &lt;/colgroup&gt;&lt;/p&gt;
+&lt;p&gt;&lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Algorithm          &lt;/th&gt;
+      &lt;th&gt;Problem Formulation&lt;/th&gt;
+      &lt;th&gt;Convex             &lt;/th&gt;
+      &lt;th&gt;Strongly Convex    &lt;/th&gt;
+      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+      &lt;th&gt;Notes              &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;&lt;/p&gt;
+&lt;p&gt;&lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Newton's Method&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log \log (1/\epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:ee364a-unconstrained"&gt;&lt;a class="footnote-ref" href="#fn:ee364a-unconstrained" rel="footnote"&gt;14&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n^3)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Only applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is twice differentiable. Constraints can be
+        incorporated via interior point methods.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Conjugate Gradient Descent&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n^2)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Converges in exactly &lt;mathjax&gt;$n$&lt;/mathjax&gt; steps for quadratic &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt;. May fail to
+        converge for non-quadratic objectives.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;L-BFGS&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;Between &lt;mathjax&gt;$O(\log (1/\epsilon))$&lt;/mathjax&gt; and &lt;mathjax&gt;$O(\log \log (1/\epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:ee236c-qnewton"&gt;&lt;a class="footnote-ref" href="#fn:ee236c-qnewton" rel="footnote"&gt;15&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n^2)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is differentiable, but works best when twice
+        differentiable. Convergence rate is not guaranteed.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;&lt;/p&gt;
+&lt;/table&gt;
+&lt;h1&gt;Stochastic Methods&lt;/h1&gt;
+&lt;p&gt;The following algorithms are specifically designed for supervised machine
+learning where the objective can be decomposed into independent "loss"
+functions and a regularizer,&lt;/p&gt;
+&lt;p&gt;&lt;mathjax&gt;$$
+\begin{align*}
+  \min_{x} \frac{1}{N} \sum_{i=1}^{N} f_{i}(x) + \lambda g(x)
+\end{align*}
+$$&lt;/mathjax&gt;&lt;/p&gt;
+&lt;p&gt;The intuition is that finding the optimal solution to this problem is
+unnecessary as the goal is to minimize the "risk" (read: error) with respect to
+a set of &lt;em&gt;samples&lt;/em&gt; from the true distribution of potential loss functions.
+Thus, the following algorithms' convergence rates are for the &lt;em&gt;expected&lt;/em&gt; rate
+of convergence (as opposed to the above algorithms which upper bound the &lt;em&gt;true&lt;/em&gt;
+rate of convergence).&lt;/p&gt;
+&lt;table class="table table-bordered table-centered"&gt;
+&lt;p&gt;&lt;colgroup&gt;
+    &lt;col style="width:20%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:40%"&gt;
+  &lt;/colgroup&gt;&lt;/p&gt;
+&lt;p&gt;&lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Algorithm          &lt;/th&gt;
+      &lt;th&gt;Problem Formulation&lt;/th&gt;
+      &lt;th&gt;Convex             &lt;/th&gt;
+      &lt;th&gt;Strongly Convex    &lt;/th&gt;
+      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+      &lt;th&gt;Notes              &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;&lt;/p&gt;
+&lt;p&gt;&lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Stochastic Gradient Descent (SGD)&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n/\epsilon^2)$&lt;/mathjax&gt;&lt;sup id="fnref:bach-2012"&gt;&lt;a class="footnote-ref" href="#fn:bach-2012" rel="footnote"&gt;16&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n/\epsilon)$&lt;/mathjax&gt;&lt;sup id="fnref:bach-2012"&gt;&lt;a class="footnote-ref" href="#fn:bach-2012" rel="footnote"&gt;16&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Assumes objective is differentiable.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Stochastic Dual Coordinate Ascent (SDCA)&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \frac{\lambda}{2} \norm{x}_2^2$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(N + \frac{1}{\lambda \epsilon})$&lt;/mathjax&gt;&lt;sup id="fnref:shalevshwartz-2012"&gt;&lt;a class="footnote-ref" href="#fn:shalevshwartz-2012" rel="footnote"&gt;17&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(( N + \frac{1}{\lambda} ) \log ( \frac{1}{\lambda \epsilon} ))$&lt;/mathjax&gt;&lt;sup id="fnref:shalevshwartz-2012"&gt;&lt;a class="footnote-ref" href="#fn:shalevshwartz-2012" rel="footnote"&gt;17&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Accelerated Proximal Stochastic Dual Coordinate Ascent (APSDCA)&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{C}} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\min (\frac{1}{\lambda \epsilon}, \sqrt{\frac{N}{\lambda \epsilon}} ))$&lt;/mathjax&gt;&lt;sup id="fnref:shalevshwartz-2013"&gt;&lt;a class="footnote-ref" href="#fn:shalevshwartz-2013" rel="footnote"&gt;18&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\min (\frac{1}{\lambda}, \sqrt{\frac{N}{\lambda}}) \log ( \frac{1}{\epsilon} ))$&lt;/mathjax&gt;&lt;sup id="fnref:shalevshwartz-2013"&gt;&lt;a class="footnote-ref" href="#fn:shalevshwartz-2013" rel="footnote"&gt;18&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Stochastic Average Gradient (SAG)&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon)$&lt;/mathjax&gt;&lt;sup id="fnref:schmidt-2013"&gt;&lt;a class="footnote-ref" href="#fn:schmidt-2013" rel="footnote"&gt;19&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log (1/\epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:schmidt-2013"&gt;&lt;a class="footnote-ref" href="#fn:schmidt-2013" rel="footnote"&gt;19&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$f_{i}(x)$&lt;/mathjax&gt; is differentiable.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;MISO&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon)$&lt;/mathjax&gt;&lt;sup id="fnref:mairal-2013"&gt;&lt;a class="footnote-ref" href="#fn:mairal-2013" rel="footnote"&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log (1/\epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:mairal-2013"&gt;&lt;a class="footnote-ref" href="#fn:mairal-2013" rel="footnote"&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        Applicable when &lt;mathjax&gt;$f_{i}(x)$&lt;/mathjax&gt; is differentiable. &lt;mathjax&gt;$g(x)$&lt;/mathjax&gt; may be used as
+        a barrier function.
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;&lt;/p&gt;
+&lt;/table&gt;
+&lt;h1&gt;Other Methods&lt;/h1&gt;
+&lt;p&gt;The following methods are meta-algorithms, typically used in distributed
+settings. Unlike preceding methods, they require solutions to optimization as
+steps within each iteration.&lt;/p&gt;
+&lt;table class="table table-bordered table-centered"&gt;
+&lt;p&gt;&lt;colgroup&gt;
+    &lt;col style="width:20%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:10%"&gt;
+    &lt;col style="width:40%"&gt;
+  &lt;/colgroup&gt;&lt;/p&gt;
+&lt;p&gt;&lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Algorithm          &lt;/th&gt;
+      &lt;th&gt;Problem Formulation&lt;/th&gt;
+      &lt;th&gt;Convex             &lt;/th&gt;
+      &lt;th&gt;Strongly Convex    &lt;/th&gt;
+      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+      &lt;th&gt;Notes              &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;&lt;/p&gt;
+&lt;p&gt;&lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;!-- Algorithm          --&gt;
+      &lt;td&gt;Alternating Direction Method of Multipliers (ADMM)&lt;/td&gt;
+      &lt;!-- Problem            --&gt;
+      &lt;td&gt;
+        &lt;mathjax&gt;$$
+          \begin{align*}
+            \min_{x,z} \quad
+              &amp;amp; f(x) + g(z) \\
+            \text{s.t.} \quad
+              &amp;amp; Ax + Bz = c
+          \end{align*}
+        $$&lt;/mathjax&gt;
+      &lt;/td&gt;
+      &lt;!-- Convex             --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1/\epsilon)$&lt;/mathjax&gt;&lt;sup id="fnref:blog-admm"&gt;&lt;a class="footnote-ref" href="#fn:blog-admm" rel="footnote"&gt;7&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Strongly Convex    --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(\log (1/\epsilon))$&lt;/mathjax&gt;&lt;sup id="fnref:hong-2012"&gt;&lt;a class="footnote-ref" href="#fn:hong-2012" rel="footnote"&gt;21&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;!-- Per-Iteration Cost --&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
+      &lt;!-- Notes              --&gt;
+      &lt;td&gt;
+        The stated convergence rate for "Strongly Convex" only requires &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; to
+        be strongly convex, not &lt;mathjax&gt;$g(x)$&lt;/mathjax&gt;. This same rate can also be applied to
+        the "Convex" case under several non-standard assumptions&lt;sup id="fnref:hong-2012"&gt;&lt;a class="footnote-ref" href="#fn:hong-2012" rel="footnote"&gt;21&lt;/a&gt;&lt;/sup&gt;.
+        Matrices &lt;mathjax&gt;$A$&lt;/mathjax&gt; and &lt;mathjax&gt;$B$&lt;/mathjax&gt; may also need to be full column rank&lt;sup id="fnref:deng-2012"&gt;&lt;a class="footnote-ref" href="#fn:deng-2012" rel="footnote"&gt;20&lt;/a&gt;&lt;/sup&gt; .
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;&lt;/p&gt;
+&lt;/table&gt;
+&lt;!-- Footnotes --&gt;
+
+&lt;!-- References --&gt;
+
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:blog-gd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-gd" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:blog-sd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/subgradient-descent.html"&gt;Subgradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-sd" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:blog-agd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html"&gt;Accelerated Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-agd" rev="footnote" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:blog-pgd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-pgd" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:blog-apgd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-apgd" rev="footnote" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:blog-fw"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/frank-wolfe.html"&gt;Franke-Wolfe Algorithm&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-fw" rev="footnote" title="Jump back to footnote 6 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:blog-admm"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/admm-revisited.html"&gt;Alternating Direction Method of Multipliers&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-admm" rev="footnote" title="Jump back to footnote 7 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:richtarik-2011"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1107.2848"&gt;Richtarik and Takac, 2011&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:richtarik-2011" rev="footnote" title="Jump back to footnote 8 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:ee381-md"&gt;
+&lt;p&gt;&lt;a href="http://users.ece.utexas.edu/~cmcaram/EE381V_2012F/Lecture_24_Scribe_Notes.final.pdf"&gt;EE381 Slides on Mirror Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee381-md" rev="footnote" title="Jump back to footnote 9 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:ee381-gd"&gt;
+&lt;p&gt;&lt;a href="http://users.ece.utexas.edu/~cmcaram/EE381V_2012F/Lecture_4_Scribe_Notes.final.pdf"&gt;EE381 Slides on Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee381-gd" rev="footnote" title="Jump back to footnote 10 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:bubeck-agd"&gt;
+&lt;p&gt;&lt;a href="https://blogs.princeton.edu/imabandit/2014/03/06/nesterovs-accelerated-gradient-descent-for-smooth-and-strongly-convex-optimization/"&gt;Sebastien Bubeck's article on Accelerated Gradient Descent for Smooth and Strongly Convex objectives&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:bubeck-agd" rev="footnote" title="Jump back to footnote 11 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:garber-2014"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1406.1305"&gt;Garber and Hazan, 2014&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:garber-2014" rev="footnote" title="Jump back to footnote 12 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:mairal-2013"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1305.3120"&gt;Mairal, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:mairal-2013" rev="footnote" title="Jump back to footnote 13 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:ee364a-unconstrained"&gt;
+&lt;p&gt;&lt;a href="http://web.stanford.edu/class/ee364a/lectures/unconstrained.pdf"&gt;EE364a Slides on Unconstrained Optimization Algorithms&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee364a-unconstrained" rev="footnote" title="Jump back to footnote 14 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:ee236c-qnewton"&gt;
+&lt;p&gt;&lt;a href="http://www.seas.ucla.edu/~vandenbe/236C/lectures/qnewton.pdf"&gt;EE236c Slides on Quasi-Newton Methods&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee236c-qnewton" rev="footnote" title="Jump back to footnote 15 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:bach-2012"&gt;
+&lt;p&gt;&lt;a href="http://www.ann.jussieu.fr/~plc/bach2012.pdf"&gt;Bach's slides on Stochastic Methods&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:bach-2012" rev="footnote" title="Jump back to footnote 16 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:shalevshwartz-2012"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1209.1873"&gt;Shalev-Shwartz and Zhang, 2012&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:shalevshwartz-2012" rev="footnote" title="Jump back to footnote 17 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:shalevshwartz-2013"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1309.2375"&gt;Shalev-Shwartz and Zhang, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:shalevshwartz-2013" rev="footnote" title="Jump back to footnote 18 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:schmidt-2013"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1309.2388"&gt;Schmidt et al, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:schmidt-2013" rev="footnote" title="Jump back to footnote 19 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:deng-2012"&gt;
+&lt;p&gt;&lt;a href="ftp://ftp.math.ucla.edu/pub/camreport/cam12-52.pdf"&gt;Deng and Yin, 2012&lt;/a&gt;, Table 1.1&amp;#160;&lt;a class="footnote-backref" href="#fnref:deng-2012" rev="footnote" title="Jump back to footnote 20 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:hong-2012"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1208.3922"&gt;Hong and Luo, 2012&lt;/a&gt;, Section 2&amp;#160;&lt;a class="footnote-backref" href="#fnref:hong-2012" rev="footnote" title="Jump back to footnote 21 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Fri, 01 Aug 2014 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2014-08-01:blog/big-table-of-convergence-rates.html</guid><category>optimization</category><category>convergence</category><category>reference</category></item><item><title>From ADMM to Proximal Gradient Descent</title><link>http://stronglyconvex.com/blog/admm-to-prox-grad.html</link><description>&lt;p&gt;At first blush, &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
 (ProxGrad) appear to have very little in common. The convergence analyses for
 these two methods are unrelated, and the former operates on an Augmented
 Lagrangian while the latter directly minimizes the primal objective. In this
