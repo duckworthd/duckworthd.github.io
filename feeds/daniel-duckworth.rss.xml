@@ -110,7 +110,7 @@ direction &lt;mathjax&gt;$g^{(t)}$&lt;/mathjax&gt;. As such, each iteration take
       &lt;!-- Convex             --&gt;
       &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon^{2} )$&lt;/mathjax&gt;&lt;sup id="fnref:ee381-md"&gt;&lt;a class="footnote-ref" href="#fn:ee381-md" rel="footnote"&gt;9&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;&lt;mathjax&gt;$O(1 / \epsilon )$&lt;/mathjax&gt;&lt;sup id="fnref:nedich-2013"&gt;&lt;a class="footnote-ref" href="#fn:nedich-2013" rel="footnote"&gt;26&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
       &lt;td&gt;&lt;mathjax&gt;$O(n)$&lt;/mathjax&gt;&lt;/td&gt;
       &lt;!-- Notes              --&gt;
@@ -166,6 +166,7 @@ direction &lt;mathjax&gt;$g^{(t)}$&lt;/mathjax&gt;. As such, each iteration take
       &lt;td&gt;
         Applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is differentiable.
         Cannot be improved upon without further assumptions.
+        Has better constants than Gradient Descent for "Strongly Convex" case.
       &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -200,6 +201,8 @@ direction &lt;mathjax&gt;$g^{(t)}$&lt;/mathjax&gt;. As such, each iteration take
       &lt;td&gt;
         Applicable when &lt;mathjax&gt;$f(x)$&lt;/mathjax&gt; is differentiable and
         &lt;mathjax&gt;$\text{prox}_{\tau_t g}(x)$&lt;/mathjax&gt; is easily computable.
+        Has better constants than Proximal Gradient Descent for "Strongly
+        Convex" case.
       &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
@@ -503,7 +506,7 @@ on iteration count &lt;mathjax&gt;$t$&lt;/mathjax&gt;.&lt;/p&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Cutting-Plane Methods&lt;/td&gt;
+      &lt;td&gt;Center of Gravity Algorithm&lt;/td&gt;
       &lt;!-- Problem            --&gt;
       &lt;td&gt;&lt;mathjax&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/mathjax&gt;&lt;/td&gt;
       &lt;!-- Convex             --&gt;
@@ -603,6 +606,9 @@ on iteration count &lt;mathjax&gt;$t$&lt;/mathjax&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:nesterov-2007"&gt;
 &lt;p&gt;&lt;a href="http://ium.mccme.ru/postscript/s12/GS-Nesterov%20Primal-dual.pdf"&gt;Nesterov, 2007&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:nesterov-2007" rev="footnote" title="Jump back to footnote 25 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:nedich-2013"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1307.1879"&gt;Nedich and Lee, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:nedich-2013" rev="footnote" title="Jump back to footnote 26 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Fri, 01 Aug 2014 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2014-08-01:blog/big-table-of-convergence-rates.html</guid><category>optimization</category><category>convergence</category><category>reference</category></item><item><title>From ADMM to Proximal Gradient Descent</title><link>http://stronglyconvex.com/blog/admm-to-prox-grad.html</link><description>&lt;p&gt;At first blush, &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;

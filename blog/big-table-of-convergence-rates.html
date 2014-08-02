@@ -177,7 +177,7 @@ direction <mathjax>$g^{(t)}$</mathjax>. As such, each iteration takes approximat
       <!-- Convex             -->
       <td><mathjax>$O(1 / \epsilon^{2} )$</mathjax><sup id="fnref:ee381-md"><a class="footnote-ref" href="#fn:ee381-md" rel="footnote">9</a></sup></td>
       <!-- Strongly Convex    -->
-      <td>...</td>
+      <td><mathjax>$O(1 / \epsilon )$</mathjax><sup id="fnref:nedich-2013"><a class="footnote-ref" href="#fn:nedich-2013" rel="footnote">26</a></sup></td>
       <!-- Per-Iteration Cost -->
       <td><mathjax>$O(n)$</mathjax></td>
       <!-- Notes              -->
@@ -233,6 +233,7 @@ direction <mathjax>$g^{(t)}$</mathjax>. As such, each iteration takes approximat
       <td>
         Applicable when <mathjax>$f(x)$</mathjax> is differentiable.
         Cannot be improved upon without further assumptions.
+        Has better constants than Gradient Descent for "Strongly Convex" case.
       </td>
     </tr>
     <tr>
@@ -267,6 +268,8 @@ direction <mathjax>$g^{(t)}$</mathjax>. As such, each iteration takes approximat
       <td>
         Applicable when <mathjax>$f(x)$</mathjax> is differentiable and
         <mathjax>$\text{prox}_{\tau_t g}(x)$</mathjax> is easily computable.
+        Has better constants than Proximal Gradient Descent for "Strongly
+        Convex" case.
       </td>
     </tr>
     <tr>
@@ -570,7 +573,7 @@ on iteration count <mathjax>$t$</mathjax>.</p>
     </tr>
     <tr>
       <!-- Algorithm          -->
-      <td>Cutting-Plane Methods</td>
+      <td>Center of Gravity Algorithm</td>
       <!-- Problem            -->
       <td><mathjax>$\displaystyle \min_{x \in \mathcal{C}} f(x)$</mathjax></td>
       <!-- Convex             -->
@@ -670,6 +673,9 @@ on iteration count <mathjax>$t$</mathjax>.</p>
 </li>
 <li id="fn:nesterov-2007">
 <p><a href="http://ium.mccme.ru/postscript/s12/GS-Nesterov%20Primal-dual.pdf">Nesterov, 2007</a>&#160;<a class="footnote-backref" href="#fnref:nesterov-2007" rev="footnote" title="Jump back to footnote 25 in the text">&#8617;</a></p>
+</li>
+<li id="fn:nedich-2013">
+<p><a href="http://arxiv.org/abs/1307.1879">Nedich and Lee, 2013</a>&#160;<a class="footnote-backref" href="#fnref:nedich-2013" rev="footnote" title="Jump back to footnote 26 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
