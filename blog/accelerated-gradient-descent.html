@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/assets/lightbox/css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
-	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 
   <!-- RSS/ATOM feeds -->
 	<link href="http://stronglyconvex.com/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
@@ -23,12 +23,12 @@
 <body>
 	<section id="sidebar">
 		<figure id="user_logo">
-      <a href="http://stronglyconvex.com"><div class="logo">&nbsp;</div></a>
+      <a href=""><div class="logo">&nbsp;</div></a>
 		</figure>
 
 		<div class="user_meta">
       <h1 id="user">
-        <a  href="http://stronglyconvex.com/"
+        <a  href="/"
             class="sitename">
           Strongly Convex
         </a>
@@ -49,7 +49,8 @@
 		<footer>
 			<address>
 				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
+        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
 			</address>
 		</footer>
 	</section>
@@ -57,7 +58,7 @@
 	<section id="posts">
 	<header>
       <h1 class="title">
-			  <a  href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html"
+			  <a  href="/blog/accelerated-gradient-descent.html"
             rel="bookmark"
 			  	  title="Permalink to Accelerated Gradient Descent">
           Accelerated Gradient Descent
@@ -321,7 +322,7 @@ fixed number of iterations or when <mathjax>$||\nabla f(x^{(t)})||_2$</mathjax> 
 <p><strong>Proof of Convergence</strong> The proof of convergence is thanks to Lieven
 Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gradient.pdf">EE236c slides</a> hosted by Zaiwen Wen.</p>
 <h1><a name="reference-impl" href="#reference-impl">Reference Implementation</a></h1>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">accelerated_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">accelerated_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;Accelerated Gradient Method</span>
 
 <span class="sd">  Parameters</span>
@@ -365,44 +366,44 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
       <span class="n">a</span> <span class="o">*=</span> <span class="mf">0.99</span>
     <span class="k">return</span> <span class="n">a</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="kn">import</span> <span class="nn">os</span>
 
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
   <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
 
-  <span class="c">### ACCELERATED GRADIENT ###</span>
+  <span class="c1">### ACCELERATED GRADIENT ###</span>
 
-  <span class="c"># problem definition</span>
-  <span class="n">function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">4</span>     <span class="c"># the function to minimize</span>
-  <span class="n">gradient</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span><span class="mi">3</span>  <span class="c"># its gradient</span>
+  <span class="c1"># problem definition</span>
+  <span class="n">function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">4</span>     <span class="c1"># the function to minimize</span>
+  <span class="n">gradient</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">x</span> <span class="o">**</span><span class="mi">3</span>  <span class="c1"># its gradient</span>
   <span class="n">alpha</span> <span class="o">=</span> <span class="n">BacktrackingLineSearch</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
   <span class="n">x0</span> <span class="o">=</span> <span class="mf">1.0</span>
   <span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">10</span>
 
-  <span class="c"># run gradient descent</span>
+  <span class="c1"># run gradient descent</span>
   <span class="n">iterates</span> <span class="o">=</span> <span class="n">accelerated_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="n">n_iterations</span><span class="p">)</span>
 
-  <span class="c">### PLOTTING ###</span>
+  <span class="c1">### PLOTTING ###</span>
 
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iterates_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
-                                     <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+                                     <span class="n">path</span><span class="o">=</span><span class="s1">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
-                                      <span class="n">path</span><span class="o">=</span><span class="s">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+                                      <span class="n">path</span><span class="o">=</span><span class="s1">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 
     <div id="article_meta">
         Category:
-          <a href="http://stronglyconvex.com/category/optimization.html">optimization</a>
+          <a href="/category/optimization.html">optimization</a>
         <br />Tags:
-          <a href="http://stronglyconvex.com/tag/optimization.html">optimization</a>
-,           <a href="http://stronglyconvex.com/tag/first-order.html">first-order</a>
-,           <a href="http://stronglyconvex.com/tag/accelerated.html">accelerated</a>
+          <a href="/tag/optimization.html">optimization</a>
+,           <a href="/tag/first-order.html">first-order</a>
+,           <a href="/tag/accelerated.html">accelerated</a>
     </div>
   </article>
 
   <footer>
-    <a href="http://stronglyconvex.com/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
+    <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
   </footer>
 
   <div id="comments">
@@ -430,17 +431,17 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
   </script>
   <script
     type= "text/javascript"
-    src="http://stronglyconvex.com/assets/js/MathJaxLocal.js"
+    src="/theme/mathjax/MathJaxLocal.js"
     >
   </script>
   <script
       type="text/javascript"
-      src="http://stronglyconvex.com/assets/lightbox/js/jquery-1.11.0.min.js"
+      src="/theme/lightbox/js/jquery-1.11.0.min.js"
       >
   </script>
   <script
       type="text/javascript"
-      src="http://stronglyconvex.com/assets/lightbox/js/lightbox.min.js"
+      src="/theme/lightbox/js/lightbox.min.js"
       >
   </script>
 </body>

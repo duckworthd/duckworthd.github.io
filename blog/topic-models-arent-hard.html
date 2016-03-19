@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/assets/lightbox/css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
-	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 
   <!-- RSS/ATOM feeds -->
 	<link href="http://stronglyconvex.com/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
@@ -23,12 +23,12 @@
 <body>
 	<section id="sidebar">
 		<figure id="user_logo">
-      <a href="http://stronglyconvex.com"><div class="logo">&nbsp;</div></a>
+      <a href=""><div class="logo">&nbsp;</div></a>
 		</figure>
 
 		<div class="user_meta">
       <h1 id="user">
-        <a  href="http://stronglyconvex.com/"
+        <a  href="/"
             class="sitename">
           Strongly Convex
         </a>
@@ -49,7 +49,8 @@
 		<footer>
 			<address>
 				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
+        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
 			</address>
 		</footer>
 	</section>
@@ -57,7 +58,7 @@
 	<section id="posts">
 	<header>
       <h1 class="title">
-			  <a  href="http://stronglyconvex.com/blog/topic-models-arent-hard.html"
+			  <a  href="/blog/topic-models-arent-hard.html"
             rel="bookmark"
 			  	  title="Permalink to Topic Models aren't hard">
           Topic Models aren't hard
@@ -108,7 +109,7 @@ generate data from a Mixture Model.</p>
 <p>In a mixture model, each data point is sampled independently. The algorithm
 for generating a sample given the model's parameters is given by the following
 python snippet.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">sample_mixture_model</span><span class="p">(</span><span class="n">n_data_points</span><span class="p">,</span> <span class="n">cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sample_mixture_model</span><span class="p">(</span><span class="n">n_data_points</span><span class="p">,</span> <span class="n">cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_data_points</span><span class="p">):</span>
     <span class="n">cluster</span> <span class="o">=</span> <span class="n">sample_categorical</span><span class="p">(</span><span class="n">cluster_weights</span><span class="p">)</span>
     <span class="n">mean</span><span class="p">,</span> <span class="n">variance</span> <span class="o">=</span> <span class="n">cluster_parameters</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span>
@@ -129,15 +130,15 @@ documents that we only see a few samples from.  Furthermore, each document has
 its own version of <code>cluster_weights</code> -- our only boon is that all documents
 share the same <code>cluster_parameters</code>.</p>
 <p>To make that concrete, let's look at how we would generate samples from LDA.</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">sample_lda</span><span class="p">(</span><span class="n">n_data_points_per_document</span><span class="p">,</span> <span class="n">all_cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
-  <span class="n">n_documents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_cluster_weights</span><span class="p">)</span>  <span class="c"># number of documents</span>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sample_lda</span><span class="p">(</span><span class="n">n_data_points_per_document</span><span class="p">,</span> <span class="n">all_cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
+  <span class="n">n_documents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_cluster_weights</span><span class="p">)</span>  <span class="c1"># number of documents</span>
   <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_documents</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">sample_mixture_model</span><span class="p">(</span><span class="n">n_data_points_per_document</span><span class="p">,</span>
                                        <span class="n">all_cluster_weights</span><span class="p">[</span><span class="n">d</span><span class="p">],</span>
                                        <span class="n">cluster_parameters</span><span class="p">):</span>
       <span class="k">yield</span> <span class="p">{</span>
-        <span class="s">&#39;document_number&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
-        <span class="s">&#39;data_point&#39;</span><span class="p">:</span> <span class="n">sample</span>
+        <span class="s1">&#39;document_number&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
+        <span class="s1">&#39;data_point&#39;</span><span class="p">:</span> <span class="n">sample</span>
       <span class="p">}</span>
 </pre></div>
 
@@ -156,7 +157,7 @@ now understand Latent Dirichlet Allocation, the core of nearly every Topic
 Model in existence.</p>
 <h1><a name="appendix" href="#appendix">Appendix</a></h1>
 <p>Here's the MATLAB code for generating the two plots above.</p>
-<div class="highlight"><pre><span class="c">%% parameters</span>
+<div class="highlight"><pre><span></span><span class="c">%% parameters</span>
 <span class="n">n_samples</span> <span class="p">=</span> <span class="mi">200</span><span class="p">;</span>
 <span class="n">n_clusters</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>
 <span class="n">n_documents</span> <span class="p">=</span> <span class="mi">4</span><span class="p">;</span>
@@ -200,16 +201,16 @@ Model in existence.</p>
 
     <div id="article_meta">
         Category:
-          <a href="http://stronglyconvex.com/category/topic-models.html">topic-models</a>
+          <a href="/category/topic-models.html">topic-models</a>
         <br />Tags:
-          <a href="http://stronglyconvex.com/tag/topic-models.html">topic-models</a>
-,           <a href="http://stronglyconvex.com/tag/bayesian.html">bayesian</a>
-,           <a href="http://stronglyconvex.com/tag/lda.html">lda</a>
+          <a href="/tag/topic-models.html">topic-models</a>
+,           <a href="/tag/bayesian.html">bayesian</a>
+,           <a href="/tag/lda.html">lda</a>
     </div>
   </article>
 
   <footer>
-    <a href="http://stronglyconvex.com/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
+    <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
   </footer>
 
   <div id="comments">
@@ -237,17 +238,17 @@ Model in existence.</p>
   </script>
   <script
     type= "text/javascript"
-    src="http://stronglyconvex.com/assets/js/MathJaxLocal.js"
+    src="/theme/mathjax/MathJaxLocal.js"
     >
   </script>
   <script
       type="text/javascript"
-      src="http://stronglyconvex.com/assets/lightbox/js/jquery-1.11.0.min.js"
+      src="/theme/lightbox/js/jquery-1.11.0.min.js"
       >
   </script>
   <script
       type="text/javascript"
-      src="http://stronglyconvex.com/assets/lightbox/js/lightbox.min.js"
+      src="/theme/lightbox/js/lightbox.min.js"
       >
   </script>
 </body>

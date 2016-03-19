@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="http://stronglyconvex.com/assets/lightbox/css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
-	<link href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 
   <!-- RSS/ATOM feeds -->
 	<link href="http://stronglyconvex.com/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
@@ -23,12 +23,12 @@
 <body>
 	<section id="sidebar">
 		<figure id="user_logo">
-      <a href="http://stronglyconvex.com"><div class="logo">&nbsp;</div></a>
+      <a href=""><div class="logo">&nbsp;</div></a>
 		</figure>
 
 		<div class="user_meta">
       <h1 id="user">
-        <a  href="http://stronglyconvex.com/"
+        <a  href="/"
             class="sitename">
           Strongly Convex
         </a>
@@ -49,32 +49,33 @@
 		<footer>
 			<address>
 				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>.
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
+        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
 			</address>
 		</footer>
 	</section>
 
 	<section id="posts">
-	<dl>
-		<ol>
-				<li>
+  <dl>
+    <ol>
+        <li>
 
-					<h1 class="title">
-						<a  href="http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html"
+          <h1 class="title">
+            <a  href="/blog/accelerated-proximal-gradient-descent.html"
                 rel="bookmark"
                 title="Permalink to Accelerated Proximal Gradient Descent"
                 >
               Accelerated Proximal Gradient Descent
             </a>
-					</h1>
+          </h1>
 
-					<abbr class="published"
-              title="2013-04-25T00:00:00"
+          <abbr class="published"
+              title="2013-04-25T00:00:00-07:00"
               >
             Thu 25 April 2013
           </abbr>
 
-				  <div class="entry-content">
+          <div class="entry-content">
             <p><mathjax>$\def\prox{\text{prox}}$</mathjax>
   In a <a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html">previous post</a>, I presented Proximal Gradient, a
 method for bypassing the <mathjax>$O(1 / \epsilon^2)$</mathjax> convergence rate of Subgradient
@@ -82,25 +83,25 @@ Descent.  This method relied on assuming that the objective function could be
 expressed as the sum of 2 functions, <mathjax>$g(x)$</mathjax> and <mathjax>$h(x)$</mathjax>, with ...</p>
           </div>
 
-				</li>
-				<li>
+        </li>
+        <li>
 
-					<h1 class="title">
-						<a  href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html"
+          <h1 class="title">
+            <a  href="/blog/accelerated-gradient-descent.html"
                 rel="bookmark"
                 title="Permalink to Accelerated Gradient Descent"
                 >
               Accelerated Gradient Descent
             </a>
-					</h1>
+          </h1>
 
-					<abbr class="published"
-              title="2013-04-12T00:00:00"
+          <abbr class="published"
+              title="2013-04-12T00:00:00-07:00"
               >
             Fri 12 April 2013
           </abbr>
 
-				  <div class="entry-content">
+          <div class="entry-content">
             <p>In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
 At the same time, he established the Accelerated Gradient Method, proved that
 its convergence rate superior to Gradient Descent (<mathjax>$O(1/\sqrt{\epsilon})$</mathjax>
@@ -108,10 +109,12 @@ iterations instead of <mathjax>$O(1/\epsilon)$</mathjax>), and then proved that 
 first-order (that ...</p>
           </div>
 
-				</li>
-		</ol>
-	</dl>
+        </li>
+    </ol>
+  </dl>
 
+<p class="paginator">
+</p>
 	</section>
 
 
@@ -123,17 +126,17 @@ first-order (that ...</p>
   </script>
   <script
     type= "text/javascript"
-    src="http://stronglyconvex.com/assets/js/MathJaxLocal.js"
+    src="/theme/mathjax/MathJaxLocal.js"
     >
   </script>
   <script
       type="text/javascript"
-      src="http://stronglyconvex.com/assets/lightbox/js/jquery-1.11.0.min.js"
+      src="/theme/lightbox/js/jquery-1.11.0.min.js"
       >
   </script>
   <script
       type="text/javascript"
-      src="http://stronglyconvex.com/assets/lightbox/js/lightbox.min.js"
+      src="/theme/lightbox/js/lightbox.min.js"
       >
   </script>
 </body>

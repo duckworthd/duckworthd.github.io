@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- stylesheets -->
+	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
+
+  <!-- fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+
+  <!-- RSS/ATOM feeds -->
+	<link href="http://stronglyconvex.com/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+
+
+		<title>Strongly Convex</title>
+		<meta charset="utf-8" />
+</head>
+<body>
+	<section id="sidebar">
+		<figure id="user_logo">
+      <a href=""><div class="logo">&nbsp;</div></a>
+		</figure>
+
+		<div class="user_meta">
+      <h1 id="user">
+        <a  href="/"
+            class="sitename">
+          Strongly Convex
+        </a>
+      </h1>
+			<h2></h2>
+
+
+			<ul>
+        <hr></hr>
+					<li><a href="/">Words</a></li>
+          <hr></hr>
+					<li><a href="/code.html">Code</a></li>
+          <hr></hr>
+					<li><a href="/about.html">About</a></li>
+          <hr></hr>
+			</ul>
+		</div>
+		<footer>
+			<address>
+				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
+        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
+			</address>
+		</footer>
+	</section>
+
+	<section id="posts">
+  <dl>
+    <ol>
+        <li>
+
+          <h1 class="title">
+            <a  href="/blog/accelerated-proximal-gradient-descent.html"
+                rel="bookmark"
+                title="Permalink to Accelerated Proximal Gradient Descent"
+                >
+              Accelerated Proximal Gradient Descent
+            </a>
+          </h1>
+
+          <abbr class="published"
+              title="2013-04-25T00:00:00-07:00"
+              >
+            Thu 25 April 2013
+          </abbr>
+
+          <div class="entry-content">
+            <p><mathjax>$\def\prox{\text{prox}}$</mathjax>
+  In a <a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html">previous post</a>, I presented Proximal Gradient, a
+method for bypassing the <mathjax>$O(1 / \epsilon^2)$</mathjax> convergence rate of Subgradient
+Descent.  This method relied on assuming that the objective function could be
+expressed as the sum of 2 functions, <mathjax>$g(x)$</mathjax> and <mathjax>$h(x)$</mathjax>, with ...</p>
+          </div>
+
+        </li>
+        <li>
+
+          <h1 class="title">
+            <a  href="/blog/coordinate-ascent-convex-clustering.html"
+                rel="bookmark"
+                title="Permalink to Coordinate Ascent for Convex Clustering"
+                >
+              Coordinate Ascent for Convex Clustering
+            </a>
+          </h1>
+
+          <abbr class="published"
+              title="2013-04-23T00:00:00-07:00"
+              >
+            Tue 23 April 2013
+          </abbr>
+
+          <div class="entry-content">
+            <p>Convex clustering is the reformulation of k-means clustering as a convex
+problem. While the two problems are not equivalent, the former can be seen as a
+relaxation of the latter that allows us to easily find globally optimal
+solutions (as opposed to only locally optimal ones).</p>
+<p>Suppose we have a ...</p>
+          </div>
+
+        </li>
+        <li>
+
+          <h1 class="title">
+            <a  href="/blog/l1-sparsity.html"
+                rel="bookmark"
+                title="Permalink to Why does L1 produce sparse solutions?"
+                >
+              Why does L1 produce sparse solutions?
+            </a>
+          </h1>
+
+          <abbr class="published"
+              title="2013-04-22T00:00:00-07:00"
+              >
+            Mon 22 April 2013
+          </abbr>
+
+          <div class="entry-content">
+            <p>Supervised machine learning problems are typically of the form "minimize your
+error while regularizing your parameters." The idea is that while many choices
+of parameters may make your training error low, the goal isn't low training
+error -- it's low test-time error. Thus, parameters should be minimize training
+error ...</p>
+          </div>
+
+        </li>
+        <li>
+
+          <h1 class="title">
+            <a  href="/blog/proximal-gradient-descent.html"
+                rel="bookmark"
+                title="Permalink to Proximal Gradient Descent"
+                >
+              Proximal Gradient Descent
+            </a>
+          </h1>
+
+          <abbr class="published"
+              title="2013-04-19T00:00:00-07:00"
+              >
+            Fri 19 April 2013
+          </abbr>
+
+          <div class="entry-content">
+            <p><mathjax>$ \def\prox{\text{prox}} $</mathjax>
+  In a <a href="/blog/subgradient-descent.html#usage">previous post</a>, I mentioned that one cannot
+hope to asymptotically outperform the <mathjax>$O(\frac{1}{\epsilon^2})$</mathjax> convergence
+rate of Subgradient Descent when dealing with a non-differentiable objective
+function. This is in fact only half-true; Subgradient Descent cannot be beat
+<em>using only first-order information ...</em></p>
+          </div>
+
+        </li>
+        <li>
+
+          <h1 class="title">
+            <a  href="/blog/accelerated-gradient-descent.html"
+                rel="bookmark"
+                title="Permalink to Accelerated Gradient Descent"
+                >
+              Accelerated Gradient Descent
+            </a>
+          </h1>
+
+          <abbr class="published"
+              title="2013-04-12T00:00:00-07:00"
+              >
+            Fri 12 April 2013
+          </abbr>
+
+          <div class="entry-content">
+            <p>In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
+At the same time, he established the Accelerated Gradient Method, proved that
+its convergence rate superior to Gradient Descent (<mathjax>$O(1/\sqrt{\epsilon})$</mathjax>
+iterations instead of <mathjax>$O(1/\epsilon)$</mathjax>), and then proved that no other
+first-order (that ...</p>
+          </div>
+
+        </li>
+    </ol>
+  </dl>
+
+<p class="paginator">
+			<a href="/index.html" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;newer</a>
+		<a href="/index3.html" class="button_accent" style="position: absolute; right: 0;">continue&nbsp;&nbsp;&nbsp;&rarr;</a>
+</p>
+	</section>
+
+
+  <!-- scripts -->
+  <script
+    type= "text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    >
+  </script>
+  <script
+    type= "text/javascript"
+    src="/theme/mathjax/MathJaxLocal.js"
+    >
+  </script>
+  <script
+      type="text/javascript"
+      src="/theme/lightbox/js/jquery-1.11.0.min.js"
+      >
+  </script>
+  <script
+      type="text/javascript"
+      src="/theme/lightbox/js/lightbox.min.js"
+      >
+  </script>
+</body>
+</html>
