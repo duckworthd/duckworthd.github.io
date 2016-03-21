@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Strongly Convex</title><link>http://stronglyconvex.com/</link><description></description><atom:link href="http://stronglyconvex.com/feeds/daniel-duckworth.rss.xml" rel="self"></atom:link><lastBuildDate>Fri, 01 Aug 2014 00:00:00 -0700</lastBuildDate><item><title>The Big Table of Convergence Rates</title><link>http://stronglyconvex.com/blog/big-table-of-convergence-rates.html</link><description>&lt;p&gt;In the past 50+ years of convex optimization research, a great many
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Strongly Convex</title><link>/</link><description></description><atom:link href="None/feeds/daniel-duckworth.rss.xml" rel="self"></atom:link><lastBuildDate>Fri, 01 Aug 2014 00:00:00 -0700</lastBuildDate><item><title>The Big Table of Convergence Rates</title><link>/blog/big-table-of-convergence-rates.html</link><description>&lt;p&gt;In the past 50+ years of convex optimization research, a great many
 algorithms have been developed, each with slight nuances to their assumptions,
 implementations, and guarantees. In this article, I'll give a shorthand
 comparison of these methods in terms of the number of iterations required
@@ -533,25 +533,25 @@ on iteration count &lt;mathjax&gt;$t$&lt;/mathjax&gt;.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;ol&gt;
 &lt;li id="fn:blog-gd"&gt;
-&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-gd" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-gd" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:blog-sd"&gt;
-&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/subgradient-descent.html"&gt;Subgradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-sd" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/blog/subgradient-descent.html"&gt;Subgradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-sd" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:blog-agd"&gt;
-&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html"&gt;Accelerated Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-agd" rev="footnote" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/blog/accelerated-gradient-descent.html"&gt;Accelerated Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-agd" rev="footnote" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:blog-pgd"&gt;
-&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-pgd" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-pgd" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:blog-apgd"&gt;
-&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-apgd" rev="footnote" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-apgd" rev="footnote" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:blog-fw"&gt;
-&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/frank-wolfe.html"&gt;Franke-Wolfe Algorithm&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-fw" rev="footnote" title="Jump back to footnote 6 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/blog/frank-wolfe.html"&gt;Franke-Wolfe Algorithm&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-fw" rev="footnote" title="Jump back to footnote 6 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:blog-admm"&gt;
-&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/admm-revisited.html"&gt;Alternating Direction Method of Multipliers&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-admm" rev="footnote" title="Jump back to footnote 7 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="/blog/admm-revisited.html"&gt;Alternating Direction Method of Multipliers&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-admm" rev="footnote" title="Jump back to footnote 7 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:richtarik-2011"&gt;
 &lt;p&gt;&lt;a href="http://arxiv.org/abs/1107.2848"&gt;Richtarik and Takac, 2011&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:richtarik-2011" rev="footnote" title="Jump back to footnote 8 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
@@ -611,7 +611,7 @@ on iteration count &lt;mathjax&gt;$t$&lt;/mathjax&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;a href="http://arxiv.org/abs/1307.1879"&gt;Nedich and Lee, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:nedich-2013" rev="footnote" title="Jump back to footnote 26 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Fri, 01 Aug 2014 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2014-08-01:blog/big-table-of-convergence-rates.html</guid><category>optimization</category><category>convergence</category><category>reference</category></item><item><title>From ADMM to Proximal Gradient Descent</title><link>http://stronglyconvex.com/blog/admm-to-prox-grad.html</link><description>&lt;p&gt;At first blush, &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
+&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Fri, 01 Aug 2014 00:00:00 -0700</pubDate><guid>tag:,2014-08-01:blog/big-table-of-convergence-rates.html</guid><category>optimization</category><category>convergence</category><category>reference</category></item><item><title>From ADMM to Proximal Gradient Descent</title><link>/blog/admm-to-prox-grad.html</link><description>&lt;p&gt;At first blush, &lt;a href="/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
 (ProxGrad) appear to have very little in common. The convergence analyses for
 these two methods are unrelated, and the former operates on an Augmented
 Lagrangian while the latter directly minimizes the primal objective. In this
@@ -880,7 +880,7 @@ the relationship between FoBoS and AMA from &lt;a href="ftp://ftp.math.ucla.edu/
 al&lt;/a&gt;'s work on Accelerated ADMM and AMA.&lt;/p&gt;
 &lt;!-- internal references --&gt;
 
-&lt;!-- papers --&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sat, 26 Jul 2014 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2014-07-26:blog/admm-to-prox-grad.html</guid><category>optimization</category><category>fobos</category><category>admm</category><category>ama</category><category>proximal</category></item><item><title>ADMM revisited</title><link>http://stronglyconvex.com/blog/admm-revisited.html</link><description>&lt;p&gt;When I originally wrote about the &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;Alternating Direction Method of
+&lt;!-- papers --&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sat, 26 Jul 2014 00:00:00 -0700</pubDate><guid>tag:,2014-07-26:blog/admm-to-prox-grad.html</guid><category>optimization</category><category>fobos</category><category>admm</category><category>ama</category><category>proximal</category></item><item><title>ADMM revisited</title><link>/blog/admm-revisited.html</link><description>&lt;p&gt;When I originally wrote about the &lt;a href="/blog/admm.html"&gt;Alternating Direction Method of
 Multipliers&lt;/a&gt; algorithm, the community's understanding of its
 convergence properties was light to say the least. While it has long been
 known (See &lt;a href="http://web.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf"&gt;Boyd's excellent article&lt;/a&gt;, Appendix A) that ADMM &lt;em&gt;will&lt;/em&gt;
@@ -939,7 +939,7 @@ takes a gradient step with respect to &lt;mathjax&gt;$y$&lt;/mathjax&gt; for fix
 &lt;/div&gt;
 &lt;p&gt;Intuitively, the extra quadratic term prevents each iteration of the
 algorithm from stepping "too far" from the last iteration, an idea that's also
-at the core of &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;.&lt;/p&gt;
+at the core of &lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="img-center"&gt;
 &lt;p&gt;&lt;img src="/assets/img/admm/convergence.gif"&gt;&lt;/img&gt;
   &lt;span class="caption"&gt;
@@ -1406,7 +1406,7 @@ a special variant of ADMM using "Gaussian back substitution" is ensured to
 converge.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="references" href="#references"&gt;References&lt;/a&gt;&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;ADMM&lt;/strong&gt; While ADMM has existed for decades, it has only recently been brought
-to light by &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;Boyd&lt;/a&gt;'s article describing its applications for statistical
+to light by &lt;a href="/blog/admm.html"&gt;Boyd&lt;/a&gt;'s article describing its applications for statistical
 machine learning. It is from this work from which I initially learned of ADMM.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Proof of Convergence&lt;/strong&gt; The proof of convergence presented here is a verbose
 expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&gt;Wang&lt;/a&gt;'s paper on Online ADMM.&lt;/p&gt;
@@ -1467,15 +1467,15 @@ expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&g
 
 &lt;span class="n"&gt;anim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;animation&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FuncAnimation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gcf&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;animate&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;frames&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;writer&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;imagemagick&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fps&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sun, 20 Jul 2014 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2014-07-20:blog/admm-revisited.html</guid><category>optimization</category><category>distributed</category><category>admm</category></item><item><title>Frank-Wolfe Algorithm</title><link>http://stronglyconvex.com/blog/frank-wolfe.html</link><description>&lt;p&gt;In this post, we'll take a look at the &lt;a href="http://en.wikipedia.org/wiki/Frank%E2%80%93Wolfe_algorithm"&gt;Frank-Wolfe Algorithm&lt;/a&gt;
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sun, 20 Jul 2014 00:00:00 -0700</pubDate><guid>tag:,2014-07-20:blog/admm-revisited.html</guid><category>optimization</category><category>distributed</category><category>admm</category></item><item><title>Frank-Wolfe Algorithm</title><link>/blog/frank-wolfe.html</link><description>&lt;p&gt;In this post, we'll take a look at the &lt;a href="http://en.wikipedia.org/wiki/Frank%E2%80%93Wolfe_algorithm"&gt;Frank-Wolfe Algorithm&lt;/a&gt;
 also known as the Conditional Gradient Method, an algorithm particularly suited
-for solving problems with compact domains. Like the &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal
-Gradient&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal
+for solving problems with compact domains. Like the &lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal
+Gradient&lt;/a&gt; and &lt;a href="/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal
 Gradient&lt;/a&gt; algorithms, Frank-Wolfe requires we
 exploit problem structure to quickly solve a mini-optimization problem. Our
 reward for doing so is a converge rate of &lt;mathjax&gt;$O(1/\epsilon)$&lt;/mathjax&gt; and the potential for
 &lt;em&gt;extremely sparse solutions&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Returning to my &lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;valley-finding metaphor&lt;/a&gt;, Frank-Wolfe is a
+&lt;p&gt;Returning to my &lt;a href="/blog/gradient-descent.html"&gt;valley-finding metaphor&lt;/a&gt;, Frank-Wolfe is a
 bit like this,&lt;/p&gt;
 &lt;div class="pseudocode"&gt;
 &lt;ol&gt;
@@ -1842,7 +1842,7 @@ machine learning.&lt;/p&gt;
 
     &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;savefig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/animation/&lt;/span&gt;&lt;span class="si"&gt;%02d&lt;/span&gt;&lt;span class="s1"&gt;.png&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sat, 04 May 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-05-04:blog/frank-wolfe.html</guid><category>optimization</category><category>first-order</category><category>sparsity</category></item><item><title>Variational Inference</title><link>http://stronglyconvex.com/blog/variational-inference.html</link><description>&lt;p&gt;&lt;a href="http://www.orchid.ac.uk/eprints/40/1/fox_vbtut.pdf"&gt;Variational Inference&lt;/a&gt; and Monte Carlo Sampling are
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sat, 04 May 2013 00:00:00 -0700</pubDate><guid>tag:,2013-05-04:blog/frank-wolfe.html</guid><category>optimization</category><category>first-order</category><category>sparsity</category></item><item><title>Variational Inference</title><link>/blog/variational-inference.html</link><description>&lt;p&gt;&lt;a href="http://www.orchid.ac.uk/eprints/40/1/fox_vbtut.pdf"&gt;Variational Inference&lt;/a&gt; and Monte Carlo Sampling are
 currently the two chief ways of doing approximate Bayesian inference. In the
 Bayesian setting, we typically have some observed variables &lt;mathjax&gt;$x$&lt;/mathjax&gt; and
 unobserved variables &lt;mathjax&gt;$z$&lt;/mathjax&gt;, and our goal is to calculate &lt;mathjax&gt;$P(z|x)$&lt;/mathjax&gt;. In all but
@@ -2353,8 +2353,8 @@ gradient is Theorem 1. Thanks to &lt;a href="https://twitter.com/atpassos_ml"&gt
 this and giving a short-hand intuition of the proof.&lt;/p&gt;
 &lt;p&gt;The derivation for Variational Inference and the correspondence between
 Coordinate Ascent and Gradient Ascent is based on the introduction to Matt
-Hoffman et al.'s &lt;a href="http://arxiv.org/abs/1206.7051"&gt;"Stochastic Variational Inference"&lt;/a&gt;.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sun, 28 Apr 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-04-28:blog/variational-inference.html</guid><category>optimization</category><category>inference</category><category>bayesian</category></item><item><title>Accelerated Proximal Gradient Descent</title><link>http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html</link><description>&lt;p&gt;&lt;mathjax&gt;$\def\prox{\text{prox}}$&lt;/mathjax&gt;
-  In a &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;previous post&lt;/a&gt;, I presented Proximal Gradient, a
+Hoffman et al.'s &lt;a href="http://arxiv.org/abs/1206.7051"&gt;"Stochastic Variational Inference"&lt;/a&gt;.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sun, 28 Apr 2013 00:00:00 -0700</pubDate><guid>tag:,2013-04-28:blog/variational-inference.html</guid><category>optimization</category><category>inference</category><category>bayesian</category></item><item><title>Accelerated Proximal Gradient Descent</title><link>/blog/accelerated-proximal-gradient-descent.html</link><description>&lt;p&gt;&lt;mathjax&gt;$\def\prox{\text{prox}}$&lt;/mathjax&gt;
+  In a &lt;a href="/blog/proximal-gradient-descent.html"&gt;previous post&lt;/a&gt;, I presented Proximal Gradient, a
 method for bypassing the &lt;mathjax&gt;$O(1 / \epsilon^2)$&lt;/mathjax&gt; convergence rate of Subgradient
 Descent.  This method relied on assuming that the objective function could be
 expressed as the sum of 2 functions, &lt;mathjax&gt;$g(x)$&lt;/mathjax&gt; and &lt;mathjax&gt;$h(x)$&lt;/mathjax&gt;, with &lt;mathjax&gt;$g$&lt;/mathjax&gt; being
@@ -2363,7 +2363,7 @@ function&lt;/a&gt;,&lt;/p&gt;
 &lt;p&gt;&lt;mathjax&gt;$$
   \prox_{\alpha h}(x) = \arg\min_{y} \alpha h(y) + \frac{1}{2}||y - x||_2^2
 $$&lt;/mathjax&gt;&lt;/p&gt;
-&lt;p&gt;In the &lt;a href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html"&gt;post before that&lt;/a&gt;, I presented Accelerated
+&lt;p&gt;In the &lt;a href="/blog/accelerated-gradient-descent.html"&gt;post before that&lt;/a&gt;, I presented Accelerated
 Gradient Descent, a method that outperforms Gradient Descent while making the
 exact same assumptions. It is then natural to ask, "Can we combine Accelerated
 Gradient Descent and Proximal Gradient to obtain a new algorithm?"  Well if we
@@ -2676,7 +2676,7 @@ Vandenberghe's fantastic &lt;a href="http://www.ee.ucla.edu/~vandenbe/236C/lectu
   &lt;span class="n"&gt;plotting&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot_iteration_vs_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/convergence.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.69314718055994529&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Thu, 25 Apr 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-04-25:blog/accelerated-proximal-gradient-descent.html</guid><category>optimization</category><category>first-order</category><category>accelerated</category><category>proximal</category></item><item><title>Coordinate Ascent for Convex Clustering</title><link>http://stronglyconvex.com/blog/coordinate-ascent-convex-clustering.html</link><description>&lt;p&gt;Convex clustering is the reformulation of k-means clustering as a convex
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Thu, 25 Apr 2013 00:00:00 -0700</pubDate><guid>tag:,2013-04-25:blog/accelerated-proximal-gradient-descent.html</guid><category>optimization</category><category>first-order</category><category>accelerated</category><category>proximal</category></item><item><title>Coordinate Ascent for Convex Clustering</title><link>/blog/coordinate-ascent-convex-clustering.html</link><description>&lt;p&gt;Convex clustering is the reformulation of k-means clustering as a convex
 problem. While the two problems are not equivalent, the former can be seen as a
 relaxation of the latter that allows us to easily find globally optimal
 solutions (as opposed to only locally optimal ones).&lt;/p&gt;
@@ -2918,7 +2918,7 @@ all dual variables to be fully instantiated.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="references" href="#references"&gt;References&lt;/a&gt;&lt;/h1&gt;
 &lt;p&gt;The original formulation for convex clustering was introduced by &lt;a href="http://www.control.isy.liu.se/research/reports/2011/2992.pdf"&gt;Lindsten et
 al.&lt;/a&gt; and &lt;a href="http://www.icml-2011.org/papers/419_icmlpaper.pdf"&gt;Hocking et al.&lt;/a&gt;. &lt;a href="http://arxiv.org/abs/1304.0499"&gt;Chi et al.&lt;/a&gt; introduced
-ADMM and AMA-based algorithms specifically designed for convex clustering.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Tue, 23 Apr 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-04-23:blog/coordinate-ascent-convex-clustering.html</guid><category>optimization</category><category>coordinate-descent</category><category>clustering</category></item><item><title>Why does L1 produce sparse solutions?</title><link>http://stronglyconvex.com/blog/l1-sparsity.html</link><description>&lt;p&gt;Supervised machine learning problems are typically of the form "minimize your
+ADMM and AMA-based algorithms specifically designed for convex clustering.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Tue, 23 Apr 2013 00:00:00 -0700</pubDate><guid>tag:,2013-04-23:blog/coordinate-ascent-convex-clustering.html</guid><category>optimization</category><category>coordinate-descent</category><category>clustering</category></item><item><title>Why does L1 produce sparse solutions?</title><link>/blog/l1-sparsity.html</link><description>&lt;p&gt;Supervised machine learning problems are typically of the form "minimize your
 error while regularizing your parameters." The idea is that while many choices
 of parameters may make your training error low, the goal isn't low training
 error -- it's low test-time error. Thus, parameters should be minimize training
@@ -3077,7 +3077,7 @@ other words, we established conditions upon which a coordinate will be 0. This
 is why the &lt;mathjax&gt;$L_1$&lt;/mathjax&gt; norm causes sparsity.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="references" href="#references"&gt;References&lt;/a&gt;&lt;/h1&gt;
 &lt;p&gt;Everything written here was explained to me by the ever-knowledgable
-MetaOptimize king, &lt;a href="https://twitter.com/atpassos"&gt;Alexandre Passos&lt;/a&gt;.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Mon, 22 Apr 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-04-22:blog/l1-sparsity.html</guid><category>optimization</category><category>sparsity</category></item><item><title>Proximal Gradient Descent</title><link>http://stronglyconvex.com/blog/proximal-gradient-descent.html</link><description>&lt;p&gt;&lt;mathjax&gt;$ \def\prox{\text{prox}} $&lt;/mathjax&gt;
+MetaOptimize king, &lt;a href="https://twitter.com/atpassos"&gt;Alexandre Passos&lt;/a&gt;.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Mon, 22 Apr 2013 00:00:00 -0700</pubDate><guid>tag:,2013-04-22:blog/l1-sparsity.html</guid><category>optimization</category><category>sparsity</category></item><item><title>Proximal Gradient Descent</title><link>/blog/proximal-gradient-descent.html</link><description>&lt;p&gt;&lt;mathjax&gt;$ \def\prox{\text{prox}} $&lt;/mathjax&gt;
   In a &lt;a href="/blog/subgradient-descent.html#usage"&gt;previous post&lt;/a&gt;, I mentioned that one cannot
 hope to asymptotically outperform the &lt;mathjax&gt;$O(\frac{1}{\epsilon^2})$&lt;/mathjax&gt; convergence
 rate of Subgradient Descent when dealing with a non-differentiable objective
@@ -3506,13 +3506,13 @@ John Duchi's article on &lt;a href="http://www.cs.berkeley.edu/~jduchi/projects/
   &lt;span class="n"&gt;plotting&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot_iteration_vs_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/convergence.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.69314718055994529&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Fri, 19 Apr 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-04-19:blog/proximal-gradient-descent.html</guid><category>optimization</category><category>first-order</category><category>proximal</category></item><item><title>Accelerated Gradient Descent</title><link>http://stronglyconvex.com/blog/accelerated-gradient-descent.html</link><description>&lt;p&gt;In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Fri, 19 Apr 2013 00:00:00 -0700</pubDate><guid>tag:,2013-04-19:blog/proximal-gradient-descent.html</guid><category>optimization</category><category>first-order</category><category>proximal</category></item><item><title>Accelerated Gradient Descent</title><link>/blog/accelerated-gradient-descent.html</link><description>&lt;p&gt;In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
 At the same time, he established the Accelerated Gradient Method, proved that
 its convergence rate superior to Gradient Descent (&lt;mathjax&gt;$O(1/\sqrt{\epsilon})$&lt;/mathjax&gt;
 iterations instead of &lt;mathjax&gt;$O(1/\epsilon)$&lt;/mathjax&gt;), and then proved that no other
 first-order (that is, gradient-based) algorithm could ever hope to beat it.
 What a boss.&lt;/p&gt;
-&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Continuing&lt;/a&gt; &lt;a href="http://stronglyconvex.com/blog/subgradient-descent.html"&gt;my analogy&lt;/a&gt;, imagine
+&lt;p&gt;&lt;a href="/blog/gradient-descent.html"&gt;Continuing&lt;/a&gt; &lt;a href="/blog/subgradient-descent.html"&gt;my analogy&lt;/a&gt;, imagine
 that you are standing on the side of a mountain and want to reach the bottom.
 If you were to follow the Accelerated Gradient Method, you'd do something like
 this,&lt;/p&gt;
@@ -3580,7 +3580,7 @@ Descent's. In particular, we assume,&lt;/p&gt;
 &lt;p&gt;&lt;mathjax&gt;$$
   || \nabla f(x) - \nabla f(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
 $$&lt;/mathjax&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Assumptions&lt;/strong&gt; As explained in my post on &lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Gradient
+&lt;p&gt;&lt;strong&gt;Assumptions&lt;/strong&gt; As explained in my post on &lt;a href="/blog/gradient-descent.html"&gt;Gradient
 Descent&lt;/a&gt;, these assumptions give us 2 things. Assumption 1
 gives us a linear lower bound on &lt;mathjax&gt;$f$&lt;/mathjax&gt;,&lt;/p&gt;
 &lt;p&gt;&lt;mathjax&gt;$$
@@ -3829,7 +3829,7 @@ Vandenberghe's &lt;a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-
                                      &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/iterates.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
   &lt;span class="n"&gt;plotting&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot_iteration_vs_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/convergence.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Fri, 12 Apr 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-04-12:blog/accelerated-gradient-descent.html</guid><category>optimization</category><category>first-order</category><category>accelerated</category></item><item><title>Subgradient Descent</title><link>http://stronglyconvex.com/blog/subgradient-descent.html</link><description>&lt;p&gt;Not far from &lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt; is another first-order
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Fri, 12 Apr 2013 00:00:00 -0700</pubDate><guid>tag:,2013-04-12:blog/accelerated-gradient-descent.html</guid><category>optimization</category><category>first-order</category><category>accelerated</category></item><item><title>Subgradient Descent</title><link>/blog/subgradient-descent.html</link><description>&lt;p&gt;Not far from &lt;a href="/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt; is another first-order
 descent algorithm (that is, an algorithm that only relies on the first
 derivative) is Subgradient Descent. In implementation, they are in fact
 identical. The only difference is on the assumptions placed on the objective
@@ -4152,7 +4152,7 @@ page 23 of Stephen Boyd's &lt;a href="http://www.stanford.edu/class/ee364b/lectu
                                      &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/iterates.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
   &lt;span class="n"&gt;plotting&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot_iteration_vs_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/convergence.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Thu, 11 Apr 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-04-11:blog/subgradient-descent.html</guid><category>optimization</category><category>first-order</category><category>subgradient</category></item><item><title>Gradient Descent</title><link>http://stronglyconvex.com/blog/gradient-descent.html</link><description>&lt;p&gt;Gradient Descent is perhaps the most intuitive of all optimization
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Thu, 11 Apr 2013 00:00:00 -0700</pubDate><guid>tag:,2013-04-11:blog/subgradient-descent.html</guid><category>optimization</category><category>first-order</category><category>subgradient</category></item><item><title>Gradient Descent</title><link>/blog/gradient-descent.html</link><description>&lt;p&gt;Gradient Descent is perhaps the most intuitive of all optimization
 algorithms. Imagine you're standing on the side of a mountain and want to reach
 the bottom. You'd probably do something like this,&lt;/p&gt;
 &lt;div class="pseudocode"&gt;
@@ -4431,7 +4431,7 @@ on unconstrained optimization&lt;/a&gt;.&lt;/p&gt;
 
     &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;savefig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/animation/&lt;/span&gt;&lt;span class="si"&gt;%02d&lt;/span&gt;&lt;span class="s1"&gt;.png&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Wed, 10 Apr 2013 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2013-04-10:blog/gradient-descent.html</guid><category>gradient</category><category>descent</category><category>first-order</category><category>optimization</category></item><item><title>Topic Models aren't hard</title><link>http://stronglyconvex.com/blog/topic-models-arent-hard.html</link><description>&lt;p&gt;In 2002, &lt;a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf"&gt;Latent Dirichlet Allocation&lt;/a&gt; (LDA) was published at NIPS, one
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Wed, 10 Apr 2013 00:00:00 -0700</pubDate><guid>tag:,2013-04-10:blog/gradient-descent.html</guid><category>gradient</category><category>descent</category><category>first-order</category><category>optimization</category></item><item><title>Topic Models aren't hard</title><link>/blog/topic-models-arent-hard.html</link><description>&lt;p&gt;In 2002, &lt;a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf"&gt;Latent Dirichlet Allocation&lt;/a&gt; (LDA) was published at NIPS, one
 of the most highly regarded conferences for research loosely labeled as
 "Artificial Intelligence". The next 5 or so years led to a flurry of
 incremental model extensions and alternative inference methods, though none
@@ -4561,7 +4561,7 @@ Model in existence.&lt;/p&gt;
   &lt;span class="c"&gt;% with color&lt;/span&gt;
   &lt;span class="c"&gt;% scatter(x(1,:), x(2,:), &amp;#39;CData&amp;#39;, c&amp;#39;);&lt;/span&gt;
 &lt;span class="k"&gt;end&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Mon, 21 Jan 2013 00:00:00 -0800</pubDate><guid>tag:stronglyconvex.com,2013-01-21:blog/topic-models-arent-hard.html</guid><category>topic-models</category><category>bayesian</category><category>lda</category></item><item><title>ADMM: parallelizing convex optimization</title><link>http://stronglyconvex.com/blog/admm.html</link><description>&lt;p&gt;In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing "separable" functions (that is, functions that are purely sums of other functions) in a large, distributed environment. However, Stochastic Gradient Descent is not the only algorithm out there.&lt;/p&gt;
+&lt;/pre&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Mon, 21 Jan 2013 00:00:00 -0800</pubDate><guid>tag:,2013-01-21:blog/topic-models-arent-hard.html</guid><category>topic-models</category><category>bayesian</category><category>lda</category></item><item><title>ADMM: parallelizing convex optimization</title><link>/blog/admm.html</link><description>&lt;p&gt;In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing "separable" functions (that is, functions that are purely sums of other functions) in a large, distributed environment. However, Stochastic Gradient Descent is not the only algorithm out there.&lt;/p&gt;
 &lt;p&gt;So why consider anything else? First of all, we have to choose step sizes &lt;mathjax&gt;$\alpha_{t,i}$&lt;/mathjax&gt;. While there are theoretical constraints on how it must behave (e.g. &lt;mathjax&gt;$\alpha_t = \frac{1}{t^k}$&lt;/mathjax&gt; is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful. It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.&lt;/p&gt;
 &lt;p&gt;Secondly, Stochastic Gradient Descent is naturally &lt;em&gt;sequential&lt;/em&gt;. You have to update &lt;mathjax&gt;$w_{t,i}$&lt;/mathjax&gt; before you can update &lt;mathjax&gt;$w_{t,i+1}$&lt;/mathjax&gt; (well, not quite. See &lt;a href="http://arxiv.org/abs/1106.5730"&gt;HOGWILD!&lt;/a&gt;). This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn't of much help in MapReduce-style frameworks.&lt;/p&gt;
 &lt;p&gt;Alternating Direction Method of Multipliers (ADMM) is an entirely different method of distributed optimization that is far better oriented for MapReduce and which only requires a single parameter to specify the learning rate. However, using it requires quite a bit more mathematical preparation.&lt;/p&gt;
@@ -4659,7 +4659,7 @@ $$&lt;/mathjax&gt;&lt;/p&gt;
 &lt;li&gt;&lt;a href="http://arxiv.org/pdf/1112.2295.pdf"&gt;A Proof of Convergence For the Alternating Direction Method of Multipliers Applied to Polyhedral-Constrained Functions&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://arxiv.org/abs/1106.5730"&gt;HOGWILD!: A Lock-Free Approach to Parallelizing Stochastic Gradient Descent&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/"&gt;Alternating Direction Method of Multipliers&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sun, 24 Jun 2012 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2012-06-24:blog/admm.html</guid><category>admm</category><category>optimization</category><category>distributed</category></item><item><title>Stochastic Gradient Descent and Sparse $L_2$ regularization</title><link>http://stronglyconvex.com/blog/sparse-l2.html</link><description>&lt;p&gt;Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter &lt;mathjax&gt;$w$&lt;/mathjax&gt; is simply the sum of the losses of each sample &lt;mathjax&gt;$i$&lt;/mathjax&gt;, i.e.,&lt;/p&gt;
+&lt;/ul&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Sun, 24 Jun 2012 00:00:00 -0700</pubDate><guid>tag:,2012-06-24:blog/admm.html</guid><category>admm</category><category>optimization</category><category>distributed</category></item><item><title>Stochastic Gradient Descent and Sparse $L_2$ regularization</title><link>/blog/sparse-l2.html</link><description>&lt;p&gt;Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter &lt;mathjax&gt;$w$&lt;/mathjax&gt; is simply the sum of the losses of each sample &lt;mathjax&gt;$i$&lt;/mathjax&gt;, i.e.,&lt;/p&gt;
 &lt;p&gt;&lt;mathjax&gt;$$
   L(w) = \sum_{i} l(x_i, y_i, w)
 $$&lt;/mathjax&gt;&lt;/p&gt;
@@ -4704,4 +4704,4 @@ $$&lt;/mathjax&gt;&lt;/p&gt;
 \end{aligned}
 $$&lt;/mathjax&gt;&lt;/p&gt;
 &lt;p&gt;And that’s it! As a final note, depending what value you choose for &lt;mathjax&gt;$\lambda$&lt;/mathjax&gt;, &lt;mathjax&gt;$c_t$&lt;/mathjax&gt; is going to get really big or really small pretty fast. The usual "take the log" tricks aren't going to fly, either, as &lt;mathjax&gt;$c_t$&lt;/mathjax&gt; need not be positive. The only way around it I’ve found is to check every iteration if &lt;mathjax&gt;$c_t$&lt;/mathjax&gt; is getting out of hand, then transform &lt;mathjax&gt;$\bar{w}_{t} \leftarrow \bar{w}_t c_t$&lt;/mathjax&gt; and &lt;mathjax&gt;$c_t \leftarrow 1$&lt;/mathjax&gt; if it is.&lt;/p&gt;
-&lt;p&gt;Finally, credit should be given where credit is due. This is a slightly more detailed explanation of &lt;a href="http://blog.smola.org/post/940672544/fast-quadratic-regularization-for-online-learning&amp;gt;"&gt;Alex Smola&lt;/a&gt; blog post from about a year ago, which in turn is accredited to Leon Bottou.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Thu, 10 May 2012 00:00:00 -0700</pubDate><guid>tag:stronglyconvex.com,2012-05-10:blog/sparse-l2.html</guid><category>regularization</category><category>sparsity</category></item></channel></rss>
+&lt;p&gt;Finally, credit should be given where credit is due. This is a slightly more detailed explanation of &lt;a href="http://blog.smola.org/post/940672544/fast-quadratic-regularization-for-online-learning&amp;gt;"&gt;Alex Smola&lt;/a&gt; blog post from about a year ago, which in turn is accredited to Leon Bottou.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Daniel Duckworth</dc:creator><pubDate>Thu, 10 May 2012 00:00:00 -0700</pubDate><guid>tag:,2012-05-10:blog/sparse-l2.html</guid><category>regularization</category><category>sparsity</category></item></channel></rss>
