@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -71,7 +64,7 @@
 descent algorithm (that is, an algorithm that only relies on the first
 derivative) is Subgradient Descent. In implementation, they are in fact
 identical. The only difference is on the assumptions placed on the objective
-function we wish to minimize, <mathjax>$f(x)$</mathjax>.  If you were to follow the Subgradient
+function we wish to minimize, $f(x)$.  If you were to follow the Subgradient
 Descent algorithm to walk down a mountain, it would look something like this,</p>
 <div class="pseudocode">
 <ol>
@@ -81,19 +74,19 @@ Descent algorithm to walk down a mountain, it would look something like this,</p
 </div>
 <h1><a name="implementation" href="#implementation">How does it work?</a></h1>
 <p>As before, we adopt the usual problem definition,</p>
-<p><mathjax>$$
+<p>$$
   \min_{x} \, f(x)
-$$</mathjax></p>
-<p>But this time, we don't assume <mathjax>$f$</mathjax> is differentiable. Instead, we assume <mathjax>$f$</mathjax>
-is convex, implying that for all <mathjax>$x$</mathjax> there exists a <mathjax>$g_{x}$</mathjax> such that,</p>
-<p><mathjax>$$
+$$</p>
+<p>But this time, we don't assume $f$ is differentiable. Instead, we assume $f$
+is convex, implying that for all $x$ there exists a $g_{x}$ such that,</p>
+<p>$$
   f(y) \ge f(x) + g_{x}^T (y - x)
-$$</mathjax></p>
-<p>If <mathjax>$f$</mathjax> is differentiable at <mathjax>$x$</mathjax> and is convex, then <mathjax>$\nabla f(x)$</mathjax> is the only
-value for <mathjax>$g_{x}$</mathjax> that satisfies this property, but if <mathjax>$f$</mathjax> is convex but
-non-differentiable at <mathjax>$x$</mathjax>, there will be other options.</p>
-<p>The set of all <mathjax>$g_x$</mathjax> that satisfies this property called the
-<strong>subdifferential</strong> of <mathjax>$f$</mathjax> at <mathjax>$x$</mathjax> and is denoted <mathjax>$\partial f(x)$</mathjax>. Given that we
+$$</p>
+<p>If $f$ is differentiable at $x$ and is convex, then $\nabla f(x)$ is the only
+value for $g_{x}$ that satisfies this property, but if $f$ is convex but
+non-differentiable at $x$, there will be other options.</p>
+<p>The set of all $g_x$ that satisfies this property called the
+<strong>subdifferential</strong> of $f$ at $x$ and is denoted $\partial f(x)$. Given that we
 have an algorithm for finding a point in the subdifferential, Subgradient
 Descent is</p>
 <figure>
@@ -106,24 +99,24 @@ Descent is</p>
 </figure>
 
 <div class="pseudocode">
-<p><strong>Input</strong>: initial iterate <mathjax>$x^{(0)}$</mathjax></p>
+<p><strong>Input</strong>: initial iterate $x^{(0)}$</p>
 <ol>
-<li>For <mathjax>$t = 0, 1, \ldots$</mathjax><ol>
-<li>if converged, return <mathjax>$x^{(t)}$</mathjax></li>
-<li>Compute a <a href="http://www.stanford.edu/class/ee392o/subgrad.pdf">subgradient</a> of <mathjax>$f$</mathjax> at <mathjax>$x^{(t)}$</mathjax>, <mathjax>$g^{(t)} \in \partial f(x^{(t)})$</mathjax></li>
-<li><mathjax>$x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}$</mathjax></li>
+<li>For $t = 0, 1, \ldots$<ol>
+<li>if converged, return $x^{(t)}$</li>
+<li>Compute a <a href="http://www.stanford.edu/class/ee392o/subgrad.pdf">subgradient</a> of $f$ at $x^{(t)}$, $g^{(t)} \in \partial f(x^{(t)})$</li>
+<li>$x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}$</li>
 </ol>
 </li>
 </ol>
 </div>
-<p>The initial iterate <mathjax>$x^{(0)}$</mathjax> can be selected arbitrarily, but <mathjax>$\alpha^{(t)}$</mathjax>
+<p>The initial iterate $x^{(0)}$ can be selected arbitrarily, but $\alpha^{(t)}$
 must be selected more carefully than in Gradient Descent. A common choice is
-<mathjax>$\frac{1}{t}$</mathjax>.</p>
+$\frac{1}{t}$.</p>
 <p><a id="example"></a></p>
 <h1><a name="example" href="#example">A Small Example</a></h1>
-<p>Let's watch Subgradient Descent do its thing. We'll use <mathjax>$f(x) = |x|$</mathjax> as our
-objective function, giving us <mathjax>$sign(x)$</mathjax> as a valid way to compute subgradients.
-We'll use the <a href="#polyak">Polyak Step Size</a> and initialize with <mathjax>$x^{(0)} = 0.75$</mathjax>.</p>
+<p>Let's watch Subgradient Descent do its thing. We'll use $f(x) = |x|$ as our
+objective function, giving us $sign(x)$ as a valid way to compute subgradients.
+We'll use the <a href="#polyak">Polyak Step Size</a> and initialize with $x^{(0)} = 0.75$.</p>
 <div class="img-center">
   <img src="/assets/img/subgradient_descent/convergence.png"></img>
   <span class="caption">
@@ -142,144 +135,144 @@ We'll use the <a href="#polyak">Polyak Step Size</a> and initialize with <mathja
 </div>
 
 <h1><a name="proof" href="#proof">Why does it work?</a></h1>
-<p>Now let's prove that Subgradient Descent can find <mathjax>$x^{*} = \arg\min_x f(x)$</mathjax>.
+<p>Now let's prove that Subgradient Descent can find $x^{*} = \arg\min_x f(x)$.
 We begin by making the following assumptions,</p>
 <ol>
-<li><mathjax>$f$</mathjax> is convex and finite for all <mathjax>$x$</mathjax></li>
-<li>a finite solution <mathjax>$x^{*}$</mathjax> exists</li>
-<li><mathjax>$f$</mathjax> is Lipschitz with constant <mathjax>$G$</mathjax>. That is,</li>
+<li>$f$ is convex and finite for all $x$</li>
+<li>a finite solution $x^{*}$ exists</li>
+<li>$f$ is Lipschitz with constant $G$. That is,</li>
 </ol>
-<p><mathjax>$$
+<p>$$
   || f(x) - f(y) ||_2 \le G || x - y ||_2 \qquad \forall x,y
-$$</mathjax></p>
+$$</p>
 <ol>
-<li>The initial distance to <mathjax>$x^{*}$</mathjax> is bounded by <mathjax>$R$</mathjax></li>
+<li>The initial distance to $x^{*}$ is bounded by $R$</li>
 </ol>
-<p><mathjax>$$
+<p>$$
   || x^{(0)} - x^{*} || \le R
-$$</mathjax></p>
+$$</p>
 <p><strong>Assumptions</strong> Looking back at the convergence proof of Gradient Descent, we
 see that the main difference is in assumption 3. Before, we assumed that the
-<mathjax>$\nabla f$</mathjax> was Lipschitz, but now we assume that <mathjax>$f$</mathjax> is Lipschitz. The
+$\nabla f$ was Lipschitz, but now we assume that $f$ is Lipschitz. The
 reason for this is because non-smooth functions cannot have a Lipschitz
-Subgradient function (Imagine 2 different subgradients for <mathjax>$f$</mathjax>, <mathjax>$g_x$</mathjax> and
-<mathjax>$g_y$</mathjax>, such that <mathjax>$g_x \ne g_y$</mathjax> and <mathjax>$x = y$</mathjax>. Then <mathjax>$||x-y||_2 = 0$</mathjax> but <mathjax>$||g_x -
-g_y||_2 &gt; 0$</mathjax>).  However, this assumption does guarantee one thing: that <mathjax>$g_x
-\le G$</mathjax> for all <mathjax>$x$</mathjax>.</p>
+Subgradient function (Imagine 2 different subgradients for $f$, $g_x$ and
+$g_y$, such that $g_x \ne g_y$ and $x = y$. Then $||x-y||_2 = 0$ but $||g_x -
+g_y||_2 &gt; 0$).  However, this assumption does guarantee one thing: that $g_x
+\le G$ for all $x$.</p>
 <p>Assumption 4 isn't really a condition at all.  It's just a notational
 convenience for later.</p>
-<p><strong>Proof Outline</strong> The proof for Gradient Descent relied on <mathjax>$f(x^{(t)}) -
-f(x^{*})$</mathjax> decreasing with each iteration, but the proof for Subgradient Descent
-relies on decreasing the (upper bound on) Euclidean distance between <mathjax>$x^{(t)}$</mathjax>
-and the set of all possible <mathjax>$x^{*}$</mathjax>.</p>
+<p><strong>Proof Outline</strong> The proof for Gradient Descent relied on $f(x^{(t)}) -
+f(x^{<em>})$ decreasing with each iteration, but the proof for Subgradient Descent
+relies on decreasing the (upper bound on) Euclidean distance between $x^{(t)}$
+and the set of all possible $x^{</em>}$.</p>
 <p>We begin by upper bounding the current distance to the optimal point by the
-previous distance (<mathjax>$||x^{(t)} - x^{*}||_2$</mathjax>), the previous error (<mathjax>$f(x^{(t)}) -
-f(x^{*})$</mathjax>), and the norm of the subgradient (<mathjax>$||g^{(t)}||_2$</mathjax>).  Next, we
-recursively apply the previous finding across all <mathjax>$t$</mathjax> to bound the sum of
-errors by the <em>initial</em> distance to <mathjax>$x^{*}$</mathjax> and the sum of all subgradient
-norms.  Then, we lower bound the sum of all errors with a minimum over <mathjax>$t$</mathjax>,
-giving us an upper bound on our error at iteration <mathjax>$t+1$</mathjax>. Finally, we use
+previous distance ($||x^{(t)} - x^{<em>}||_2$), the previous error ($f(x^{(t)}) -
+f(x^{</em>})$), and the norm of the subgradient ($||g^{(t)}||_2$).  Next, we
+recursively apply the previous finding across all $t$ to bound the sum of
+errors by the <em>initial</em> distance to $x^{*}$ and the sum of all subgradient
+norms.  Then, we lower bound the sum of all errors with a minimum over $t$,
+giving us an upper bound on our error at iteration $t+1$. Finally, we use
 Assumption 4. to make that bound go to zero.</p>
-<p><strong>Step 1</strong> Upper bound <mathjax>$||x^{(t+1)} - x^{*}||$</mathjax>. Let <mathjax>$x^{*}$</mathjax> be any point in
-<mathjax>$\arg\min_{x} f(x)$</mathjax>. Then,</p>
-<p><mathjax>$$
-\begin{align*}
-  ||x^{(t+1)} - x^{*}||_2^2
-  = &amp; ||x^{(t)} - \alpha^{(t)} g^{(t)} - x^{*}||_2^2
-    &amp;&amp; \text{# Definition of $x^{(t+1)}$} \\
-  = &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} \langle g^{(t)}, x^{(t)} - x^{*} \rangle + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
-    \\
-  \le &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{*}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
-    \\
-\end{align*}
-$$</mathjax></p>
-<p>Our last step uses <mathjax>$f(x^{*}) \ge f(x^{(t)}) + \langle g^{(t)}, x^{*} - x^{(t)} \rangle$</mathjax></p>
-<p><strong>Step 2</strong> Upper bound <mathjax>$||x^{(t+1)} - x^{*}||$</mathjax> by <mathjax>$||x^{(0)} - x^{*}||$</mathjax>.
-First, we apply Step 1 recursively to bound the current distance to <mathjax>$x^{*}$</mathjax></p>
-<p><mathjax>$$
-\begin{align*}
-  ||x^{(t+1)} - x^{*}||_2^2
-  \le &amp; ||x^{(t)} - x^{*}||_2^2 - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{*}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
-    \\
-  \le &amp; \left( ||x^{(t-1)} - x^{*}||_2^2 - 2 \alpha^{(t-1)} ( f(x^{(t-1)}) - f(x^{*}) ) + ( \alpha^{(t-1)} )^2 ||g^{(t-1)}||_2^2 \right) \\
-      &amp; \quad - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{*}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
-      &amp;&amp; \text{# Apply recursion}\\
-    = &amp; ||x^{(t-1)} - x^{*}||_2^2
-        - 2 \sum_{\tau=t-1}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
-        + \sum_{\tau=t-1}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
-  \vdots \\
-  \le &amp; ||x^{(0)} - x^{*}||_2^2
-        - 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
-        + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
-\end{align*}
-$$</mathjax></p>
-<p>Then we drop <mathjax>$||x^{(t+1)} - x^{*}||_2^2$</mathjax> from the left side it's lower bounded by zero,</p>
-<p><mathjax>$$
-\begin{align*}
+<p><strong>Step 1</strong> Upper bound $||x^{(t+1)} - x^{<em>}||$. Let $x^{</em>}$ be any point in
+$\arg\min_{x} f(x)$. Then,</p>
+<p>$$
+\begin{align<em>}
+  ||x^{(t+1)} - x^{</em>}||_2^2
+  = &amp; ||x^{(t)} - \alpha^{(t)} g^{(t)} - x^{<em>}||_2^2
+    &amp;&amp; \text{# Definition of $x^{(t+1)}$} \
+  = &amp; ||x^{(t)} - x^{</em>}||_2^2 - 2 \alpha^{(t)} \langle g^{(t)}, x^{(t)} - x^{<em>} \rangle + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
+    \
+  \le &amp; ||x^{(t)} - x^{</em>}||_2^2 - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{<em>}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
+    \
+\end{align</em>}
+$$</p>
+<p>Our last step uses $f(x^{<em>}) \ge f(x^{(t)}) + \langle g^{(t)}, x^{</em>} - x^{(t)} \rangle$</p>
+<p><strong>Step 2</strong> Upper bound $||x^{(t+1)} - x^{<em>}||$ by $||x^{(0)} - x^{</em>}||$.
+First, we apply Step 1 recursively to bound the current distance to $x^{*}$</p>
+<p>$$
+\begin{align<em>}
+  ||x^{(t+1)} - x^{</em>}||<em _tau="t-1">2^2
+  \le &amp; ||x^{(t)} - x^{<em>}||_2^2 - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{</em>}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
+    \
+  \le &amp; \left( ||x^{(t-1)} - x^{<em>}||_2^2 - 2 \alpha^{(t-1)} ( f(x^{(t-1)}) - f(x^{</em>}) ) + ( \alpha^{(t-1)} )^2 ||g^{(t-1)}||_2^2 \right) \
+      &amp; \quad - 2 \alpha^{(t)} ( f(x^{(t)}) - f(x^{<em>}) ) + ( \alpha^{(t)} )^2 ||g^{(t)}||_2^2
+      &amp;&amp; \text{# Apply recursion}\
+    = &amp; ||x^{(t-1)} - x^{</em>}||_2^2
+        - 2 \sum</em>^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{<em>}) )
+        + \sum_{\tau=t-1}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \
+  \vdots \
+  \le &amp; ||x^{(0)} - x^{</em>}||<em _tau="0">2^2
+        - 2 \sum</em>^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{<em>}) )
+        + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \
+\end{align</em>}
+$$</p>
+<p>Then we drop $||x^{(t+1)} - x^{*}||_2^2$ from the left side it's lower bounded by zero,</p>
+<p>$$
+\begin{align<em>}
   0
-  \le &amp; ||x^{(0)} - x^{*}||_2^2
-        - 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
-        + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
-  2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
-  \le &amp; ||x^{(0)} - x^{*}||_2^2
-        + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
-\end{align*}
-$$</mathjax></p>
+  \le &amp; ||x^{(0)} - x^{</em>}||<em _tau="0">2^2
+        - 2 \sum</em>^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{<em>}) )
+        + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||<em _tau="0">2^2 \
+  2 \sum</em>^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{</em>}) )
+  \le &amp; ||x^{(0)} - x^{<em>}||<em _tau="0">2^2
+        + \sum</em>^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \
+\end{align</em>}
+$$</p>
 <p><strong>Step 3</strong> Upper bound current error. First, notice that we can lower bound the
-contents of the sum on the left with the minimum across <mathjax>$\tau$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
-  \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) )
-  \ge &amp; \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) - f(x^{*}) \right) \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
-\end{align*}
-$$</mathjax></p>
-<p>Then divide by <mathjax>$2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
-  2 \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) - f(x^{*}) \right) \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
-  \le &amp; 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{*}) ) \\
-  \le &amp; ||x^{(0)} - x^{*}||_2^2
-          + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2 \\
-  \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) \right) - f(x^{*})
+contents of the sum on the left with the minimum across $\tau$,</p>
+<p>$$
+\begin{align<em>}
+  \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{</em>}) )
+  \ge &amp; \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) - f(x^{<em>}) \right) \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
+\end{align</em>}
+$$</p>
+<p>Then divide by $2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )$,</p>
+<p>$$
+\begin{align<em>}
+  2 \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) - f(x^{</em>}) \right) \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
+  \le &amp; 2 \sum_{\tau=0}^{t} \alpha^{(\tau)} ( f(x^{(\tau)}) - f(x^{<em>}) ) \
+  \le &amp; ||x^{(0)} - x^{</em>}||<em _tau="0">2^2
+          + \sum</em>^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||<em 0 _in="\in" _ldots="\ldots" _tau="\tau" t>2^2 \
+  \left( \min</em> f(x^{(\tau)}) \right) - f(x^{<em>})
   \le &amp; \frac{
-          ||x^{(0)} - x^{*}||_2^2
-          + \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||_2^2
+          ||x^{(0)} - x^{</em>}||<em _tau="0">2^2
+          + \sum</em>^{t} ( \alpha^{(\tau)} )^2 ||g^{(\tau)}||<em _tau="0">2^2
         }{
-          2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
-        } \\
-  \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) \right) - f(x^{*})
+          2 \sum</em>^{t} ( \alpha^{(\tau)} )
+        } \
+  \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) \right) - f(x^{<em>})
   \le &amp; \frac{
           R^2
           + G^2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2
         }{
           2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
-        } \\
-\end{align*}
-$$</mathjax></p>
-<p><strong>Step 4</strong> Making the bound go to zero.  Let <mathjax>$\alpha^{(\tau)} = \frac{R}{G
-\sqrt{t}}$</mathjax> (this is the minimizer of the right hand side for constant
-<mathjax>$\alpha^{(\tau)}$</mathjax>). Then,</p>
-<p><mathjax>$$
-\begin{align*}
-  \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) \right) - f(x^{*})
+        } \
+\end{align</em>}
+$$</p>
+<p><strong>Step 4</strong> Making the bound go to zero.  Let $\alpha^{(\tau)} = \frac{R}{G
+\sqrt{t}}$ (this is the minimizer of the right hand side for constant
+$\alpha^{(\tau)}$). Then,</p>
+<p>$$
+\begin{align<em>}
+  \left( \min_{\tau \in 0 \ldots t} f(x^{(\tau)}) \right) - f(x^{</em>})
   \le &amp; \frac{
           R^2 + G^2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )^2
         }{
           2 \sum_{\tau=0}^{t} ( \alpha^{(\tau)} )
-        } \\
+        } \
     = &amp; \frac{
           R^2 + G^2 \frac{R^2}{G^2} \sum_{\tau=0}^{t} \frac{1}{t+1}
         }{
           2 \frac{R}{G} \sum_{\tau=0}^{t} \frac{1}{\sqrt{t+1}}
-        } \\
+        } \
     = &amp; \frac{ RG }{ 2 \sqrt{t+1} }
         + \frac{ RG } { 2 \sqrt{t+1} }
     = \frac{ RG }{ \sqrt{t+1} }
 \end{align*}
-$$</mathjax></p>
-<p>Thus, we can conclude that if we want <mathjax>$f(x^{(t)}) - f(x^{*}) \le \epsilon$</mathjax>,
-we need <mathjax>$O(\frac{1}{\epsilon^2})$</mathjax> iterations. Compared to Gradient
-Descent's <mathjax>$O(\frac{1}{\epsilon})$</mathjax> convergence rate, Subgradient Descent looks
+$$</p>
+<p>Thus, we can conclude that if we want $f(x^{(t)}) - f(x^{*}) \le \epsilon$,
+we need $O(\frac{1}{\epsilon^2})$ iterations. Compared to Gradient
+Descent's $O(\frac{1}{\epsilon})$ convergence rate, Subgradient Descent looks
 pretty bad!</p>
 <h1><a name="usage" href="#usage">When should I use it?</a></h1>
 <p>As the implementation of Gradient Descent and Subgradient Descent are
@@ -295,30 +288,30 @@ family of algorithms that allow you to exploit the properties of differentiable
 problems even if your problem isn't.</p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
 <p><strong>Step Size</strong> As stated previously, a common choice of step size is
-<mathjax>$\alpha^{(t)} = \frac{1}{t}$</mathjax>, but that's far from your only choice. Indeed, any
+$\alpha^{(t)} = \frac{1}{t}$, but that's far from your only choice. Indeed, any
 step rule that satisfies the following conditions works when inserted into the
 above proof,</p>
-<p><mathjax>$$
+<p>$$
   \sum_{t=0}^{\infty} \alpha^{(t)} = \infty \qquad
   \sum_{t=0}^{\infty} ( \alpha^{(t)} )^2 &lt; \infty
-$$</mathjax></p>
-<p>For example, <mathjax>$\alpha^{(t)} = \frac{a}{b + t^{c}}$</mathjax> for positive constants <mathjax>$a$</mathjax>
-and <mathjax>$b$</mathjax> and <mathjax>$c \in (0.5, 1]$</mathjax> also works. These conditions are referred to as
+$$</p>
+<p>For example, $\alpha^{(t)} = \frac{a}{b + t^{c}}$ for positive constants $a$
+and $b$ and $c \in (0.5, 1]$ also works. These conditions are referred to as
 being square-summable but not summable.</p>
-<p>If <mathjax>$f(x^{*})$</mathjax> is known ahead of time, another choice is <a href="http://www.stanford.edu/class/ee364b/lectures/subgrad_method_slides.pdf">Polyak's Step
+<p>If $f(x^{*})$ is known ahead of time, another choice is <a href="http://www.stanford.edu/class/ee364b/lectures/subgrad_method_slides.pdf">Polyak's Step
 Size</a>,</p>
-<p><mathjax>$$
+<p>$$
 \alpha^{(t)} = \frac{ f(x^{(t)}) - f(x^{*}) }
                     { ||g^{(t)}||_2^2 }
-$$</mathjax></p>
-<p>If <mathjax>$f(x^{*})$</mathjax> isn't know, then <mathjax>$\alpha^{(t)} = \frac{ f(x^{(t)}) -
-f^{(t)}_{best} + \gamma^{(t)} }{ ||g^{(t)}||_2^2 }$</mathjax> is also valid for
-<mathjax>$f^{(t)}_{best} = \min_{\tau \in 0\ldots t} f(x^{(t)})$</mathjax> and <mathjax>$\gamma^{(t)}$</mathjax>
+$$</p>
+<p>If $f(x^{*})$ isn't know, then $\alpha^{(t)} = \frac{ f(x^{(t)}) -
+f^{(t)}<em best>{best} + \gamma^{(t)} }{ ||g^{(t)}||_2^2 }$ is also valid for
+$f^{(t)}</em> = \min_{\tau \in 0\ldots t} f(x^{(t)})$ and $\gamma^{(t)}$
 being square-summable and not summable.</p>
 <p><strong>Checking Convergence</strong> In short, there are no easy ways to know when to stop
-with Subgradient Descent. Checking if <mathjax>$\nabla f(x)$</mathjax> is small doesn't make sense
-because <mathjax>$\nabla f(x)$</mathjax> isn't defined at some points and <mathjax>$g_x$</mathjax> doesn't
-necessarily get small near <mathjax>$x \triangleq x^{*}$</mathjax>. Instead, a fixed number of
+with Subgradient Descent. Checking if $\nabla f(x)$ is small doesn't make sense
+because $\nabla f(x)$ isn't defined at some points and $g_x$ doesn't
+necessarily get small near $x \triangleq x^{*}$. Instead, a fixed number of
 iterations is typically used.</p>
 <h1><a name="references" href="#references">References</a></h1>
 <p><strong>Proof of Convergence</strong> The proof of convergence for Subgradient Descent is
@@ -367,7 +360,7 @@ page 23 of Stephen Boyd's <a href="http://www.stanford.edu/class/ee364b/lectures
     <span class="k">return</span> <span class="mf">0.0</span>
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="kn">import</span> <span class="nn">os</span>
 
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -426,7 +419,7 @@ page 23 of Stephen Boyd's <a href="http://www.stanford.edu/class/ee364b/lectures
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

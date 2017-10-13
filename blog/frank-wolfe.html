@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -73,7 +66,7 @@ for solving problems with compact domains. Like the <a href="/blog/proximal-grad
 Gradient</a> and <a href="/blog/accelerated-proximal-gradient-descent.html">Accelerated Proximal
 Gradient</a> algorithms, Frank-Wolfe requires we
 exploit problem structure to quickly solve a mini-optimization problem. Our
-reward for doing so is a converge rate of <mathjax>$O(1/\epsilon)$</mathjax> and the potential for
+reward for doing so is a converge rate of $O(1/\epsilon)$ and the potential for
 <em>extremely sparse solutions</em>.</p>
 <p>Returning to my <a href="/blog/gradient-descent.html">valley-finding metaphor</a>, Frank-Wolfe is a
 bit like this,</p>
@@ -87,64 +80,64 @@ bit like this,</p>
 </div>
 <h1><a name="implementation" href="#implementation">How does it work?</a></h1>
 <p>Frank-Wolfe is designed to solve problems of the form,</p>
-<p><mathjax>$$
+<p>$$
   \min_{x \in D} f(x)
-$$</mathjax></p>
-<p>where <mathjax>$D$</mathjax> is compact and <mathjax>$f$</mathjax> is differentiable. For example, in <mathjax>$R^n$</mathjax> any
+$$</p>
+<p>where $D$ is compact and $f$ is differentiable. For example, in $R^n$ any
 closed and bounded set is compact. The algorithm for Frank-Wolfe is then,</p>
 <div class="pseudocode">
-<p><strong>Input</strong>: Initial iterate <mathjax>$x^{(0)}$</mathjax></p>
+<p><strong>Input</strong>: Initial iterate $x^{(0)}$</p>
 <ol>
-<li>For <mathjax>$t = 0, 1, 2, \ldots$</mathjax><ol>
-<li>Let <mathjax>$s^{(t+1)} = \arg\min_{s \in D} \langle \nabla f(x^{(t)}), s \rangle$</mathjax></li>
-<li>If <mathjax>$g(x) = \langle \nabla f(x^{(t)}), x - s^{(t+1)} \rangle \le \epsilon$</mathjax>, break</li>
-<li>Let <mathjax>$x^{(t+1)} = (1 - \alpha^{(t)}) x^{(t)} + \alpha^{(t)} s^{(t+1)}$</mathjax></li>
+<li>For $t = 0, 1, 2, \ldots$<ol>
+<li>Let $s^{(t+1)} = \arg\min_{s \in D} \langle \nabla f(x^{(t)}), s \rangle$</li>
+<li>If $g(x) = \langle \nabla f(x^{(t)}), x - s^{(t+1)} \rangle \le \epsilon$, break</li>
+<li>Let $x^{(t+1)} = (1 - \alpha^{(t)}) x^{(t)} + \alpha^{(t)} s^{(t+1)}$</li>
 </ol>
 </li>
 </ol>
 </div>
-<p>The proof relies on <mathjax>$\alpha^{(t)} = 2 / (t+2)$</mathjax>, but line search works as
+<p>The proof relies on $\alpha^{(t)} = 2 / (t+2)$, but line search works as
 well.  The intuition for the algorithm is that at each iteration, we minimize
-a linear approximation to <mathjax>$f$</mathjax>,</p>
-<p><mathjax>$$
+a linear approximation to $f$,</p>
+<p>$$
   s^{(t+1)} = \arg\min_{s \in D} f(x^{(t)}) + \nabla f(x^{(t)})^T (s - x^{(t)})
-$$</mathjax></p>
-<p>then take a step in that direction. We can immediately see that if <mathjax>$D$</mathjax>
-weren't compact, <mathjax>$s^{(t)}$</mathjax> would go off to infinity.</p>
+$$</p>
+<p>then take a step in that direction. We can immediately see that if $D$
+weren't compact, $s^{(t)}$ would go off to infinity.</p>
 <p><a id="upper_bound"></a>
   <strong>Upper Bound</strong> One nice property of Frank-Wolfe is that it comes with its
-own upper bound on <mathjax>$f(x^{(t)}) - f(x^{*})$</mathjax> calculated during the course of
-the algorithm. Recall the linear upper bound on <mathjax>$f$</mathjax> due to convexity,</p>
-<p><mathjax>$$
-\begin{align*}
-  f(x^{*})
-  &amp; \ge f(x) + \nabla f(x)^T (x^{*} - x) \\
-  f(x) - f(x^{*})
-  &amp; \le \nabla f(x)^T (x - x^{*}) \\
-\end{align*}
-$$</mathjax></p>
+own upper bound on $f(x^{(t)}) - f(x^{*})$ calculated during the course of
+the algorithm. Recall the linear upper bound on $f$ due to convexity,</p>
+<p>$$
+\begin{align<em>}
+  f(x^{</em>})
+  &amp; \ge f(x) + \nabla f(x)^T (x^{<em>} - x) \
+  f(x) - f(x^{</em>})
+  &amp; \le \nabla f(x)^T (x - x^{<em>}) \
+\end{align</em>}
+$$</p>
 <p>Since,</p>
-<p><mathjax>$$
+<p>$$
   s^{(t+1)}
   = \arg\min_{s} \nabla f(x^{(t)})^T s
   = \arg\max_{s} \nabla f(x^{(t)})^T (x^{(t)} - s)
-$$</mathjax>
-  we know that <mathjax>$\nabla f(x^{(t)})^T (x^{(t)} - x^{*}) \le \nabla f(x^{(t)})^T
-(x^{(t)} - s^{(t+1)})$</mathjax> and thus,</p>
-<p><mathjax>$$
+$$
+  we know that $\nabla f(x^{(t)})^T (x^{(t)} - x^{*}) \le \nabla f(x^{(t)})^T
+(x^{(t)} - s^{(t+1)})$ and thus,</p>
+<p>$$
   f(x) - f(x^{*}) \le \nabla f(x^{(t)})^T (x^{(t)} - s^{(t+1)})
-$$</mathjax></p>
+$$</p>
 <p><a id="example"></a></p>
 <h1><a name="example" href="#example">A Small Example</a></h1>
 <p>For this example, we'll minimize a simple univariate quadratic function
 constrained to lie in an interval,</p>
-<p><mathjax>$$
+<p>$$
   \min_{x \in [-1,2]} (x-0.5)^2 + 2x
-$$</mathjax></p>
-<p>Its derivative is given by <mathjax>$2(x-0.5) + 2$</mathjax>, and since we are dealing with real
-numbers, the minimizers of the linear approximation must be either <mathjax>$-1$</mathjax> or
-<mathjax>$2$</mathjax> if the gradient is positive or negative, respectively. We'll use a stepsize
-of <mathjax>$\alpha^{(t)} = 2 / (t+2)$</mathjax> as prescribed by the convergence proof in the
+$$</p>
+<p>Its derivative is given by $2(x-0.5) + 2$, and since we are dealing with real
+numbers, the minimizers of the linear approximation must be either $-1$ or
+$2$ if the gradient is positive or negative, respectively. We'll use a stepsize
+of $\alpha^{(t)} = 2 / (t+2)$ as prescribed by the convergence proof in the
 next section.</p>
 <div class="img-center">
   <img src="/assets/img/frank_wolfe/animation.gif"></img>
@@ -180,88 +173,88 @@ next section.</p>
 <h1><a name="proof" href="#proof">Why does it work?</a></h1>
 <p>We begin by making the two assumptions given earlier,</p>
 <ol>
-<li><mathjax>$f$</mathjax> is convex, differentiable, and finite for all <mathjax>$x \in D$</mathjax></li>
-<li><mathjax>$D$</mathjax> is compact</li>
+<li>$f$ is convex, differentiable, and finite for all $x \in D$</li>
+<li>$D$ is compact</li>
 </ol>
 <p><strong>Assumptions</strong> First, notice that we never needed to assume that a solution
-<mathjax>$x^{*}$</mathjax> exists. This is because <mathjax>$D$</mathjax> is compact and <mathjax>$f$</mathjax> is finite, meaning <mathjax>$x$</mathjax>
-cannot get bigger and bigger to make <mathjax>$f(x)$</mathjax> arbitrarily small.</p>
-<p>Secondly, we never made a Lipschitz assumption on <mathjax>$f$</mathjax> or its gradient. Since
-<mathjax>$D$</mathjax> is compact, we don't have to -- instead, we get the following for free.
-Define <mathjax>$C_f$</mathjax> as,</p>
-<p><mathjax>$$
+$x^{*}$ exists. This is because $D$ is compact and $f$ is finite, meaning $x$
+cannot get bigger and bigger to make $f(x)$ arbitrarily small.</p>
+<p>Secondly, we never made a Lipschitz assumption on $f$ or its gradient. Since
+$D$ is compact, we don't have to -- instead, we get the following for free.
+Define $C_f$ as,</p>
+<p>$$
   C_f = \max_{\substack{
-                x,s \in D \\
-                \alpha \in [0,1] \\
+                x,s \in D \
+                \alpha \in [0,1] \
                 y = x + \alpha (s-x)
               }}
           \frac{2}{\alpha^2} \left(
             f(y) - f(x) - \langle \nabla f(x), y - x \rangle
           \right)
-$$</mathjax></p>
-<p>This immediate implies the following upper bound on <mathjax>$f$</mathjax> for all <mathjax>$x, y \in
-D$</mathjax> and <mathjax>$\alpha \in [0,1]$</mathjax>,</p>
-<p><mathjax>$$
+$$</p>
+<p>This immediate implies the following upper bound on $f$ for all $x, y \in
+D$ and $\alpha \in [0,1]$,</p>
+<p>$$
   f(y) \le f(x) + \langle \nabla f(x), y-x \rangle + \frac{\alpha^2}{2} C_f
-$$</mathjax></p>
+$$</p>
 <p><strong>Proof Outline</strong> The proof for Frank-Wolfe is surprisingly simple. The idea
-is to first upper bound <mathjax>$f(x^{(t+1)})$</mathjax> in terms of <mathjax>$f(x^{(t)})$</mathjax>, <mathjax>$g(x^{(t)})$</mathjax>,
-and <mathjax>$C_f$</mathjax>. We then transform this per-iteration bound into a bound on
-<mathjax>$f(x^{(t)}) - f(x^{*})$</mathjax> depending on <mathjax>$t$</mathjax> using induction. That's it!</p>
-<p><strong>Step 1</strong> Upper bound <mathjax>$f(x^{(t+1)})$</mathjax>. As usual, we'll denote <mathjax>$x^{+} \triangleq
-x^{(t+1)}$</mathjax>, <mathjax>$x \triangleq x^{(t)}$</mathjax>, <mathjax>$s^{+} \triangleq s^{(t+1)}$</mathjax>, and <mathjax>$\alpha
-\triangleq \alpha^{(t)}$</mathjax>. We begin by using the upper bound we just obtained for
-<mathjax>$f$</mathjax> in terms of <mathjax>$C_f$</mathjax>, substituting <mathjax>$x^{+} = (1 - \alpha) x + \alpha s^{+}$</mathjax> and
-then <mathjax>$g(x) = \nabla f(x)^T (x - s^{+})$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
+is to first upper bound $f(x^{(t+1)})$ in terms of $f(x^{(t)})$, $g(x^{(t)})$,
+and $C_f$. We then transform this per-iteration bound into a bound on
+$f(x^{(t)}) - f(x^{*})$ depending on $t$ using induction. That's it!</p>
+<p><strong>Step 1</strong> Upper bound $f(x^{(t+1)})$. As usual, we'll denote $x^{+} \triangleq
+x^{(t+1)}$, $x \triangleq x^{(t)}$, $s^{+} \triangleq s^{(t+1)}$, and $\alpha
+\triangleq \alpha^{(t)}$. We begin by using the upper bound we just obtained for
+$f$ in terms of $C_f$, substituting $x^{+} = (1 - \alpha) x + \alpha s^{+}$ and
+then $g(x) = \nabla f(x)^T (x - s^{+})$,</p>
+<p>$$
+\begin{align<em>}
   f(x^{+}) 
-  &amp; \le f(x) + \nabla f(x)^T (x^{+} - x) + \frac{\alpha^2}{2} C_f \\
-  &amp; = f(x) + \nabla f(x)^T ( (1-\alpha) x + \alpha s^{+} - x ) + \frac{\alpha^2}{2} C_f \\
-  &amp; = f(x) + \nabla f(x)^T ( \alpha s^{+} - \alpha x ) + \frac{\alpha^2}{2} C_f \\
-  &amp; = f(x) - \alpha \nabla f(x)^T ( x - s^{+} ) + \frac{\alpha^2}{2} C_f \\
-  &amp; = f(x) - \alpha g(x) + \frac{\alpha^2}{2} C_f \\
+  &amp; \le f(x) + \nabla f(x)^T (x^{+} - x) + \frac{\alpha^2}{2} C_f \
+  &amp; = f(x) + \nabla f(x)^T ( (1-\alpha) x + \alpha s^{+} - x ) + \frac{\alpha^2}{2} C_f \
+  &amp; = f(x) + \nabla f(x)^T ( \alpha s^{+} - \alpha x ) + \frac{\alpha^2}{2} C_f \
+  &amp; = f(x) - \alpha \nabla f(x)^T ( x - s^{+} ) + \frac{\alpha^2}{2} C_f \
+  &amp; = f(x) - \alpha g(x) + \frac{\alpha^2}{2} C_f \
+\end{align</em>}
+$$</p>
+<p><strong>Step 2</strong> Use induction on $t$. First, recall the upper bound on $f(x) -
+f(x^{<em>}) \le g(x)$ <a href="#upper_bound">we derived above</a>. Let's add $-f(x^{</em>})$ into
+what we got from Step 1, then use the upper bound on $f(x) - f(x^{*})$ to get,</p>
+<p>$$
+\begin{align<em>}
+  f(x^{+}) - f(x^{</em>})
+  &amp; \le f(x) - f(x^{<em>}) - \alpha g(x) + \frac{\alpha^2}{2} C_f \
+  &amp; \le f(x) - f(x^{</em>}) - \alpha ( f(x) - f(x^{<em>}) ) + \frac{\alpha^2}{2} C_f \
+  &amp; = (1 - \alpha) (f(x) - f(x^{</em>})) + \frac{\alpha^2}{2} C_f \
 \end{align*}
-$$</mathjax></p>
-<p><strong>Step 2</strong> Use induction on <mathjax>$t$</mathjax>. First, recall the upper bound on <mathjax>$f(x) -
-f(x^{*}) \le g(x)$</mathjax> <a href="#upper_bound">we derived above</a>. Let's add <mathjax>$-f(x^{*})$</mathjax> into
-what we got from Step 1, then use the upper bound on <mathjax>$f(x) - f(x^{*})$</mathjax> to get,</p>
-<p><mathjax>$$
-\begin{align*}
-  f(x^{+}) - f(x^{*})
-  &amp; \le f(x) - f(x^{*}) - \alpha g(x) + \frac{\alpha^2}{2} C_f \\
-  &amp; \le f(x) - f(x^{*}) - \alpha ( f(x) - f(x^{*}) ) + \frac{\alpha^2}{2} C_f \\
-  &amp; = (1 - \alpha) (f(x) - f(x^{*})) + \frac{\alpha^2}{2} C_f \\
-\end{align*}
-$$</mathjax></p>
-<p>Now, we employ induction on <mathjax>$t$</mathjax> to show that,</p>
-<p><mathjax>$$
+$$</p>
+<p>Now, we employ induction on $t$ to show that,</p>
+<p>$$
   f(x^{(t)}) - f(x^{*}) \le \frac{4 C_f / 2}{t+2}
-$$</mathjax></p>
-<p>We'll assume that the step size is <mathjax>$\alpha^{(t)} = \frac{2}{t+2}$</mathjax>, giving us
-<mathjax>$\alpha^{(0)} = 2 / (0+2) = 1$</mathjax> and the base case,</p>
-<p><mathjax>$$
-\begin{align*}
-  f(x^{(1)} - f(x^{*})
-  &amp; \le (1 - \alpha^{(0)}) ( f(x^{(0)}) - f(x^{*}) ) + \frac{\alpha^2}{2} C_f \\
-  &amp; = (1 - 1) ( f(x^{(0)}) - f(x^{*}) ) + \frac{1}{2} C_f \\
+$$</p>
+<p>We'll assume that the step size is $\alpha^{(t)} = \frac{2}{t+2}$, giving us
+$\alpha^{(0)} = 2 / (0+2) = 1$ and the base case,</p>
+<p>$$
+\begin{align<em>}
+  f(x^{(1)} - f(x^{</em>})
+  &amp; \le (1 - \alpha^{(0)}) ( f(x^{(0)}) - f(x^{<em>}) ) + \frac{\alpha^2}{2} C_f \
+  &amp; = (1 - 1) ( f(x^{(0)}) - f(x^{</em>}) ) + \frac{1}{2} C_f \
   &amp; \le \frac{4 C_f / 2}{(0 + 1) + 2}
 \end{align*}
-$$</mathjax></p>
-<p>Next, for the recursive case, we use the inductive assumption on <mathjax>$f(x) - f(x^{*})$</mathjax>, the definition of <mathjax>$\alpha^{(t)}$</mathjax>, and some algebra,</p>
-<p><mathjax>$$
-\begin{align*}
-  f(x^{+}) - f(x^{*})
-  &amp; \le (1 - \alpha) ( f(x) - f(x^{*}) ) + \frac{ \alpha^2}{2} C_f \\
-  &amp; \le \left(1 - \frac{2}{t+2} \right) \frac{4 C_f / 2}{t + 2} + \left( \frac{2}{t+2} \right)^2 C_f / 2 \\
-  &amp; \le \frac{4 C_f / 2}{t + 2} \left( 1 - \frac{2}{t+2} + \frac{1}{t+2} \right) \\
-  &amp; = \frac{4 C_f / 2}{t + 2} \left( \frac{t+1}{t+2} \right) \\
-  &amp; \le \frac{4 C_f / 2}{t + 2} \left( \frac{t+2}{t+3} \right) \\
-  &amp; = \frac{4 C_f / 2}{(t + 1) + 2} \\
-\end{align*}
-$$</mathjax></p>
-<p>Thus, if we want an error tolerance of <mathjax>$\epsilon$</mathjax>, we need
-<mathjax>$O(\frac{1}{\epsilon})$</mathjax> iterations to find it. This matches the convergence
+$$</p>
+<p>Next, for the recursive case, we use the inductive assumption on $f(x) - f(x^{*})$, the definition of $\alpha^{(t)}$, and some algebra,</p>
+<p>$$
+\begin{align<em>}
+  f(x^{+}) - f(x^{</em>})
+  &amp; \le (1 - \alpha) ( f(x) - f(x^{<em>}) ) + \frac{ \alpha^2}{2} C_f \
+  &amp; \le \left(1 - \frac{2}{t+2} \right) \frac{4 C_f / 2}{t + 2} + \left( \frac{2}{t+2} \right)^2 C_f / 2 \
+  &amp; \le \frac{4 C_f / 2}{t + 2} \left( 1 - \frac{2}{t+2} + \frac{1}{t+2} \right) \
+  &amp; = \frac{4 C_f / 2}{t + 2} \left( \frac{t+1}{t+2} \right) \
+  &amp; \le \frac{4 C_f / 2}{t + 2} \left( \frac{t+2}{t+3} \right) \
+  &amp; = \frac{4 C_f / 2}{(t + 1) + 2} \
+\end{align</em>}
+$$</p>
+<p>Thus, if we want an error tolerance of $\epsilon$, we need
+$O(\frac{1}{\epsilon})$ iterations to find it. This matches the convergence
 rate of Gradient Descent an Proximal Gradient Descent, but falls short of their
 accelerated brethren.</p>
 <h1><a name="usage" href="#usage">When should I use it?</a></h1>
@@ -269,51 +262,51 @@ accelerated brethren.</p>
 mini-optimization problem at each iteration. Unlike Proximal Gradient, however,
 this mini-problem will lead to unbounded iterates if the input space is not
 compact -- in other words, Frank-Wolfe cannot directly be applied when your
-domain is all of <mathjax>$R^{n}$</mathjax>. However, there is a very special case wherein
+domain is all of $R^{n}$. However, there is a very special case wherein
 Frank-Wolfe shines.</p>
 <p><a id="sparsity"></a>
   <strong>Sparsity</strong> The primary reason machine learning researchers have recently
 taken an interest in Frank-Wolfe is because in certain problems the iterates
-<mathjax>$x^{(t)}$</mathjax> will be extremely sparse.  Suppose that <mathjax>$D$</mathjax> is a polyhedron defined
-by a set of linear constraints. Then <mathjax>$s^{(t)}$</mathjax> is a solution to a Linear
-Program, meaning that each <mathjax>$s^{(t)}$</mathjax> lies on one of the vertices of the
-polyhedron. If these vertices have only a few non-zero entries, then <mathjax>$x^{(t)}$</mathjax>
-will too, as <mathjax>$x^{(t)}$</mathjax> is a linear combination of <mathjax>$s^{(1)} \ldots s^{(t)}$</mathjax>.
+$x^{(t)}$ will be extremely sparse.  Suppose that $D$ is a polyhedron defined
+by a set of linear constraints. Then $s^{(t)}$ is a solution to a Linear
+Program, meaning that each $s^{(t)}$ lies on one of the vertices of the
+polyhedron. If these vertices have only a few non-zero entries, then $x^{(t)}$
+will too, as $x^{(t)}$ is a linear combination of $s^{(1)} \ldots s^{(t)}$.
 This is in direct contrast to gradient and proximal based methods, wherein
-<mathjax>$x^{(t)}$</mathjax> is the linear combination of a set of non-sparse <em>gradients</em>.</p>
+$x^{(t)}$ is the linear combination of a set of non-sparse <em>gradients</em>.</p>
 <p><strong>Atomic Norms</strong> One particular case where Frank-Wolfe shines is when
-minimizing <mathjax>$f(x)$</mathjax> subject to <mathjax>$||x|| \le c$</mathjax> where <mathjax>$|| \cdot ||$</mathjax> is an "atomic
-norm". We say that <mathjax>$||\cdot||$</mathjax> is an atomic norm if <mathjax>$||x||$</mathjax> is the smallest <mathjax>$t$</mathjax>
-such that <mathjax>$x/t$</mathjax> is in the convex hull of a finite set of points <mathjax>$\mathcal{A}$</mathjax>,
+minimizing $f(x)$ subject to $||x|| \le c$ where $|| \cdot ||$ is an "atomic
+norm". We say that $||\cdot||$ is an atomic norm if $||x||$ is the smallest $t$
+such that $x/t$ is in the convex hull of a finite set of points $\mathcal{A}$,
 that is,</p>
-<p><mathjax>$$
-  ||x|| = \inf \{ t : x \in t \, \text{Conv}(\mathcal{A}) \}
-$$</mathjax></p>
-<p>For example, <mathjax>$||x||_1$</mathjax> is an atomic norm with <mathjax>$\mathcal{A}$</mathjax> being the set of
-all vectors with only one <mathjax>$+1$</mathjax> or one <mathjax>$-1$</mathjax> entry. In these cases, finding
-<mathjax>$\arg\min_{||s|| \le c} \langle \nabla f(x), s \rangle$</mathjax> is tantamount to
-finding which element of <mathjax>$\mathcal{A}$</mathjax> minimizes <mathjax>$\langle \nabla f(x), s
-\rangle$</mathjax> (since <mathjax>$\text{Conv}(\mathcal{A})$</mathjax> defines a polyhedron). For a whole
+<p>$$
+  ||x|| = \inf { t : x \in t \, \text{Conv}(\mathcal{A}) }
+$$</p>
+<p>For example, $||x||<em _le="\le" _s_="||s||" c>1$ is an atomic norm with $\mathcal{A}$ being the set of
+all vectors with only one $+1$ or one $-1$ entry. In these cases, finding
+$\arg\min</em> \langle \nabla f(x), s \rangle$ is tantamount to
+finding which element of $\mathcal{A}$ minimizes $\langle \nabla f(x), s
+\rangle$ (since $\text{Conv}(\mathcal{A})$ defines a polyhedron). For a whole
 lot more on Atomic Norms, see <a href="http://pages.cs.wisc.edu/~brecht/papers/2010-crpw_inverse_problems.pdf">this tome</a> by
 Chandrasekaranm et al.</p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
-<p><strong>Step Size</strong> The proof above relied on a step size of <mathjax>$\alpha^{(t)} =
-\frac{2}{t+2}$</mathjax>, but as usual <a href="/blog/gradient-descent.html#line_search">Line Search</a> can be applied to
+<p><strong>Step Size</strong> The proof above relied on a step size of $\alpha^{(t)} =
+\frac{2}{t+2}$, but as usual <a href="/blog/gradient-descent.html#line_search">Line Search</a> can be applied to
 accelerate convergence.</p>
 <p><strong>Approximate Linear Solutions</strong> Though not stated in the proof above,
 another cool point about Frank-Wolfe is that you don't actually need to solve
 the linear mini-problem exactly, but you will still converge to the optimal
 solution (albet at a slightly slower rate). In particular, assume that each
-mini-problem can be solved approximately with additive error <mathjax>$\frac{\delta
-C_f}{t+2}$</mathjax> at iteration <mathjax>$t$</mathjax>,</p>
-<p><mathjax>$$
+mini-problem can be solved approximately with additive error $\frac{\delta
+C_f}{t+2}$ at iteration $t$,</p>
+<p>$$
   \langle s^{(t+1)}, \nabla f(x^{(t)}) \rangle
   \le \min_{s} \langle s, \nabla f(x^{(t)}) \rangle + \frac{\delta C_f}{t+2}
-$$</mathjax></p>
+$$</p>
 <p>then Frank-Wolfe's rate of convergence is</p>
-<p><mathjax>$$
+<p>$$
   f(x^{(t)}) - f(x^{*}) \le \frac{2 C_f}{t+2} (1 + \delta)
-$$</mathjax></p>
+$$</p>
 <p>The proof for this can be found in the supplement to <a href="http://jmlr.csail.mit.edu/proceedings/papers/v28/jaggi13-supp.pdf">Jaggi's</a>
 excellent survey on Frank-Wolfe for machine learning.</p>
 <h1><a name="invariance" href="#invariance">Linear Invariance</a></h1>
@@ -322,24 +315,24 @@ is, if you rotate and scale the space, nothing changes about the convergence
 rate. This is in direct contrast to many other methods which depend on the
 <a href="http://en.wikipedia.org/wiki/Condition_number">condition number</a> of a function (for functions with
 Hessians, this is the ratio between the largest and smallest eigenvalues,
-<mathjax>$\sigma_{\max} / \sigma_{\min})$</mathjax>.</p>
+$\sigma_{\max} / \sigma_{\min})$.</p>
 <p>Suppose we transform our input space with a surjective (that is, onto) linear
-transformation <mathjax>$M: \hat{D} \rightarrow D$</mathjax>. Let's now try to solve the problem,</p>
-<p><mathjax>$$
+transformation $M: \hat{D} \rightarrow D$. Let's now try to solve the problem,</p>
+<p>$$
   \min_{\hat{x} \in \hat{D}} \hat{f}(\hat{x}) = f(M \hat{x}) = f(x)
-$$</mathjax></p>
+$$</p>
 <p>Let's look at the solution to the per-iteration mini-problem we need to solve
 for Frank-Wolfe,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   \min_{\hat{s} \in \hat{D}} \langle \nabla \hat{f}(\hat{x}), \hat{s} \rangle
   = \min_{\hat{s} \in \hat{D}} \langle M^T \nabla f( M \hat{x}), \hat{s} \rangle
   = \min_{\hat{s} \in \hat{D}} \langle \nabla f( x ), M \hat{s} \rangle
   = \min_{s \in D} \langle \nabla f( x ), s \rangle
-\end{align*}
-$$</mathjax></p>
-<p>In other words, we will find the same <mathjax>$s$</mathjax> if we solve in the original space,
-or if we find <mathjax>$\hat{s}$</mathjax> and then map it back to <mathjax>$s$</mathjax>. No matter how <mathjax>$M$</mathjax> warps
+\end{align</em>}
+$$</p>
+<p>In other words, we will find the same $s$ if we solve in the original space,
+or if we find $\hat{s}$ and then map it back to $s$. No matter how $M$ warps
 the space, Frank-Wolfe will do the same thing. This also means that if there's
 a linear transformation you can do to make the points of your polyhedron
 sparse, you can do it with no penalty!</p>
@@ -383,7 +376,7 @@ machine learning.</p>
   <span class="k">return</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">iteration</span> <span class="o">+</span> <span class="mf">2.0</span><span class="p">)</span>
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="kn">import</span> <span class="nn">os</span>
 
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -478,7 +471,7 @@ machine learning.</p>
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

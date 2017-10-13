@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -76,11 +69,11 @@
           </abbr>
 
           <div class="entry-content">
-            <p><mathjax>$\def\prox{\text{prox}}$</mathjax>
+            <p>$\def\prox{\text{prox}}$
   In a <a href="/blog/proximal-gradient-descent.html">previous post</a>, I presented Proximal Gradient, a
-method for bypassing the <mathjax>$O(1 / \epsilon^2)$</mathjax> convergence rate of Subgradient
+method for bypassing the $O(1 / \epsilon^2)$ convergence rate of Subgradient
 Descent.  This method relied on assuming that the objective function could be
-expressed as the sum of 2 functions, <mathjax>$g(x)$</mathjax> and <mathjax>$h(x)$</mathjax>, with ...</p>
+expressed as the sum of 2 functions, $g(x)$ and $h(x)$, with …</p>
           </div>
 
         </li>
@@ -106,7 +99,7 @@ expressed as the sum of 2 functions, <mathjax>$g(x)$</mathjax> and <mathjax>$h(x
 problem. While the two problems are not equivalent, the former can be seen as a
 relaxation of the latter that allows us to easily find globally optimal
 solutions (as opposed to only locally optimal ones).</p>
-<p>Suppose we have a ...</p>
+<p>Suppose we have a …</p>
           </div>
 
         </li>
@@ -132,7 +125,7 @@ solutions (as opposed to only locally optimal ones).</p>
 error while regularizing your parameters." The idea is that while many choices
 of parameters may make your training error low, the goal isn't low training
 error -- it's low test-time error. Thus, parameters should be minimize training
-error ...</p>
+error while remaining …</p>
           </div>
 
         </li>
@@ -154,12 +147,12 @@ error ...</p>
           </abbr>
 
           <div class="entry-content">
-            <p><mathjax>$ \def\prox{\text{prox}} $</mathjax>
+            <p>$ \def\prox{\text{prox}} $
   In a <a href="/blog/subgradient-descent.html#usage">previous post</a>, I mentioned that one cannot
-hope to asymptotically outperform the <mathjax>$O(\frac{1}{\epsilon^2})$</mathjax> convergence
+hope to asymptotically outperform the $O(\frac{1}{\epsilon^2})$ convergence
 rate of Subgradient Descent when dealing with a non-differentiable objective
 function. This is in fact only half-true; Subgradient Descent cannot be beat
-<em>using only first-order information ...</em></p>
+<em>using only first-order information …</em></p>
           </div>
 
         </li>
@@ -183,9 +176,9 @@ function. This is in fact only half-true; Subgradient Descent cannot be beat
           <div class="entry-content">
             <p>In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
 At the same time, he established the Accelerated Gradient Method, proved that
-its convergence rate superior to Gradient Descent (<mathjax>$O(1/\sqrt{\epsilon})$</mathjax>
-iterations instead of <mathjax>$O(1/\epsilon)$</mathjax>), and then proved that no other
-first-order (that ...</p>
+its convergence rate superior to Gradient Descent ($O(1/\sqrt{\epsilon})$
+iterations instead of $O(1/\epsilon)$), and then proved that no other
+first-order (that …</p>
           </div>
 
         </li>
@@ -202,7 +195,7 @@ first-order (that ...</p>
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

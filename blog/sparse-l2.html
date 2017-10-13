@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -67,51 +60,51 @@
 		  <abbr class="published">Thu 10 May 2012</abbr>
 	</header>
   <article>
-    <p>Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter <mathjax>$w$</mathjax> is simply the sum of the losses of each sample <mathjax>$i$</mathjax>, i.e.,</p>
-<p><mathjax>$$
+    <p>Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter $w$ is simply the sum of the losses of each sample $i$, i.e.,</p>
+<p>$$
   L(w) = \sum_{i} l(x_i, y_i, w)
-$$</mathjax></p>
-<p>Basically any loss function you can think of in the i.i.d sample regime can be composed this way. Since we assumed that your dataset was huge, there's no way you’re going to be able to load it all into memory for BFGS, so you choose to use Stochastic Gradient Descent. The update for sample <mathjax>$i$</mathjax> with step size <mathjax>$\eta_t$</mathjax> would then be,</p>
-<p><mathjax>$$
+$$</p>
+<p>Basically any loss function you can think of in the i.i.d sample regime can be composed this way. Since we assumed that your dataset was huge, there's no way you’re going to be able to load it all into memory for BFGS, so you choose to use Stochastic Gradient Descent. The update for sample $i$ with step size $\eta_t$ would then be,</p>
+<p>$$
   w_{t+1} = w_t - \eta_t \nabla_w l(x_i, y_i, w_t)
-$$</mathjax></p>
-<p>So far, so good. If <mathjax>$\nabla_w l(x_i, y_i, w)$</mathjax> is sparse, then you only need to change a handful of <mathjax>$w$</mathjax>'s components. Of course, being the astute Machine Learning expert that you are, you know that you’re going to need some regularization. Let's redefine the total loss and take a look at our new update equation,</p>
-<p><mathjax>$$
+$$</p>
+<p>So far, so good. If $\nabla_w l(x_i, y_i, w)$ is sparse, then you only need to change a handful of $w$'s components. Of course, being the astute Machine Learning expert that you are, you know that you’re going to need some regularization. Let's redefine the total loss and take a look at our new update equation,</p>
+<p>$$
 \begin{aligned}
-  L(w) &amp; = \sum_{i} l(x_i, y_i, w) + \frac{\lambda}{2}||w||_2^2  \\
-  w_{t+1} &amp; = w_t - \eta_t \left( \nabla_w l(x_i, y_i, w_t) + \lambda w_t \right)
+  L(w) &amp; = \sum_{i} l(x_i, y_i, w) + \frac{\lambda}{2}||w||<em t_1="t+1">2^2  \
+  w</em> &amp; = w_t - \eta_t \left( \nabla_w l(x_i, y_i, w_t) + \lambda w_t \right)
 \end{aligned}
-$$</mathjax></p>
-<p>Uh oh. Now that <mathjax>$w$</mathjax> appears in our Stochastic Gradient Descent update equation, you’re going to have change every non-zero element of <mathjax>$w$</mathjax> at every iteration, even if <mathjax>$\nabla_w l(x_i, y_i, w)$</mathjax> is sparse! Whatever shall you do?</p>
-<p>The answer isn't as scary as you might think. Let’s do some algebraic manipulation from <mathjax>$t = 0$</mathjax>,</p>
-<p><mathjax>$$
+$$</p>
+<p>Uh oh. Now that $w$ appears in our Stochastic Gradient Descent update equation, you’re going to have change every non-zero element of $w$ at every iteration, even if $\nabla_w l(x_i, y_i, w)$ is sparse! Whatever shall you do?</p>
+<p>The answer isn't as scary as you might think. Let’s do some algebraic manipulation from $t = 0$,</p>
+<p>$$
 \begin{aligned}
   w_{1}
-  &amp; = w_0 - \eta_0 \left( \nabla_w l(x_i, y_i, w_0) + \lambda w_0 \right) \\
-  &amp; = w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) - \eta_0 \lambda w_0 \\
-  &amp; = (1 - \eta_0 \lambda ) w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) \\
+  &amp; = w_0 - \eta_0 \left( \nabla_w l(x_i, y_i, w_0) + \lambda w_0 \right) \
+  &amp; = w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) - \eta_0 \lambda w_0 \
+  &amp; = (1 - \eta_0 \lambda ) w_0 - \eta_0 \nabla_w l(x_i, y_i, w_0) \
   &amp; = (1 - \eta_0 \lambda ) \left(
       w_0 - \frac{\eta_0}{1-\eta_0 \lambda } \nabla_w l(x_i, y_i, w_0)
-    \right) \\
+    \right) \
 \end{aligned}
-$$</mathjax></p>
-<p>Do you see it now? <mathjax>$L_2$</mathjax> regularization is really just a rescaling of <mathjax>$w_t$</mathjax> at every iteration. Thus instead of keeping <mathjax>$w_t$</mathjax>, let’s keep track of,</p>
-<p><mathjax>$$
+$$</p>
+<p>Do you see it now? $L_2$ regularization is really just a rescaling of $w_t$ at every iteration. Thus instead of keeping $w_t$, let’s keep track of,</p>
+<p>$$
 \begin{aligned}
-  c_t &amp; = \prod_{\tau=0}^t (1-\eta_{\tau} \lambda )  \\
+  c_t &amp; = \prod_{\tau=0}^t (1-\eta_{\tau} \lambda )  \
   \bar{w}_t &amp; = \frac{w_t}{c_t}
 \end{aligned}
-$$</mathjax></p>
-<p>where you update <mathjax>$\bar{w}_t$</mathjax> and <mathjax>$c_t$</mathjax> by,</p>
-<p><mathjax>$$
+$$</p>
+<p>where you update $\bar{w}_t$ and $c_t$ by,</p>
+<p>$$
 \begin{aligned}
-  \bar{w}_{t+1}
-  &amp; = \bar{w}_t - \frac{\eta_t}{(1 - \eta_t) c_t} \nabla_w l(x_i, w_i, c_t \bar{w}_t) \\
-  c_{t+1}
+  \bar{w}<em t_1="t+1">{t+1}
+  &amp; = \bar{w}_t - \frac{\eta_t}{(1 - \eta_t) c_t} \nabla_w l(x_i, w_i, c_t \bar{w}_t) \
+  c</em>
   &amp; = (1 - \eta_t \lambda) c_t
 \end{aligned}
-$$</mathjax></p>
-<p>And that’s it! As a final note, depending what value you choose for <mathjax>$\lambda$</mathjax>, <mathjax>$c_t$</mathjax> is going to get really big or really small pretty fast. The usual "take the log" tricks aren't going to fly, either, as <mathjax>$c_t$</mathjax> need not be positive. The only way around it I’ve found is to check every iteration if <mathjax>$c_t$</mathjax> is getting out of hand, then transform <mathjax>$\bar{w}_{t} \leftarrow \bar{w}_t c_t$</mathjax> and <mathjax>$c_t \leftarrow 1$</mathjax> if it is.</p>
+$$</p>
+<p>And that’s it! As a final note, depending what value you choose for $\lambda$, $c_t$ is going to get really big or really small pretty fast. The usual "take the log" tricks aren't going to fly, either, as $c_t$ need not be positive. The only way around it I’ve found is to check every iteration if $c_t$ is getting out of hand, then transform $\bar{w}_{t} \leftarrow \bar{w}_t c_t$ and $c_t \leftarrow 1$ if it is.</p>
 <p>Finally, credit should be given where credit is due. This is a slightly more detailed explanation of <a href="http://blog.smola.org/post/940672544/fast-quadratic-regularization-for-online-learning&gt;">Alex Smola</a> blog post from about a year ago, which in turn is accredited to Leon Bottou.</p>
 
     <div id="article_meta">
@@ -147,7 +140,7 @@ $$</mathjax></p>
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

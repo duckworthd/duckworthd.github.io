@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -81,7 +74,7 @@ also known as the Conditional Gradient Method, an algorithm particularly suited
 for solving problems with compact domains. Like the <a href="/blog/proximal-gradient-descent.html">Proximal
 Gradient</a> and <a href="/blog/accelerated-proximal-gradient-descent.html">Accelerated Proximal
 Gradient</a> algorithms, Frank-Wolfe requires we
-exploit problem structure to quickly solve a mini-optimization problem ...</p>
+exploit problem structure to quickly solve a mini-optimization problem. Our …</p>
           </div>
 
         </li>
@@ -103,11 +96,11 @@ exploit problem structure to quickly solve a mini-optimization problem ...</p>
           </abbr>
 
           <div class="entry-content">
-            <p><mathjax>$\def\prox{\text{prox}}$</mathjax>
+            <p>$\def\prox{\text{prox}}$
   In a <a href="/blog/proximal-gradient-descent.html">previous post</a>, I presented Proximal Gradient, a
-method for bypassing the <mathjax>$O(1 / \epsilon^2)$</mathjax> convergence rate of Subgradient
+method for bypassing the $O(1 / \epsilon^2)$ convergence rate of Subgradient
 Descent.  This method relied on assuming that the objective function could be
-expressed as the sum of 2 functions, <mathjax>$g(x)$</mathjax> and <mathjax>$h(x)$</mathjax>, with ...</p>
+expressed as the sum of 2 functions, $g(x)$ and $h(x)$, with …</p>
           </div>
 
         </li>
@@ -129,12 +122,12 @@ expressed as the sum of 2 functions, <mathjax>$g(x)$</mathjax> and <mathjax>$h(x
           </abbr>
 
           <div class="entry-content">
-            <p><mathjax>$ \def\prox{\text{prox}} $</mathjax>
+            <p>$ \def\prox{\text{prox}} $
   In a <a href="/blog/subgradient-descent.html#usage">previous post</a>, I mentioned that one cannot
-hope to asymptotically outperform the <mathjax>$O(\frac{1}{\epsilon^2})$</mathjax> convergence
+hope to asymptotically outperform the $O(\frac{1}{\epsilon^2})$ convergence
 rate of Subgradient Descent when dealing with a non-differentiable objective
 function. This is in fact only half-true; Subgradient Descent cannot be beat
-<em>using only first-order information ...</em></p>
+<em>using only first-order information …</em></p>
           </div>
 
         </li>
@@ -158,9 +151,9 @@ function. This is in fact only half-true; Subgradient Descent cannot be beat
           <div class="entry-content">
             <p>In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
 At the same time, he established the Accelerated Gradient Method, proved that
-its convergence rate superior to Gradient Descent (<mathjax>$O(1/\sqrt{\epsilon})$</mathjax>
-iterations instead of <mathjax>$O(1/\epsilon)$</mathjax>), and then proved that no other
-first-order (that ...</p>
+its convergence rate superior to Gradient Descent ($O(1/\sqrt{\epsilon})$
+iterations instead of $O(1/\epsilon)$), and then proved that no other
+first-order (that …</p>
           </div>
 
         </li>
@@ -186,7 +179,7 @@ first-order (that ...</p>
 descent algorithm (that is, an algorithm that only relies on the first
 derivative) is Subgradient Descent. In implementation, they are in fact
 identical. The only difference is on the assumptions placed on the objective
-function we wish to minimize, <mathjax>$f(x)$</mathjax>.  If ...</p>
+function we wish to minimize, $f(x)$.  If …</p>
           </div>
 
         </li>
@@ -202,7 +195,7 @@ function we wish to minimize, <mathjax>$f(x)$</mathjax>.  If ...</p>
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

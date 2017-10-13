@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -69,31 +62,31 @@
   <article>
     <p><a href="http://www.orchid.ac.uk/eprints/40/1/fox_vbtut.pdf">Variational Inference</a> and Monte Carlo Sampling are
 currently the two chief ways of doing approximate Bayesian inference. In the
-Bayesian setting, we typically have some observed variables <mathjax>$x$</mathjax> and
-unobserved variables <mathjax>$z$</mathjax>, and our goal is to calculate <mathjax>$P(z|x)$</mathjax>. In all but
-the simplest cases, calculating <mathjax>$P(z|x)$</mathjax> for all values of <mathjax>$z$</mathjax> in closed form
+Bayesian setting, we typically have some observed variables $x$ and
+unobserved variables $z$, and our goal is to calculate $P(z|x)$. In all but
+the simplest cases, calculating $P(z|x)$ for all values of $z$ in closed form
 is impossible, so approximations must be made.</p>
 <p>Variational Inference's approximation is made by choosing a family of
-distributions <mathjax>$q(z|\eta)$</mathjax> parameterized by <mathjax>$\eta$</mathjax> and choosing a setting for
-<mathjax>$\eta$</mathjax> that brings <mathjax>$q(z|\eta)$</mathjax> "close" to <mathjax>$P(z|x)$</mathjax>.  In particular,
+distributions $q(z|\eta)$ parameterized by $\eta$ and choosing a setting for
+$\eta$ that brings $q(z|\eta)$ "close" to $P(z|x)$.  In particular,
 Variational Inference is about finding,</p>
-<p><mathjax>$$
-\begin{align*}
-  &amp; \arg\min_{\eta} KL \left[ q(z|\eta) || P(z|x) \right] \\
+<p>$$
+\begin{align<em>}
+  &amp; \arg\min_{\eta} KL \left[ q(z|\eta) || P(z|x) \right] \
   &amp; = \arg\min_{\eta} \sum_{z} q(z|\eta) \log \frac{ q(z|\eta) }{ P(z|x) }
-\end{align*}
-$$</mathjax></p>
+\end{align</em>}
+$$</p>
 <p>Looking at this formulation, the first thing you should be thinking is, "We
-don't even know how to calculate <mathjax>$P(z|x)$</mathjax> much less take an expectation with
+don't even know how to calculate $P(z|x)$ much less take an expectation with
 respect to it. How can I possibly solve this problem?" The key is to restrict
-<mathjax>$q(z|\eta)$</mathjax> to decompose into a product of independent distributions, 1 for
-each hidden variable <mathjax>$z_i$</mathjax>. In other words,</p>
-<p><mathjax>$$
+$q(z|\eta)$ to decompose into a product of independent distributions, 1 for
+each hidden variable $z_i$. In other words,</p>
+<p>$$
   q(z|\eta) = \prod_{i} q(z_i | \eta_i)
-$$</mathjax></p>
+$$</p>
 <p>This is the "mean field approximation" and will allow us to optimize each
-<mathjax>$\eta_i$</mathjax> one at a time. The final key <mathjax>$P(z_i|z_{-i},x)$</mathjax> must lie in the
-exponential family, and that <mathjax>$q(z_i|\eta_i)$</mathjax> be of the same form. For example,
+$\eta_i$ one at a time. The final key $P(z_i|z_{-i},x)$ must lie in the
+exponential family, and that $q(z_i|\eta_i)$ be of the same form. For example,
 if the former is a Dirichlet distribution, so should the latter. When this is
 the case, we can solve the Coordinate Ascent update in closed form.</p>
 <p>When all 3 conditions are met -- the mean field approximation, the univariate
@@ -102,149 +95,149 @@ distributions match -- we can apply Coordinate Ascent to minimize the
 KL-divergence between the mean field distribution and the posterior.</p>
 <h1><a name="derivation" href="#derivation">Derivation of the Objective</a></h1>
 <p>The original intuition for Variational Inference stems from lower bounding
-the marginal likelihood of the observed variables <mathjax>$P(x)$</mathjax>, then maximizing that
-lower bound. For many choices of <mathjax>$q(z|\eta)$</mathjax> doing this will be computationally
+the marginal likelihood of the observed variables $P(x)$, then maximizing that
+lower bound. For many choices of $q(z|\eta)$ doing this will be computationally
 infeasible, but we'll see that if we make the mean field approximation and
 choose the right variational distributions, then we can efficiently do
 Coordinate Ascent.</p>
 <p>First, let's derive a lower bound on the likelihood of the observed
 variables,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   \log P(x)
   &amp; = \log \left(
     \sum_{z} P(x, z) \frac{ q(z | \eta) } { q(z | \eta) }
-  \right) \\
+  \right) \
   &amp; = \log \left(
     P(x)  \sum_{z} q(z | \eta) \frac{ P(z | x) } { q(z | \eta) }
-  \right) \\
+  \right) \
   &amp; = \log \left(
     \sum_{z} q(z | \eta) \frac{ P(z | x) } { q(z | \eta) }
-  \right) + \log P(x) \\
-\end{align*}
-$$</mathjax></p>
-<p>Since <mathjax>$\log$</mathjax> is a concave function, we can apply Jensen's inequality to see
-that <mathjax>$\log(p x + (1-p)y) \ge p \log(x) + (1-p) \log y$</mathjax> for any <mathjax>$p \in [0,
-1]$</mathjax>.</p>
-<p><mathjax>$$
-\begin{align*}
+  \right) + \log P(x) \
+\end{align</em>}
+$$</p>
+<p>Since $\log$ is a concave function, we can apply Jensen's inequality to see
+that $\log(p x + (1-p)y) \ge p \log(x) + (1-p) \log y$ for any $p \in [0,
+1]$.</p>
+<p>$$
+\begin{align<em>}
   \log P(x)
   &amp; = \log \left(
     \sum_{z} q(z | \eta) \frac{ P(z | x) } { q(z | \eta) }
-  \right) + \log P(x) \\
+  \right) + \log P(x) \
   &amp; \ge \sum_{z} q(z | \eta) \log \left(
     \frac{ P(z | x) } { q(z | \eta) }
-  \right) + \log P(x) \\
+  \right) + \log P(x) \
   &amp; = - \sum_{z} q(z | \eta) \log \left(
     \frac{ q(z | \eta) } { P(z | x) }
-  \right) + \log P(x) \\
-  &amp; = - \text{KL}[ q(z | \eta) || P(z | x) ] + \log P(x) \\
-  &amp; = - \text{KL}[ q(z | \eta) || P(z , x) ] \\
-\end{align*}
-$$</mathjax></p>
+  \right) + \log P(x) \
+  &amp; = - \text{KL}[ q(z | \eta) || P(z | x) ] + \log P(x) \
+  &amp; = - \text{KL}[ q(z | \eta) || P(z , x) ] \
+\end{align</em>}
+$$</p>
 <p>From this expression, we can see that minimizing the KL divergence over
-<mathjax>$\eta$</mathjax>, we're lower bounding the likelihood of the observed variables.
-In addition, if <mathjax>$q(z|\eta)$</mathjax> has the same form as <mathjax>$P(z|x)$</mathjax>, then the best choice
-for <mathjax>$\eta$</mathjax> is one that lets <mathjax>$q(z|\eta) = P(z|x)$</mathjax> for all <mathjax>$z$</mathjax>.</p>
+$\eta$, we're lower bounding the likelihood of the observed variables.
+In addition, if $q(z|\eta)$ has the same form as $P(z|x)$, then the best choice
+for $\eta$ is one that lets $q(z|\eta) = P(z|x)$ for all $z$.</p>
 <p>At this point, we still have an intractable problem. Even evaluating the KL
-divergence requires taking an expectation over all settings for <mathjax>$z$</mathjax> (an
-exponential number in <mathjax>$z$</mathjax>'s length!), so applying an iterative algorithm to
-choose <mathjax>$\eta$</mathjax> is right out. However, we'll soon see that by restricting the
-form of <mathjax>$q(z|\eta)$</mathjax>, we can potentially decompose the KL divergence into more
+divergence requires taking an expectation over all settings for $z$ (an
+exponential number in $z$'s length!), so applying an iterative algorithm to
+choose $\eta$ is right out. However, we'll soon see that by restricting the
+form of $q(z|\eta)$, we can potentially decompose the KL divergence into more
 easily manageable bits.</p>
 <h1><a name="mean-field" href="#mean-field">The Mean Field Approximation</a></h1>
 <p>The key to avoiding the massive sum of the previous equation is to assume that
-<mathjax>$q(z|\eta)$</mathjax> decomposes into a product of independent distributions. This is
+$q(z|\eta)$ decomposes into a product of independent distributions. This is
 known as the "Mean Field Approximation". Mathematically, the approximation
 means that,</p>
-<p><mathjax>$$
+<p>$$
   q(z|\eta) = \prod_{i} q(z_i | \eta_i)
-$$</mathjax></p>
+$$</p>
 <p>Suppose we make this assumption and that we want to perform coordinate ascent
-on a single index <mathjax>$\eta_k$</mathjax>. By factoring <mathjax>$P(z|x) = \prod_{i=1}^{k} P(z_i |
-z_{1:i-1}, x)$</mathjax> and dropping all terms that are constant with respect to
-<mathjax>$\eta_k$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
-  &amp; \arg\max_{\eta_k} -KL \left[ q(z|\eta) || p(z|x) \right] + \underbrace{\log P(x)}_{\text{constant wrt $\eta_k$}} \\
-  &amp; = \arg\max_{\eta_k} \sum_{z} q(z|\eta) \log P(z|x) - \sum_{z} q(z|\eta) \log q(z|\eta) \\
+on a single index $\eta_k$. By factoring $P(z|x) = \prod_{i=1}^{k} P(z_i |
+z_{1:i-1}, x)$ and dropping all terms that are constant with respect to
+$\eta_k$,</p>
+<p>$$
+\begin{align<em>}
+  &amp; \arg\max_{\eta_k} -KL \left[ q(z|\eta) || p(z|x) \right] + \underbrace{\log P(x)}<em _eta_k="\eta_k">{\text{constant wrt $\eta_k$}} \
+  &amp; = \arg\max</em> \sum_{z} q(z|\eta) \log P(z|x) - \sum_{z} q(z|\eta) \log q(z|\eta) \
   &amp; = \arg\max_{\eta_k} \sum_{z} q(z|\eta) \log \left( \prod_{i} P(z_{i}|z_{1:i-1},x) \right)
-    - \sum_{z} \left( \prod_{i} q(z_i|\eta_i) \right) \log \left( \prod_{i} q(z_i|\eta_i) \right) \\
+    - \sum_{z} \left( \prod_{i} q(z_i|\eta_i) \right) \log \left( \prod_{i} q(z_i|\eta_i) \right) \
   &amp; = \arg\max_{\eta_k} \sum_{j} \sum_{z} q(z|\eta)\log P(z_{j}|z_{1:j-1},x)
-    - \underbrace{ \sum_{j} \sum_{z_j} q(z_j|\eta_j) \log q(z_j|\eta_j) }_{\text{only $j=k$ not const wrt. $\eta_k$}} \\
-  &amp; = \arg\max_{\eta_k} \underbrace{ \sum_{j} \sum_{z_{1:j}} \left( \prod_{i \le j} q(z_i|\eta_i) \right) \log P(z_{j}|z_{1:j-1},x) }_{\text{only last $j$ contains $q(z_k|\eta_k)$}}
-    - \sum_{z_k} q(z_k|\eta_k) \log q(z_k|\eta_k)  \\
-  &amp; = \arg\max_{\eta_k} \sum_{z} q(z_k|\eta_k) \underbrace{ \left( \prod_{i \ne k} q(z_i|\eta_i) \right) }_{\text{fixed wrt $\eta_k$}} \log P(z_k | z_{-k}, x)
-    - \sum_{z_k} q(z_k|\eta_k) \log q(z_k|\eta_k)  \\
-  &amp; = \arg\max_{\eta_k} \mathbb{E}_{q(z|\eta)} \left[ \log P(z_k | z_{-k}, x) \right]
-    - \mathbb{E}_{ q(z_k|\eta_k) } \left[ \log q(z_k|\eta_k) \right] \\
-\end{align*}
-$$</mathjax></p>
-<p>At this point, we'll make the assumption that <mathjax>$P(z_k|z_{-k},x)$</mathjax> is an
-exponential family distribution (<mathjax>$z_{-k}$</mathjax> is all <mathjax>$z_i$</mathjax> with <mathjax>$i \ne k$</mathjax>), and
-moreover that <mathjax>$q(z_k|\eta_k)$</mathjax> and <mathjax>$P(z_k|z_{-k},x)$</mathjax> lie in the same exponential
+    - \underbrace{ \sum_{j} \sum_{z_j} q(z_j|\eta_j) \log q(z_j|\eta_j) }<em _eta_k="\eta_k">{\text{only $j=k$ not const wrt. $\eta_k$}} \
+  &amp; = \arg\max</em> \underbrace{ \sum_{j} \sum_{z_{1:j}} \left( \prod_{i \le j} q(z_i|\eta_i) \right) \log P(z_{j}|z_{1:j-1},x) }<em z_k>{\text{only last $j$ contains $q(z_k|\eta_k)$}}
+    - \sum</em> q(z_k|\eta_k) \log q(z_k|\eta_k)  \
+  &amp; = \arg\max_{\eta_k} \sum_{z} q(z_k|\eta_k) \underbrace{ \left( \prod_{i \ne k} q(z_i|\eta_i) \right) }<em -k>{\text{fixed wrt $\eta_k$}} \log P(z_k | z</em>, x)
+    - \sum_{z_k} q(z_k|\eta_k) \log q(z_k|\eta_k)  \
+  &amp; = \arg\max_{\eta_k} \mathbb{E}<em -k>{q(z|\eta)} \left[ \log P(z_k | z</em>, x) \right]
+    - \mathbb{E}_{ q(z_k|\eta_k) } \left[ \log q(z_k|\eta_k) \right] \
+\end{align</em>}
+$$</p>
+<p>At this point, we'll make the assumption that $P(z_k|z_{-k},x)$ is an
+exponential family distribution ($z_{-k}$ is all $z_i$ with $i \ne k$), and
+moreover that $q(z_k|\eta_k)$ and $P(z_k|z_{-k},x)$ lie in the same exponential
 family.  Mathematically, this means that,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   q(z_k|\eta_k)
-  &amp;= h(z_k) \exp( \eta_i^T t(z_k) - A(\eta_k) \\
+  &amp;= h(z_k) \exp( \eta_i^T t(z_k) - A(\eta_k) \
   P(z_k|z_{-k},x)
-  &amp;= h(z_k) \exp( g(z_{-k},x)^T t(z_k) - A(g(z_{-k},x)) \\
-\end{align*}
-$$</mathjax></p>
-<p>Here <mathjax>$t(\cdot)$</mathjax> are sufficient statistics, <mathjax>$A(\cdot)$</mathjax> is the log of the
-normalizing constant, <mathjax>$g(\cdot)$</mathjax> is a function of all other variables that
-determines the parameters for <mathjax>$P(z_k|z_{-k},x)$</mathjax>, and <mathjax>$h(\cdot)$</mathjax> is some
+  &amp;= h(z_k) \exp( g(z_{-k},x)^T t(z_k) - A(g(z_{-k},x)) \
+\end{align</em>}
+$$</p>
+<p>Here $t(\cdot)$ are sufficient statistics, $A(\cdot)$ is the log of the
+normalizing constant, $g(\cdot)$ is a function of all other variables that
+determines the parameters for $P(z_k|z_{-k},x)$, and $h(\cdot)$ is some
 function that doesn't depend on the parameters of the distribution.</p>
 <p>Plugging this back into the previous equation (we define it to be
-<mathjax>$L(\eta_k)$</mathjax>), applying the <mathjax>$\log$</mathjax>, and using the linearity property of the
+$L(\eta_k)$), applying the $\log$, and using the linearity property of the
 expectation,</p>
-<p><mathjax>$$
-\begin{align*}
-&amp; \arg\max_{\eta_k} &amp;&amp; L(\eta_k) \\
-= &amp; \arg\max_{\eta_k} &amp;&amp; \mathbb{E}_{q(z|\eta)} \left[ \log P(z_k | z_{-k}, x) \right]
-    - \mathbb{E}_{ q(z_k|\eta_k) } \left[ \log q(z_k|\eta_k) \right] \\
-= &amp; \arg\max_{\eta_k} &amp;&amp;\mathbb{E}_{q(z|\eta)} \left[
-    \log h(z_k) + g(z_{-k},x)^T t(z_k) - A(g(z_{-k},x)
+<p>$$
+\begin{align<em>}
+&amp; \arg\max_{\eta_k} &amp;&amp; L(\eta_k) \
+= &amp; \arg\max_{\eta_k} &amp;&amp; \mathbb{E}<em -k>{q(z|\eta)} \left[ \log P(z_k | z</em>, x) \right]
+    - \mathbb{E}<em _eta_k="\eta_k">{ q(z_k|\eta_k) } \left[ \log q(z_k|\eta_k) \right] \
+= &amp; \arg\max</em> &amp;&amp;\mathbb{E}<em -k>{q(z|\eta)} \left[
+    \log h(z_k) + g(z</em>,x)^T t(z_k) - A(g(z_{-k},x)
   \right]
-  - \mathbb{E}_{q(z_k|\eta_k)} \left[ \log q(z_k|\eta_k) \right]  \\
-= &amp; \arg\max_{\eta_k} &amp;&amp;\left(
-    \underbrace{ \mathbb{E}_{q(z_k|\eta_k)} \left[ \log h(z_k) \right] }_{\text{cancels out}}
+  - \mathbb{E}<em _eta_k="\eta_k">{q(z_k|\eta_k)} \left[ \log q(z_k|\eta_k) \right]  \
+= &amp; \arg\max</em> &amp;&amp;\left(
+    \underbrace{ \mathbb{E}<em _text_cancels="\text{cancels" out>{q(z_k|\eta_k)} \left[ \log h(z_k) \right] }</em>}
     + \underbrace{
-      \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right]^T \mathbb{E}_{q(z_{k}|\eta_{k})} \left[ t(z_k) \right]
-    }_{\text{$\mathbb{E}$ splits b/c $q(z_{-k}|\eta_{-k})$ and $q(z_k|\eta_k)$ are indep.}}
-    - \underbrace{ \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ A(g(z_{-k},x) \right] }_{\text{const wrt $\eta_k$}}
-  \right) \\
+      \mathbb{E}<em -k>{q(z</em>|\eta_{-k})} \left[ g(z_{-k},x) \right]^T \mathbb{E}<em k>{q(z</em>|\eta_{k})} \left[ t(z_k) \right]
+    }<em -k>{\text{$\mathbb{E}$ splits b/c $q(z</em>|\eta_{-k})$ and $q(z_k|\eta_k)$ are indep.}}
+    - \underbrace{ \mathbb{E}<em -k>{q(z</em>|\eta_{-k})} \left[ A(g(z_{-k},x) \right] }<em q_z_k_eta_k_="q(z_k|\eta_k)">{\text{const wrt $\eta_k$}}
+  \right) \
 &amp;&amp;&amp; - \left(
-    \underbrace{ \mathbb{E}_{q(z_k|\eta_k)} \left[ \log h(z_k) \right] }_{\text{cancels out}}
-    + \eta_k^T \mathbb{E}_{q(z_k|\eta_k)} \left[ t(z_k) \right]
+    \underbrace{ \mathbb{E}</em> \left[ \log h(z_k) \right] }<em q_z_k_eta_k_="q(z_k|\eta_k)">{\text{cancels out}}
+    + \eta_k^T \mathbb{E}</em> \left[ t(z_k) \right]
     - A(\eta_k)
-  \right) \\
-= &amp; \arg\max_{\eta_k} &amp;&amp; \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right]^T \left( \nabla_{\eta_k} A(\eta_k) \right)
+  \right) \
+= &amp; \arg\max_{\eta_k} &amp;&amp; \mathbb{E}<em -k>{q(z</em>|\eta_{-k})} \left[ g(z_{-k},x) \right]^T \left( \nabla_{\eta_k} A(\eta_k) \right)
     + \eta_k^T \left( \nabla_{\eta_k} A(\eta_k) \right)
-    - A(\eta_k) \\
-\end{align*}
-$$</mathjax></p>
-<p>On this last line, we use the property <mathjax>$\nabla A_{\eta_k} (\eta_k) =
-\mathbb{E}_{q(z_k|\eta_k)} [ t(z_k) ]$</mathjax>, a fact that holds for the exponential
+    - A(\eta_k) \
+\end{align</em>}
+$$</p>
+<p>On this last line, we use the property $\nabla A_{\eta_k} (\eta_k) =
+\mathbb{E}_{q(z_k|\eta_k)} [ t(z_k) ]$, a fact that holds for the exponential
 family.  Finally, let's take the gradient of this expression and set it to
-zero to solve for <mathjax>$\eta_k$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
+zero to solve for $\eta_k$,</p>
+<p>$$
+\begin{align<em>}
   0
-  &amp; = \nabla_{\eta_k} L(\eta_k) \\
+  &amp; = \nabla_{\eta_k} L(\eta_k) \
   &amp; = \left( \nabla_{\eta_k}^2 A(\eta_k) \right)
     \left(
-      \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right]
+      \mathbb{E}<em -k>{q(z</em>|\eta_{-k})} \left[ g(z_{-k},x) \right]
       - \eta_k
-    \right) \\
+    \right) \
   \eta_k
-  &amp; = \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right] \\
-\end{align*}
-$$</mathjax></p>
-<p>So what is this expression? It says that in order to update <mathjax>$\eta_k$</mathjax>, we need
-to be able to evaluate the expected parameters for <mathjax>$P(z_k|z_{-k},x)$</mathjax>
-under our approximation to the posterior <mathjax>$q(z_{-k}|\eta_{-k})$</mathjax>. How do we do
+  &amp; = \mathbb{E}<em -k>{q(z</em>|\eta_{-k})} \left[ g(z_{-k},x) \right] \
+\end{align</em>}
+$$</p>
+<p>So what is this expression? It says that in order to update $\eta_k$, we need
+to be able to evaluate the expected parameters for $P(z_k|z_{-k},x)$
+under our approximation to the posterior $q(z_{-k}|\eta_{-k})$. How do we do
 this? Let's take a look at an example to make this concrete.</p>
 <h1><a name="example" href="#example">Example</a></h1>
 <p>For this part, let's take a look at the model defined by Latent Dirichlet
@@ -254,17 +247,17 @@ Allocation (LDA),</p>
 </div>
 
 <div class="pseudocode">
-<p><strong>Input:</strong> document-topic prior <mathjax>$\alpha$</mathjax>, topic-word prior <mathjax>$\beta$</mathjax></p>
+<p><strong>Input:</strong> document-topic prior $\alpha$, topic-word prior $\beta$</p>
 <ol>
-<li>For each topic <mathjax>$k = 1 \ldots K$</mathjax><ol>
-<li>Sample topic-word parameters <mathjax>$\phi_{k} \sim \text{Dirichlet}(\beta)$</mathjax></li>
+<li>For each topic $k = 1 \ldots K$<ol>
+<li>Sample topic-word parameters $\phi_{k} \sim \text{Dirichlet}(\beta)$</li>
 </ol>
 </li>
-<li>For each document <mathjax>$i = 1 \ldots M$</mathjax><ol>
-<li>Sample document-topic parameters <mathjax>$\theta_i \sim \text{Dirichlet}(\alpha)$</mathjax></li>
-<li>For each token <mathjax>$j = 1 \ldots N$</mathjax><ol>
-<li>Sample topic <mathjax>$z_{i,j} \sim \text{Categorical}(\theta_i)$</mathjax></li>
-<li>Sample word <mathjax>$x_{i,j} \sim \text{Categorical}(\phi_{z_{i,j}})$</mathjax></li>
+<li>For each document $i = 1 \ldots M$<ol>
+<li>Sample document-topic parameters $\theta_i \sim \text{Dirichlet}(\alpha)$</li>
+<li>For each token $j = 1 \ldots N$<ol>
+<li>Sample topic $z_{i,j} \sim \text{Categorical}(\theta_i)$</li>
+<li>Sample word $x_{i,j} \sim \text{Categorical}(\phi_{z_{i,j}})$</li>
 </ol>
 </li>
 </ol>
@@ -273,29 +266,29 @@ Allocation (LDA),</p>
 </div>
 <p>First, a short word on notation. In the following I'll occasionally drop
 indices to denote all variables with the same prefix. For example, when I say
-<mathjax>$\theta$</mathjax>, I mean <mathjax>$\theta_{1:M}$</mathjax>, and when I say <mathjax>$z_i$</mathjax>, I mean <mathjax>$z_{i,1:N}$</mathjax>.
-I'll also refer to <mathjax>$q(\theta_i|\eta_i)$</mathjax> as "the variational distribution
-corresponding to <mathjax>$P(\theta_i|\alpha,\theta_{-i},z,x)$</mathjax>", and similarly for
-<mathjax>$q(z_{i,j}|\gamma_{i,j})$</mathjax>. Oh, and <mathjax>$z_{-i}$</mathjax> means all <mathjax>$z_j$</mathjax> with <mathjax>$j \ne i$</mathjax>, and
-<mathjax>$\theta_{1:M}$</mathjax> means <mathjax>$(\theta_1, \ldots \theta_M)$</mathjax>.</p>
+$\theta$, I mean $\theta_{1:M}$, and when I say $z_i$, I mean $z_{i,1:N}$.
+I'll also refer to $q(\theta_i|\eta_i)$ as "the variational distribution
+corresponding to $P(\theta_i|\alpha,\theta_{-i},z,x)$", and similarly for
+$q(z_{i,j}|\gamma_{i,j})$. Oh, and $z_{-i}$ means all $z_j$ with $j \ne i$, and
+$\theta_{1:M}$ means $(\theta_1, \ldots \theta_M)$.</p>
 <p>Our goal now is to derive the posterior distribution over the latent
 variables, given the hyperparameters and the observed variables,
-<mathjax>$P(\theta, z, \phi| \alpha, x, \beta)$</mathjax>. We'll approximate it via the mean field
+$P(\theta, z, \phi| \alpha, x, \beta)$. We'll approximate it via the mean field
 distribution,</p>
-<p><mathjax>$$
+<p>$$
   q(\theta,z,\phi | \eta,\gamma,\psi) = \left(
     \prod_{i} q(\theta_i | \eta_i) \prod_{j} q(z_{i,j} | \gamma_{i,j})
   \right) \left(
     \prod_{k} q(\phi_k | \psi_k)
   \right)
-$$</mathjax></p>
+$$</p>
 <p><strong>Outline</strong> Deriving the update rules for Variational Inference requires we
 do 3 things. First, we must derive the posterior distribution for each hidden
 variable given all other variables, hidden and observed. This distribution must
 lie in the exponential family, and the corresponding variational distribution for
 that variable must be of the same form. For example, if
-<mathjax>$P(\theta_i|\alpha,\theta_{-i},z,x)$</mathjax> is a Dirichlet distribution, then
-<mathjax>$q(\theta_i|\eta_i)$</mathjax> must also be Dirichlet.</p>
+$P(\theta_i|\alpha,\theta_{-i},z,x)$ is a Dirichlet distribution, then
+$q(\theta_i|\eta_i)$ must also be Dirichlet.</p>
 <p>Second, we need to derive, for each hidden variable, the function that gives
 us the parameters for the posterior distribution over that variable given all
 others, hidden and observed.</p>
@@ -304,72 +297,72 @@ with respect to the mean field distribution. If we are able to calculate this
 expectation for a particular hidden variable, we can use it to update the
 matching variational distribution's parameters.</p>
 <p>In the following, I'll show you how to derive the update for the variational
-distribution of one of the hidden variables in LDA, <mathjax>$\theta_i$</mathjax>.</p>
+distribution of one of the hidden variables in LDA, $\theta_i$.</p>
 <p><strong>Step 1</strong> First, we must show that the posterior distribution over each
 individual hidden variable lies in the exponential family. This is not always
 the case, but for models that employ <a href="http://lesswrong.com/lw/5sn/the_joys_of_conjugate_priors/">conjugate priors</a>, this
-can be guaranteed. A conjugate prior dictates that if <mathjax>$P(z)$</mathjax> is a conjugate
-prior to <mathjax>$P(x|z)$</mathjax>, then <mathjax>$P(z|x)$</mathjax> is in the same family as <mathjax>$P(z)$</mathjax> is. This is
+can be guaranteed. A conjugate prior dictates that if $P(z)$ is a conjugate
+prior to $P(x|z)$, then $P(z|x)$ is in the same family as $P(z)$ is. This is
 the case for Dirichlet/Categorical distributions such as those that appear in
-LDA. In other words, <mathjax>$P(\theta_i|\alpha,\theta_{-i},z,x) =
-P(\theta_i|\alpha,z_{i})$</mathjax> (by conditional independence) is a Dirichlet
-distribution because <mathjax>$P(\theta_i|\alpha)$</mathjax> is Dirichlet and
-<mathjax>$P(z_{i,j}|\theta_i)$</mathjax> is Categorical.</p>
+LDA. In other words, $P(\theta_i|\alpha,\theta_{-i},z,x) =
+P(\theta_i|\alpha,z_{i})$ (by conditional independence) is a Dirichlet
+distribution because $P(\theta_i|\alpha)$ is Dirichlet and
+$P(z_{i,j}|\theta_i)$ is Categorical.</p>
 <p><strong>Step 2</strong> Next, we derive the parameter function for each hidden variable
 as a function of all other variables, hidden and observed. Let's see how this
 plays out for the Dirichlet distribution,</p>
 <p>The exponential family form of the Dirichlet distribution is,</p>
-<p><mathjax>$$
+<p>$$
   P(\theta_i|\alpha) = \exp \left(
-    \sum_{k} (\alpha_k - 1) \log (\theta_i)_k
+    \sum_{k} (\alpha_k - 1) \log (\theta_i)<em k>k
     - \log \left(
-      \frac{ \prod_{k} \Gamma(\alpha_k) }{ \Gamma( \sum_k \alpha_k ) }
+      \frac{ \prod</em> \Gamma(\alpha_k) }{ \Gamma( \sum_k \alpha_k ) }
     \right)
   \right)
-$$</mathjax></p>
+$$</p>
 <p>The exponential family form of a Categorical distribution is,</p>
-<p><mathjax>$$
+<p>$$
   P(z_{i,j}|\theta_i) = \exp \left(
     \sum_{k} 1[z_{i,j} = k] \log (\theta_i)_k
   \right)
-$$</mathjax></p>
-<p>Thus, the posterior distribution for <mathjax>$\theta_i$</mathjax> is proportional to,</p>
-<p><mathjax>$$
-\begin{align*}
+$$</p>
+<p>Thus, the posterior distribution for $\theta_i$ is proportional to,</p>
+<p>$$
+\begin{align<em>}
   P(\theta_i|\alpha,z_{i})
-  &amp; \propto P(\theta_i, z_i | \alpha) \\
-  &amp; = P(\theta_i|\alpha) \prod_{j} P(z_{i,j}|\theta_i) \\
+  &amp; \propto P(\theta_i, z_i | \alpha) \
+  &amp; = P(\theta_i|\alpha) \prod_{j} P(z_{i,j}|\theta_i) \
   &amp; = \exp \left(
     \sum_{k} \left(\alpha_k - 1 + \sum_{j} 1[z_{i,j} = k] \right) \log (\theta_i)_k
   \right)
-\end{align*}
-$$</mathjax></p>
-<p>Notice how <mathjax>$\alpha_k - 1$</mathjax> changed to <mathjax>$\alpha_k - 1 + \sum_{j} 1[z_{i,j} = k]$</mathjax>?
-These are the parameters for our posterior distribution over <mathjax>$\theta_i$</mathjax>. Thus,
-the parameters for <mathjax>$P(\theta_i|\alpha,z_i)$</mathjax> are,</p>
-<p><mathjax>$$
+\end{align</em>}
+$$</p>
+<p>Notice how $\alpha_k - 1$ changed to $\alpha_k - 1 + \sum_{j} 1[z_{i,j} = k]$?
+These are the parameters for our posterior distribution over $\theta_i$. Thus,
+the parameters for $P(\theta_i|\alpha,z_i)$ are,</p>
+<p>$$
   g_{\theta_i}(\alpha,z_{i}) = \begin{pmatrix}
-    \alpha_1 - 1 + \sum_{j} 1[z_{i,j} = 1] \\
-    \alpha_2 - 1 + \sum_{j} 1[z_{i,j} = 2] \\
-    \vdots \\
+    \alpha_1 - 1 + \sum_{j} 1[z_{i,j} = 1] \
+    \alpha_2 - 1 + \sum_{j} 1[z_{i,j} = 2] \
+    \vdots \
   \end{pmatrix}
-$$</mathjax></p>
+$$</p>
 <p><strong>Step 3</strong> Now we need to take the expectation over the parameter
 function we just derived with respect to the mean field distribution. For
-<mathjax>$g_{\theta_i}(\alpha, z_i)$</mathjax>, this is particularly easy -- all the indicators
-simply turn into probabilities. Thus the update for <mathjax>$q(\theta_i|\eta_i)$</mathjax> is,</p>
-<p><mathjax>$$
+$g_{\theta_i}(\alpha, z_i)$, this is particularly easy -- all the indicators
+simply turn into probabilities. Thus the update for $q(\theta_i|\eta_i)$ is,</p>
+<p>$$
   \eta_i
   = E_{q(z_{i}|\gamma_i)} [ g_{\theta_i}(\alpha, z_i) ]
   = \begin{pmatrix}
-    \alpha_1 - 1 + \sum_{j} q(z_{i,j} = 1 | \gamma_{i,j}) \\
-    \alpha_2 - 1 + \sum_{j} q(z_{i,j} = 2 | \gamma_{i,j}) \\
-    \vdots \\
+    \alpha_1 - 1 + \sum_{j} q(z_{i,j} = 1 | \gamma_{i,j}) \
+    \alpha_2 - 1 + \sum_{j} q(z_{i,j} = 2 | \gamma_{i,j}) \
+    \vdots \
   \end{pmatrix}
-$$</mathjax></p>
+$$</p>
 <p><strong>Conclusion</strong> We've now derived the update rule for one of the components of
-the mean field distribution, <mathjax>$q(\theta_i|\eta_i)$</mathjax>. Left unexplained here is the
-updates for <mathjax>$q(z_{i,j}|\gamma_{i,j})$</mathjax> and <mathjax>$q(\phi_k|\psi_k)$</mathjax>, though you can
+the mean field distribution, $q(\theta_i|\eta_i)$. Left unexplained here is the
+updates for $q(z_{i,j}|\gamma_{i,j})$ and $q(\phi_k|\psi_k)$, though you can
 find a (messier) derivation in the original paper on <a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf">Latent Dirichlet
 Allocation</a>.</p>
 <h1><a name="aside" href="#aside">Aside: Coordinate Ascent is Gradient Ascent</a></h1>
@@ -380,24 +373,24 @@ would an update look like then?</p>
 <p>It ends up that for the Variational Inference objective, Coordinate Ascent
 <em>is</em> Gradient Ascent with step size equal to 1. Actually, that's only half true
 -- it's Gradient Ascent using a "Natural Gradient" (rather than the usual
-gradient defined with respect to <mathjax>$||\cdot||_2^2$</mathjax>).</p>
-<p><strong>Gradient Ascent</strong> First, recall the Gradient Ascent update for <mathjax>$\eta_k$</mathjax> (we
-use the definition of <mathjax>$\nabla_{\eta_k} L(\eta_k)$</mathjax> we found when deriving the
+gradient defined with respect to $||\cdot||_2^2$).</p>
+<p><strong>Gradient Ascent</strong> First, recall the Gradient Ascent update for $\eta_k$ (we
+use the definition of $\nabla_{\eta_k} L(\eta_k)$ we found when deriving the
 Coordinate Ascent update).</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   \eta_k^{(t+1)}
-  &amp; = \eta_k^{(t)} + \alpha^{(t)} \nabla_{\eta_k} L(\eta_k^{(t)}) \\
+  &amp; = \eta_k^{(t)} + \alpha^{(t)} \nabla_{\eta_k} L(\eta_k^{(t)}) \
   &amp; = \eta_k^{(t)} + \alpha^{(t)} \left[
       \left( \nabla_{\eta_k}^2 A(\eta_k^{(t)}) \right)
       \left(
-        \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right]
+        \mathbb{E}<em -k>{q(z</em>|\eta_{-k})} \left[ g(z_{-k},x) \right]
         - \eta_k^{(t)}
       \right)
-    \right] \\
-\end{align*}
-$$</mathjax></p>
-<p><strong>Natural Gradient</strong> Hmm, that <mathjax>$\nabla_{\eta_k}^2 A(\eta_k^{(t)})$</mathjax> term is a
+    \right] \
+\end{align</em>}
+$$</p>
+<p><strong>Natural Gradient</strong> Hmm, that $\nabla_{\eta_k}^2 A(\eta_k^{(t)})$ term is a
 bit of a nuisance. Is there any way to make it just go away? In fact, we can --
 by replacing the concept of a gradient with a "natural gradient". Whereas a
 regular gradient is the direction of steepest ascent with respect to Euclidean
@@ -407,147 +400,147 @@ a given function, some input coordinates might be more important than others,
 and this should be taken into account when considering how far away 2 points
 are.</p>
 <p>So what do I mean "a direction of steepest ascent"?  Let's look at the
-gradient of a function as the solution to the following problem as <mathjax>$\epsilon
-\rightarrow 0$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
+gradient of a function as the solution to the following problem as $\epsilon
+\rightarrow 0$,</p>
+<p>$$
+\begin{align<em>}
   \nabla_{\eta_k} L(\eta_k)
-  = &amp; \arg\min_{d \eta_k} L(\eta_k + d \eta_k) \\
+  = &amp; \arg\min_{d \eta_k} L(\eta_k + d \eta_k) \
     &amp; \text{s.t.} \quad   ||d \eta_k||_2^2 &lt; \epsilon
-\end{align*}
-$$</mathjax></p>
-<p>A natural gradient with respect to <mathjax>$L(\eta_k)$</mathjax> is defined much the same way,
-but with <mathjax>$D_{E}(x,y) = || x-y ||_2^2$</mathjax> replaced with another squared metric.
+\end{align</em>}
+$$</p>
+<p>A natural gradient with respect to $L(\eta_k)$ is defined much the same way,
+but with $D_{E}(x,y) = || x-y ||_2^2$ replaced with another squared metric.
 In our case, we're going to use the symmetrized KL divergence,</p>
-<p><mathjax>$$
+<p>$$
   D_{KL}(\eta_k, \eta_k') = \text{KL} \left[ q(z_k|\eta_k) || q(z_k|\eta_k') \right]
                           + \text{KL} \left[ q(z_k|\eta_k') || q(z_k|\eta_k) \right]
-$$</mathjax></p>
-<p>Swapping the squared Euclidean metric <mathjax>$D_{E}$</mathjax> with <mathjax>$D_{KL}$</mathjax>, we have a
+$$</p>
+<p>Swapping the squared Euclidean metric $D_{E}$ with $D_{KL}$, we have a
 definition for a "Natural Gradient",</p>
-<p><mathjax>$$
-\begin{align*}
-  \hat{\nabla}_{\eta_k} L(\eta_k)
-  = &amp; \arg\min_{d \eta_k}   L(\eta_k + d \eta_k) \\
+<p>$$
+\begin{align<em>}
+  \hat{\nabla}<em _eta_k="\eta_k" d>{\eta_k} L(\eta_k)
+  = &amp; \arg\min</em>   L(\eta_k + d \eta_k) \
     &amp; \text{s.t.} \quad D_{KL}(\eta_k, \eta_k + d \eta_k) &lt; \epsilon
-\end{align*}
-$$</mathjax></p>
+\end{align</em>}
+$$</p>
 <p>While at first the gradient and natural gradient may seem difficult to
-relate, suppose that <mathjax>$D_{KL}(\eta_k, \eta_k + d \eta_k) = d \eta_k^T
-G(\eta_k) d \eta_k$</mathjax> for some matrix <mathjax>$G(\eta_k)$</mathjax>. Then by plugging this into the
-previous optimization problem, replacing <mathjax>$L(\eta_k + d \eta_k)$</mathjax> by its first
-order Taylor approximation (which holds when <mathjax>$\epsilon$</mathjax> is small), and
+relate, suppose that $D_{KL}(\eta_k, \eta_k + d \eta_k) = d \eta_k^T
+G(\eta_k) d \eta_k$ for some matrix $G(\eta_k)$. Then by plugging this into the
+previous optimization problem, replacing $L(\eta_k + d \eta_k)$ by its first
+order Taylor approximation (which holds when $\epsilon$ is small), and
 requiring the derivative of the problem's Lagrangian be equal to 0, we see
 that,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   0
   &amp; = \nabla_{d \eta_k} \left[
       L(\eta_k + d \eta_k) + \lambda ( d \eta_k G(\eta_k) d \eta_k - \epsilon)
-    \right] \\
+    \right] \
   &amp; \approx \nabla_{d \eta_k} \left[
       L(\eta_k) + \nabla_{\eta_k} L(\eta_k)^T (\eta_k + d \eta_k - \eta_k) + \lambda ( d \eta_k G(\eta_k) d \eta_k - \epsilon)
-    \right] \\
-  &amp; = \nabla_{\eta_k} L(\eta_k) + 2 \lambda G(\eta_k) d \eta_k \\
+    \right] \
+  &amp; = \nabla_{\eta_k} L(\eta_k) + 2 \lambda G(\eta_k) d \eta_k \
   d \eta_k
   &amp; \propto G(\eta_k)^{-1} \nabla_{\eta_k} L(\eta_k)
-\end{align*}
-$$</mathjax></p>
-<p>As <mathjax>$\epsilon \rightarrow 0$</mathjax>, <mathjax>$d \eta_k$</mathjax> becomes <mathjax>$\hat{\nabla}_{\eta_k}
-L(\eta_k)$</mathjax>, resulting in <mathjax>$\hat{\nabla}_{\eta_k} L(\eta_k) \propto
-G(\eta_k)^{-1} \nabla_{\eta_k} L(\eta_k)$</mathjax>. In other words, we can obtain
-<mathjax>$\hat{\nabla}_{\eta_k} L(\eta_k)$</mathjax> easily if we can simply compute <mathjax>$G(\eta_k)$</mathjax>.
-Now let's derive <mathjax>$G(\eta_k)$</mathjax>.</p>
-<p>First, let's take the first-order Taylor approximation to <mathjax>$q(z|\eta_k + d
-\eta_k)$</mathjax> and its <mathjax>$\log$</mathjax> about <mathjax>$\eta_k$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
+\end{align</em>}
+$$</p>
+<p>As $\epsilon \rightarrow 0$, $d \eta_k$ becomes $\hat{\nabla}<em _eta_k="\eta_k">{\eta_k}
+L(\eta_k)$, resulting in $\hat{\nabla}</em> L(\eta_k) \propto
+G(\eta_k)^{-1} \nabla_{\eta_k} L(\eta_k)$. In other words, we can obtain
+$\hat{\nabla}_{\eta_k} L(\eta_k)$ easily if we can simply compute $G(\eta_k)$.
+Now let's derive $G(\eta_k)$.</p>
+<p>First, let's take the first-order Taylor approximation to $q(z|\eta_k + d
+\eta_k)$ and its $\log$ about $\eta_k$,</p>
+<p>$$
+\begin{align<em>}
   q(z_k|\eta_k + d \eta_k)
-  &amp; \approx q(z_k|\eta_k) + (\nabla q(z_k|\eta_k))^T (\eta_k + d \eta_k - \eta_k) \\
-  &amp; = q(z_k|\eta_k) + q(z_k|\eta_k) (\nabla \log q(z_k|\eta_k))^T d \eta_k \\
+  &amp; \approx q(z_k|\eta_k) + (\nabla q(z_k|\eta_k))^T (\eta_k + d \eta_k - \eta_k) \
+  &amp; = q(z_k|\eta_k) + q(z_k|\eta_k) (\nabla \log q(z_k|\eta_k))^T d \eta_k \
   \log q(z_k|\eta_k + d \eta_k)
-  &amp; \approx \log q(z_k|\eta_k) + (\nabla \log q(z_k|\eta_k))^T (\eta_k + d \eta_k - \eta_k) \\
-  &amp; = \log q(z_k|\eta_k) + (\nabla \log q(z_k|\eta_k))^T d \eta_k \\
-\end{align*}
-$$</mathjax></p>
-<p>Plugging this back into the definition of <mathjax>$D_{KL}$</mathjax> and cancelling out terms, we
-get a nice expression for <mathjax>$G(\eta_k)$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
+  &amp; \approx \log q(z_k|\eta_k) + (\nabla \log q(z_k|\eta_k))^T (\eta_k + d \eta_k - \eta_k) \
+  &amp; = \log q(z_k|\eta_k) + (\nabla \log q(z_k|\eta_k))^T d \eta_k \
+\end{align</em>}
+$$</p>
+<p>Plugging this back into the definition of $D_{KL}$ and cancelling out terms, we
+get a nice expression for $G(\eta_k)$,</p>
+<p>$$
+\begin{align<em>}
   D_{KL}(\eta, \eta')
-  &amp; = \text{KL} \left[ q(z_k|\eta_k) || q(z_k|\eta_k + d\eta_k) \right] + \text{KL} \left[ q(z_k|\eta_k + d\eta_k) || q(z_k|\eta_k) \right] \\
+  &amp; = \text{KL} \left[ q(z_k|\eta_k) || q(z_k|\eta_k + d\eta_k) \right] + \text{KL} \left[ q(z_k|\eta_k + d\eta_k) || q(z_k|\eta_k) \right] \
   &amp; = \sum_{z} q(z|\eta_k) \log \frac{ q(z|\eta_k) }{ q(z|\eta_k+d\eta_k) }
-      + \sum_{z} q(z|\eta_k+d\eta_k) \log \frac{ q(z|\eta_k+d\eta_k) }{ q(z|\eta_k) } \\
+      + \sum_{z} q(z|\eta_k+d\eta_k) \log \frac{ q(z|\eta_k+d\eta_k) }{ q(z|\eta_k) } \
   &amp; = \sum_{z} \left[ q(z|\eta_k) - q(z|\eta_k+d\eta_k) \right]
-               \left[ \log q(z|\eta_k) - \log q(z|\eta_k+d\eta_k) \right] \\
+               \left[ \log q(z|\eta_k) - \log q(z|\eta_k+d\eta_k) \right] \
   &amp; \approx \sum_{z}
-      \left[ q(z|\eta_k) - q(z_k|\eta_k) - q(z_k|\eta_k)(\nabla \log q(z_k|\eta_k))^T d \eta_k \right] \\
-      &amp; \qquad \quad \times \left[ \log q(z|\eta_k) - \log q(z_k|\eta_k) - (\nabla \log q(z_k|\eta_k))^T d \eta_k \right] \\
+      \left[ q(z|\eta_k) - q(z_k|\eta_k) - q(z_k|\eta_k)(\nabla \log q(z_k|\eta_k))^T d \eta_k \right] \
+      &amp; \qquad \quad \times \left[ \log q(z|\eta_k) - \log q(z_k|\eta_k) - (\nabla \log q(z_k|\eta_k))^T d \eta_k \right] \
   &amp; = \sum_{z}
       \left[ - q(z_k|\eta_k) (\nabla \log q(z_k|\eta_k))^T d \eta_k \right]
-      \left[ - (\nabla \log q(z_k|\eta_k))^T d \eta_k \right] \\
-  &amp; = d \eta_k^T \mathbb{E}_{q(z|\eta_k)} \left[ (\nabla \log q(z_k|\eta_k)) (\nabla \log q(z_k|\eta_k))^T \right] d \eta_k \\
-  &amp; = d \eta_k^T G(\eta_k) d \eta_k \\
-\end{align*}
-$$</mathjax></p>
-<p>Looking at the expression for <mathjax>$G(\eta_k)$</mathjax>, we can see that it is in fact the
+      \left[ - (\nabla \log q(z_k|\eta_k))^T d \eta_k \right] \
+  &amp; = d \eta_k^T \mathbb{E}_{q(z|\eta_k)} \left[ (\nabla \log q(z_k|\eta_k)) (\nabla \log q(z_k|\eta_k))^T \right] d \eta_k \
+  &amp; = d \eta_k^T G(\eta_k) d \eta_k \
+\end{align</em>}
+$$</p>
+<p>Looking at the expression for $G(\eta_k)$, we can see that it is in fact the
 <a href="http://en.wikipedia.org/wiki/Fisher_information">Fisher Information Matrix</a>. Since we already assumed that
-<mathjax>$q(z_k|\eta_k)$</mathjax> is in the exponential family, let's plug in its exponential
-form <mathjax>$q(z_k|\eta_k) = h(z_k) \exp \left( \eta_k^T t(z_k) - A(\eta_k) \right)$</mathjax>
-and apply the <mathjax>$\log$</mathjax> to see that we are simply taking the covariance matrix of
-the sufficient statistics <mathjax>$t(z_k)$</mathjax>. For exponential families, this also happens
+$q(z_k|\eta_k)$ is in the exponential family, let's plug in its exponential
+form $q(z_k|\eta_k) = h(z_k) \exp \left( \eta_k^T t(z_k) - A(\eta_k) \right)$
+and apply the $\log$ to see that we are simply taking the covariance matrix of
+the sufficient statistics $t(z_k)$. For exponential families, this also happens
 to be the second derivative of the log normalizing constant,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   G(\eta_k)
-  &amp;= \mathbb{E}_{q(z_k|\eta_k)} \left[
-      \left( \nabla_{\eta_k} \log q(z_k|\eta_k) \right) \left( \nabla_{\eta_k} \log q(z_k|\eta_k) \right)^T
-    \right] \\
-  &amp;= \mathbb{E}_{q(z_k|\eta_k)} \left[
-      \left( t(z_k) - \nabla_{\eta_k} A(\eta_k) \right) \left( t(z_k) - \nabla_{\eta_k} A(\eta_k) \right)^T
-    \right] \\
-  &amp;= \mathbb{E}_{q(z_k|\eta_k)} \left[
-      \left( t(z_k) - \mathbb{E}_{q(z_k|\eta_k)} [t(z_k)] \right) \left( t(z_k) - \mathbb{E}_{q(z_k|\eta_k)} [t(z_k)] \right)^T
-    \right] \\
-  &amp;= \nabla_{\eta_k}^2 A(\eta_k) \\
-\end{align*}
-$$</mathjax></p>
+  &amp;= \mathbb{E}<em _eta_k="\eta_k">{q(z_k|\eta_k)} \left[
+      \left( \nabla</em> \log q(z_k|\eta_k) \right) \left( \nabla_{\eta_k} \log q(z_k|\eta_k) \right)^T
+    \right] \
+  &amp;= \mathbb{E}<em _eta_k="\eta_k">{q(z_k|\eta_k)} \left[
+      \left( t(z_k) - \nabla</em> A(\eta_k) \right) \left( t(z_k) - \nabla_{\eta_k} A(\eta_k) \right)^T
+    \right] \
+  &amp;= \mathbb{E}<em q_z_k_eta_k_="q(z_k|\eta_k)">{q(z_k|\eta_k)} \left[
+      \left( t(z_k) - \mathbb{E}</em> [t(z_k)] \right) \left( t(z_k) - \mathbb{E}<em _eta_k="\eta_k">{q(z_k|\eta_k)} [t(z_k)] \right)^T
+    \right] \
+  &amp;= \nabla</em>^2 A(\eta_k) \
+\end{align</em>}
+$$</p>
 <p>Finally, let's define a Gradient Ascent algorithm in terms of the Natural
 Gradient, rather than the regular gradient,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   \eta_k^{(t+1)}
-  &amp; = \eta_k^{(t)} + \alpha^{(t)} \hat{\nabla}_{\eta_k} L(\eta_k^{(t)}) \\
-  &amp; = \eta_k^{(t)} + \alpha^{(t)} G(\eta_k^{(t)})^{-1} \nabla_{\eta_k} L(\eta_k^{(t)}) \\
+  &amp; = \eta_k^{(t)} + \alpha^{(t)} \hat{\nabla}<em _eta_k="\eta_k">{\eta_k} L(\eta_k^{(t)}) \
+  &amp; = \eta_k^{(t)} + \alpha^{(t)} G(\eta_k^{(t)})^{-1} \nabla</em> L(\eta_k^{(t)}) \
   &amp; = \eta_k^{(t)} + \alpha^{(t)}
     \left( \nabla_{\eta_k}^2 A(\eta_k^{(t)}) \right)^{-1}
     \left[
       \left( \nabla_{\eta_k}^2 A(\eta_k^{(t)}) \right)
       \left(
-        \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right]
+        \mathbb{E}<em -k>{q(z</em>|\eta_{-k})} \left[ g(z_{-k},x) \right]
         - \eta_k^{(t)}
       \right)
-    \right] \\
+    \right] \
   &amp; = (1 - \alpha^{(t)}) \eta_k^{(t)}
-    + \alpha^{(t)} \mathbb{E}_{q(z_{-k}|\eta_{-k})} \left[ g(z_{-k},x) \right] \\
-\end{align*}
-$$</mathjax></p>
-<p>Look at that -- <mathjax>$G(\eta_k^{(t)})^{-1} = (\nabla_{\eta_k}^2 A(\eta_k))^{-1}$</mathjax>
-perfectly cancels out <mathjax>$\nabla_{\eta_k}^2 A(\eta_k)$</mathjax>, and we're left with a
+    + \alpha^{(t)} \mathbb{E}<em -k>{q(z</em>|\eta_{-k})} \left[ g(z_{-k},x) \right] \
+\end{align</em>}
+$$</p>
+<p>Look at that -- $G(\eta_k^{(t)})^{-1} = (\nabla_{\eta_k}^2 A(\eta_k))^{-1}$
+perfectly cancels out $\nabla_{\eta_k}^2 A(\eta_k)$, and we're left with a
 linear combination of the old parameters and the parameters Coordinate Ascent
-would recommend. If <mathjax>$\alpha^{(t)} = 1$</mathjax>, then we just get the old Coordinate
+would recommend. If $\alpha^{(t)} = 1$, then we just get the old Coordinate
 Ascent update!</p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
 <p>The Variational Inference method I described here, while general in concept,
 can only easily be applied to a very particular class models -- ones where
-<mathjax>$P(z_k | z_{-k}, x)$</mathjax> is in the exponential family. This more or less means that
-<mathjax>$z_k$</mathjax> be a discrete variable or that <mathjax>$P(z_k)$</mathjax> be a conjugate prior to all other
+$P(z_k | z_{-k}, x)$ is in the exponential family. This more or less means that
+$z_k$ be a discrete variable or that $P(z_k)$ be a conjugate prior to all other
 variables depending on it.</p>
-<p>In addition, we restricted <mathjax>$q(z | \eta)$</mathjax> to be a mean field approximation,
-meaning that each variable is independent with its own distribution <mathjax>$q(z_k |
-\eta_k)$</mathjax>. This approximation has no hope of representing any interactions
-between variables, and perhaps surprisingly <mathjax>$q(z_k|\eta_k)$</mathjax> does <em>not match the
-marginal distribution over <mathjax>$z_k$</mathjax> at all.</em>  This is a common source of confusion
+<p>In addition, we restricted $q(z | \eta)$ to be a mean field approximation,
+meaning that each variable is independent with its own distribution $q(z_k |
+\eta_k)$. This approximation has no hope of representing any interactions
+between variables, and perhaps surprisingly $q(z_k|\eta_k)$ does <em>not match the
+marginal distribution over $z_k$ at all.</em>  This is a common source of confusion
 for first-time users, and makes debugging Variational Inference algorithms
 rather difficult.</p>
 <p>Third, the Coordinate Ascent algorithm described is not necessarily quick. I
@@ -614,7 +607,7 @@ Hoffman et al.'s <a href="http://arxiv.org/abs/1206.7051">"Stochastic Variationa
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

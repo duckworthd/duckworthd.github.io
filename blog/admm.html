@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -68,97 +61,97 @@
 	</header>
   <article>
     <p>In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing "separable" functions (that is, functions that are purely sums of other functions) in a large, distributed environment. However, Stochastic Gradient Descent is not the only algorithm out there.</p>
-<p>So why consider anything else? First of all, we have to choose step sizes <mathjax>$\alpha_{t,i}$</mathjax>. While there are theoretical constraints on how it must behave (e.g. <mathjax>$\alpha_t = \frac{1}{t^k}$</mathjax> is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful. It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.</p>
-<p>Secondly, Stochastic Gradient Descent is naturally <em>sequential</em>. You have to update <mathjax>$w_{t,i}$</mathjax> before you can update <mathjax>$w_{t,i+1}$</mathjax> (well, not quite. See <a href="http://arxiv.org/abs/1106.5730">HOGWILD!</a>). This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn't of much help in MapReduce-style frameworks.</p>
+<p>So why consider anything else? First of all, we have to choose step sizes $\alpha_{t,i}$. While there are theoretical constraints on how it must behave (e.g. $\alpha_t = \frac{1}{t^k}$ is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful. It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.</p>
+<p>Secondly, Stochastic Gradient Descent is naturally <em>sequential</em>. You have to update $w_{t,i}$ before you can update $w_{t,i+1}$ (well, not quite. See <a href="http://arxiv.org/abs/1106.5730">HOGWILD!</a>). This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn't of much help in MapReduce-style frameworks.</p>
 <p>Alternating Direction Method of Multipliers (ADMM) is an entirely different method of distributed optimization that is far better oriented for MapReduce and which only requires a single parameter to specify the learning rate. However, using it requires quite a bit more mathematical preparation.</p>
 <p>The basic idea is that if we have an optimization problem specified as follows,</p>
-<p><mathjax>$$
+<p>$$
 \begin{align}
-  &amp; \min_{x,z} f(x) + g(z)  \\
+  &amp; \min_{x,z} f(x) + g(z)  \
   &amp; \text{s.t. } A x + B z = c
 \end{align}
-$$</mathjax></p>
+$$</p>
 <p>Then we can derive the Lagrangian and add a quadratic penalty for violating the constraint,</p>
-<p><mathjax>$$
+<p>$$
 L_{\rho}(x,z,y) = f(x) + g(z) + y^T (Ax + Bz -c) + \frac{\rho}{2} || Ax + Bz - c ||_2^2
-$$</mathjax></p>
+$$</p>
 <p>Finally we apply the following algorithm</p>
 <div class="pseudocode">
-<p><strong>Input</strong> Initial primal and dual iterates <mathjax>$x_{0}$</mathjax>, <mathjax>$z_{0}$</mathjax>, and <mathjax>$y_{0}$</mathjax></p>
+<p><strong>Input</strong> Initial primal and dual iterates $x_{0}$, $z_{0}$, and $y_{0}$</p>
 <ol>
 <li>
 <p>Optimize over the first primal variable,</p>
-<p><mathjax>$$
-  x_{t+1} = \text{argmin}_x L_{\rho}(x,z_t, y_t)
-$$</mathjax></p>
+<p>$$
+  x_{t+1} = \text{argmin}<em _rho="\rho">x L</em>(x,z_t, y_t)
+$$</p>
 </li>
 <li>
 <p>Optimize over the second primal variable,</p>
-<p><mathjax>$$
-  z_{t+1} = \text{argmin}_x L_{\rho}(x_{t+1},z, y_t)
-$$</mathjax></p>
+<p>$$
+  z_{t+1} = \text{argmin}<em _rho="\rho">x L</em>(x_{t+1},z, y_t)
+$$</p>
 </li>
 <li>
 <p>Take a gradient step for the dual variable</p>
-<p><mathjax>$$
+<p>$$
   y_{t+1} = y_t + \rho (A x_{t+1} + B z_{t+1} - c)
-$$</mathjax></p>
+$$</p>
 </li>
 </ol>
 </div>
-<p>Notice the choice of step size for updating <mathjax>$y_t$</mathjax> and the addition of a quadratic term to the Lagrangian; these are the critical addition of ADMM.</p>
+<p>Notice the choice of step size for updating $y_t$ and the addition of a quadratic term to the Lagrangian; these are the critical addition of ADMM.</p>
 <p>The question now becomes, how can we apply this seemingly restricted method to make a distributed algorithm? Suppose we want to minimize our usual separable function</p>
-<p><mathjax>$$
+<p>$$
 \min_x \sum_i f_i(x)
-$$</mathjax></p>
-<p>We can reformulate this problem by giving each <mathjax>$f_i$</mathjax> its own <mathjax>$x_i$</mathjax>, and requiring that <mathjax>$x_i = z$</mathjax> at the very end.</p>
-<p><mathjax>$$
+$$</p>
+<p>We can reformulate this problem by giving each $f_i$ its own $x_i$, and requiring that $x_i = z$ at the very end.</p>
+<p>$$
 \begin{align}
-  &amp; \min_{x_i, z} \sum_i f_i(x_i)   \\
+  &amp; \min_{x_i, z} \sum_i f_i(x_i)   \
   &amp; \text{s.t.} \quad \forall i \quad x_i = z
 \end{align}
-$$</mathjax></p>
-<p>This means that we can optimize each <mathjax>$x_i$</mathjax> independently, then aggregate their solutions to update <mathjax>$z$</mathjax> (the one true <mathjax>$x$</mathjax>), and finally use both of those to update <mathjax>$y$</mathjax>. Let's see how this works out exactly. The augmented Lagrangian would be,</p>
-<p><mathjax>$$
+$$</p>
+<p>This means that we can optimize each $x_i$ independently, then aggregate their solutions to update $z$ (the one true $x$), and finally use both of those to update $y$. Let's see how this works out exactly. The augmented Lagrangian would be,</p>
+<p>$$
 L_{\rho}(x,z,y) = \sum_{i} \left( 
     f_i(x_i) + y^T (x_i - z) + \frac{\rho}{2} || x_i - z ||_2^2
   \right)
-$$</mathjax></p>
+$$</p>
 <div class="pseudocode">
-<p><strong>Input</strong> Initial primal and dual iterates <mathjax>$x_{0}$</mathjax>, and <mathjax>$y_{0}$</mathjax></p>
+<p><strong>Input</strong> Initial primal and dual iterates $x_{0}$, and $y_{0}$</p>
 <ol>
 <li>
-<p>For each machine <mathjax>$i$</mathjax> in parallel, optimize the local variable <mathjax>$x_i$</mathjax></p>
-<p><mathjax>$$
+<p>For each machine $i$ in parallel, optimize the local variable $x_i$</p>
+<p>$$
 \begin{align}
-  x_{t+1, i} &amp; = \text{argmin}_x f_i(x) 
-    + y_{t,i}^T (x - z_t) 
-    + \frac{\rho}{2} (x-z)^T (x-z) \\
+  x_{t+1, i} &amp; = \text{argmin}<em t_i="t,i">x f_i(x) 
+    + y</em>^T (x - z_t) 
+    + \frac{\rho}{2} (x-z)^T (x-z) \
 \end{align}
-$$</mathjax></p>
+$$</p>
 </li>
 <li>
-<p>Aggregate the resulting <mathjax>$x_{t,i+1}$</mathjax> and optimize the global variable <mathjax>$z$</mathjax>,</p>
-<p><mathjax>$$
+<p>Aggregate the resulting $x_{t,i+1}$ and optimize the global variable $z$,</p>
+<p>$$
 \begin{align}
-  z_{t+1} &amp;= \text{argmin}_z y_{t,i}^T (x_{t+1, i} - z) 
-    + \frac{\rho}{2} (x_{t+1, i} - z)^T (x_{t+1, i} - z)  \\
+  z_{t+1} &amp;= \text{argmin}<em t_i="t,i">z y</em>^T (x_{t+1, i} - z) 
+    + \frac{\rho}{2} (x_{t+1, i} - z)^T (x_{t+1, i} - z)  \
   &amp;= \frac{1}{N} \sum_{i=1}^{N} \left( 
     x_{t+1, i} + \frac{1}{\rho} y_{t, i}
   \right)
 \end{align}
-$$</mathjax></p>
+$$</p>
 </li>
 <li>
-<p>Update the dual variables <mathjax>$y_{t,i}$</mathjax>,</p>
-<p><mathjax>$$
+<p>Update the dual variables $y_{t,i}$,</p>
+<p>$$
   y_{t+1, i} = y_{t, i} + \rho ( x_{t+1,i} - z_{t+1} )
-$$</mathjax></p>
+$$</p>
 </li>
 </ol>
 </div>
-<p>This is already pretty cool, but there's even more. It ends up that ADMM works splendidly even when we add a regularization penalty to the primal problem, such as the <mathjax>$L_2$</mathjax> or <mathjax>$L_1$</mathjax> norm. You can find out all of these cool things and more in the Stephen Boyd's <a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">paper</a> and <a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">lecture</a>.</p>
-<p>On a final note, the proofs on convergence for ADMM are currently not as complete as those for other methods like Stochastic Gradient Descent. While it is known that the dual variable <mathjax>$y_t$</mathjax> will converge as long as <mathjax>$f$</mathjax> and <mathjax>$g$</mathjax> are convex and a solution exists, we can only prove convergence of the primal variables <mathjax>$x_t$</mathjax> and <mathjax>$z_t$</mathjax> if they are constrained to lie in a polyhedron at this point in time.</p>
+<p>This is already pretty cool, but there's even more. It ends up that ADMM works splendidly even when we add a regularization penalty to the primal problem, such as the $L_2$ or $L_1$ norm. You can find out all of these cool things and more in the Stephen Boyd's <a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">paper</a> and <a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">lecture</a>.</p>
+<p>On a final note, the proofs on convergence for ADMM are currently not as complete as those for other methods like Stochastic Gradient Descent. While it is known that the dual variable $y_t$ will converge as long as $f$ and $g$ are convex and a solution exists, we can only prove convergence of the primal variables $x_t$ and $z_t$ if they are constrained to lie in a polyhedron at this point in time.</p>
 <h1><a name="references" href="#references">References</a></h1>
 <ul>
 <li><a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers</a></li>
@@ -201,7 +194,7 @@ $$</mathjax></p>
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

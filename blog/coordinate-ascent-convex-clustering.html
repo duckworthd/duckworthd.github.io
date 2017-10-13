@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -71,7 +64,7 @@
 problem. While the two problems are not equivalent, the former can be seen as a
 relaxation of the latter that allows us to easily find globally optimal
 solutions (as opposed to only locally optimal ones).</p>
-<p>Suppose we have a set of points <mathjax>$\{ x_i : i = 1, \ldots, n\}$</mathjax>. Our goal is to
+<p>Suppose we have a set of points ${ x_i : i = 1, \ldots, n}$. Our goal is to
 partition these points into groups such that all the elements in each group are
 close to each other and are distant from points in other groups.</p>
 <p>In this post, I'll talk about an algorithm to do just that.</p>
@@ -85,61 +78,61 @@ close to each other and are distant from points in other groups.</p>
 
 <h1><a name="k-means" href="#k-means">K-Means</a></h1>
 <p>The original objective for k-means clustering is as follows. Suppose we want
-to find <mathjax>$k$</mathjax> sets <mathjax>$S_i$</mathjax> such that every <mathjax>$x_i$</mathjax> is in exactly 1 set <mathjax>$S_j$</mathjax>. Each <mathjax>$S_j$</mathjax>
-will then have a center <mathjax>$\theta_j$</mathjax>, which is simply the average of all <mathjax>$x_i$</mathjax> it
+to find $k$ sets $S_i$ such that every $x_i$ is in exactly 1 set $S_j$. Each $S_j$
+will then have a center $\theta_j$, which is simply the average of all $x_i$ it
 contains. Putting it all together, we obtain the following optimization problme,</p>
-<p><mathjax>$$
-\begin{align*}
-  &amp; \underset{S}{\min}  &amp; &amp; \sum_{j=1}^{k} \sum_{i \in S_j} ||x_i - \theta_j||_2^2 \\
-  &amp; \text{subject to}   &amp; &amp; \theta_j = \frac{1}{|S_j|} \sum_{i \in S_j} x_i \\
-  &amp;                     &amp; &amp; \bigcup_{j} S_j = \{ 1 \ldots n \}
-\end{align*}
-$$</mathjax></p>
+<p>$$
+\begin{align<em>}
+  &amp; \underset{S}{\min}  &amp; &amp; \sum_{j=1}^{k} \sum_{i \in S_j} ||x_i - \theta_j||<em S_j _in="\in" i>2^2 \
+  &amp; \text{subject to}   &amp; &amp; \theta_j = \frac{1}{|S_j|} \sum</em> x_i \
+  &amp;                     &amp; &amp; \bigcup_{j} S_j = { 1 \ldots n }
+\end{align</em>}
+$$</p>
 <p>In 2009, <a href="http://dl.acm.org/citation.cfm?id=1519389">Aloise et al.</a> proved that solving this problem is
 NP-hard, meaning that short of enumerating every possible partition, we cannot
-say whether or not we've found an optimal solution <mathjax>$S^{*}$</mathjax>. In other words, we
+say whether or not we've found an optimal solution $S^{*}$. In other words, we
 can approximately solve k-means, but actually solving it is very
-computationally intense (with the usual caveats about <mathjax>$P = NP$</mathjax>).</p>
+computationally intense (with the usual caveats about $P = NP$).</p>
 <h1><a name="convex-clustering" href="#convex-clustering">Convex Clustering</a></h1>
 <p>Convex clustering sidesteps this complexity result by proposing a new
 problem that we <em>can</em> solve quickly. The optimal solution for this new problem
 need not coincide with that of k-means, but <a href="http://www.control.isy.liu.se/research/reports/2011/2992.pdf">can be seen</a> a solution to
 the convex relaxation of the original problem.</p>
-<p>The idea of convex clustering is that each point <mathjax>$x_i$</mathjax> is paired with its
-associated center <mathjax>$u_i$</mathjax>, and the distance between the two is minimized. If this
-were nothing else, <mathjax>$u_i = x_i$</mathjax> would be the optimal solution, and no
+<p>The idea of convex clustering is that each point $x_i$ is paired with its
+associated center $u_i$, and the distance between the two is minimized. If this
+were nothing else, $u_i = x_i$ would be the optimal solution, and no
 clustering would happen. Instead, a penalty term is added that brings the
 clusters centers close together,</p>
-<p><mathjax>$$
-\begin{align*}
-  \min_{u} \frac{1}{2} \sum_{i=1}^{n} ||x_i - u_i||_2^2
-            + \gamma \sum_{i &lt; j} w_{i,j} ||u_i - u_j||_p
-\end{align*}
-$$</mathjax></p>
-<p>Notice that the distance <mathjax>$||x_i - u_i||_2^2$</mathjax> is a squared 2-norm, but
-the distance between the centers <mathjax>$||u_i - u_j||_p$</mathjax> is a p-norm (<mathjax>$p \in \{1, 2,
-\infty \}$</mathjax>). This sum-of-norms type penalization brings about "group sparsity"
+<p>$$
+\begin{align<em>}
+  \min_{u} \frac{1}{2} \sum_{i=1}^{n} ||x_i - u_i||<em _="&lt;" i j>2^2
+            + \gamma \sum</em> w_{i,j} ||u_i - u_j||_p
+\end{align</em>}
+$$</p>
+<p>Notice that the distance $||x_i - u_i||_2^2$ is a squared 2-norm, but
+the distance between the centers $||u_i - u_j||_p$ is a p-norm ($p \in {1, 2,
+\infty }$). This sum-of-norms type penalization brings about "group sparsity"
 and is used primarily because many of the elements in this sum will be 0 at the
-optimum. In convex clustering, that means <mathjax>$u_i = u_j$</mathjax> for some pairs <mathjax>$i$</mathjax> and
-<mathjax>$j$</mathjax> -- in other words, <mathjax>$i$</mathjax> and <mathjax>$j$</mathjax> are clustered together!</p>
+optimum. In convex clustering, that means $u_i = u_j$ for some pairs $i$ and
+$j$ -- in other words, $i$ and $j$ are clustered together!</p>
 <h1><a name="algorithms" href="#algorithms">Algorithms for Convex Clustering</a></h1>
 <p>As the convex clustering formulation is a convex problem, we automatically
 get a variety of black-box algorithms capable of solving it. Unfortunately, the
-number of variables in the problem is rather large -- if <mathjax>$x_i \in
-\mathcal{R}^{d}$</mathjax>, then <mathjax>$u \in \mathcal{R}^{n \times d}$</mathjax>.  If <mathjax>$d = 5$</mathjax>, we cannot
+number of variables in the problem is rather large -- if $x_i \in
+\mathcal{R}^{d}$, then $u \in \mathcal{R}^{n \times d}$.  If $d = 5$, we cannot
 reasonably expect interior point solvers such as <a href="http://cvxr.com/cvx/">cvx</a> to handle any more
 than a few thousand points.</p>
 <p><a href="http://www.icml-2011.org/papers/419_icmlpaper.pdf">Hocking et al.</a> and <a href="http://arxiv.org/abs/1304.0499">Chi et al.</a> were the first to design
 algorithms specifically for convex clustering. The former designed one
-algorithm for each <mathjax>$p$</mathjax>-norm, employing active sets (<mathjax>$p \in \{1, 2\}$</mathjax>),
-subgradient descent (<mathjax>$p = 2$</mathjax>), and the Frank-Wolfe algorithm (<mathjax>$p = \infty$</mathjax>).
+algorithm for each $p$-norm, employing active sets ($p \in {1, 2}$),
+subgradient descent ($p = 2$), and the Frank-Wolfe algorithm ($p = \infty$).
 The latter makes use of <a href="http://www.stanford.edu/~boyd/papers/admm_distr_stats.html">ADMM</a> and AMA, the latter of which reduces to
 proximal gradient on a dual objective.</p>
 <p>Here, I'll describe another method for solving the convex clustering problem
 based on coordinate ascent. The idea is to take the original formulation,
-substitute a new primal variable <mathjax>$z_l = u_{l_1} - u_{l_2}$</mathjax>, then update a dual
-variable <mathjax>$\lambda_l$</mathjax> corresponding to each equality constraint 1 at a time. For
-this problem, we can reconstruct the primal variables <mathjax>$u_i$</mathjax> in closed form
+substitute a new primal variable $z_l = u_{l_1} - u_{l_2}$, then update a dual
+variable $\lambda_l$ corresponding to each equality constraint 1 at a time. For
+this problem, we can reconstruct the primal variables $u_i$ in closed form
 given the dual variables, so it is easy to check how close we are to the
 optimum.</p>
 <!--
@@ -201,92 +194,92 @@ $d =$ the dimensionality of $x_i$, $c = $ the current number of clusters
 
 <h1><a name="reformulation" href="#reformulation">Problem Reformulation</a></h1>
 <p>To describe the dual problem being maximized, we first need to modify the
-primal problem. First, let <mathjax>$z_l = u_{l_1} - u_{l_2}$</mathjax>. Then we can write the
+primal problem. First, let $z_l = u_{l_1} - u_{l_2}$. Then we can write the
 objective function as,</p>
-<p><mathjax>$$
-\begin{align*}
-  &amp; \underset{S}{\min}  &amp; &amp; \frac{1}{2} \sum_{i=1}^{n} ||x_i - u_i||_2^2
-                            + \gamma \sum_{l} w_{l} ||z_l||_p \\
-  &amp; \text{subject to}   &amp; &amp; z_l = u_{l_1} - u_{l_2}
-\end{align*}
-$$</mathjax></p>
+<p>$$
+\begin{align<em>}
+  &amp; \underset{S}{\min}  &amp; &amp; \frac{1}{2} \sum_{i=1}^{n} ||x_i - u_i||<em l>2^2
+                            + \gamma \sum</em> w_{l} ||z_l||<em l_1>p \
+  &amp; \text{subject to}   &amp; &amp; z_l = u</em> - u_{l_2}
+\end{align</em>}
+$$</p>
 <p><a href="http://arxiv.org/abs/1304.0499">Chi et al.</a> show on page 6 that the dual of this problem is then,</p>
-<p><mathjax>$$
-\begin{align*}
-  &amp; \underset{\lambda}{\max}  &amp; &amp; - \frac{1}{2} \sum_{i} ||\Delta_i||_2^2
-                                  - \sum_{l} \lambda_l^T (x_{l_1} - x_{l_2}) \\
-  &amp; \text{subject to}         &amp; &amp; ||\lambda_l||_{p^{*}} \le \gamma w_l \\
+<p>$$
+\begin{align<em>}
+  &amp; \underset{\lambda}{\max}  &amp; &amp; - \frac{1}{2} \sum_{i} ||\Delta_i||<em l>2^2
+                                  - \sum</em> \lambda_l^T (x_{l_1} - x_{l_2}) \
+  &amp; \text{subject to}         &amp; &amp; ||\lambda_l||_{p^{</em>}} \le \gamma w_l \
   &amp;                           &amp; &amp; \Delta_{i} = \sum_{l: l_1 = i} \lambda_l - \sum_{l : l_2 = i} \lambda_l
 \end{align*}
-$$</mathjax></p>
-<p>In this notation, <mathjax>$||\cdot||_{p^{*}}$</mathjax> is the dual norm of <mathjax>$||\cdot||_p$</mathjax>. The
-primal variables <mathjax>$u$</mathjax> and dual variables <mathjax>$\lambda$</mathjax> are then related by the
+$$</p>
+<p>In this notation, $||\cdot||_{p^{*}}$ is the dual norm of $||\cdot||_p$. The
+primal variables $u$ and dual variables $\lambda$ are then related by the
 following equation,</p>
-<p><mathjax>$$
+<p>$$
   u_i = \Delta_i + x_i
-$$</mathjax></p>
+$$</p>
 <h1><a name="coordinate-ascent" href="#coordinate-ascent">Coordinate Ascent</a></h1>
-<p>Now let's optimize the dual problem 1 <mathjax>$\lambda_k$</mathjax> at a time. First, notice
-that <mathjax>$\lambda_k$</mathjax> will only appear in 2 <mathjax>$\Delta_i$</mathjax> terms -- <mathjax>$\Delta_{k_1}$</mathjax> and
-<mathjax>$\Delta_{k_2}$</mathjax>. After dropping all terms independent of <mathjax>$\lambda_k$</mathjax>, we now get
+<p>Now let's optimize the dual problem 1 $\lambda_k$ at a time. First, notice
+that $\lambda_k$ will only appear in 2 $\Delta_i$ terms -- $\Delta_{k_1}$ and
+$\Delta_{k_2}$. After dropping all terms independent of $\lambda_k$, we now get
 the following problem,</p>
-<p><mathjax>$$
-\begin{align*}
-  &amp; \underset{\lambda_k}{\min}  &amp; &amp; \frac{1}{2} (||\Delta_{k_1}||_2^2 + ||\Delta_{k_2}||_2^2)
-                                    + \lambda_k^T (x_{k_1} - x_{k_2}) \\
-  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||_{p^{*}} \le \gamma w_k \\
-  &amp;                           &amp; &amp; \Delta_{k_1} = \sum_{l: l_1 = k_1} \lambda_l - \sum_{l : l_2 = k_1} \lambda_l \\
+<p>$$
+\begin{align<em>}
+  &amp; \underset{\lambda_k}{\min}  &amp; &amp; \frac{1}{2} (||\Delta_{k_1}||<em k_2>2^2 + ||\Delta</em>||<em k_1>2^2)
+                                    + \lambda_k^T (x</em> - x_{k_2}) \
+  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||_{p^{</em>}} \le \gamma w_k \
+  &amp;                           &amp; &amp; \Delta_{k_1} = \sum_{l: l_1 = k_1} \lambda_l - \sum_{l : l_2 = k_1} \lambda_l \
   &amp;                           &amp; &amp; \Delta_{k_2} = \sum_{l: l_1 = k_2} \lambda_l - \sum_{l : l_2 = k_2} \lambda_l
 \end{align*}
-$$</mathjax></p>
-<p>We can pull <mathjax>$\lambda_k$</mathjax> out of <mathjax>$\Delta_{k_1}$</mathjax> and <mathjax>$\Delta_{k_2}$</mathjax> to get,</p>
-<p><mathjax>$$
-\begin{align*}
-  ||\Delta_{k_1}||_2^2 &amp; = ||\lambda_k||_2^2 + ||\Delta_{k_1} - \lambda_k||_2^2 + 2 \lambda_k^T (\Delta_{k_1} - \lambda_k) \\
-  ||\Delta_{k_2}||_2^2 &amp; = ||\lambda_k||_2^2 + ||\Delta_{k_2} + \lambda_k||_2^2 - 2 \lambda_k^T (\Delta_{k_2} + \lambda_k)
-\end{align*}
-$$</mathjax></p>
-<p>Let's define <mathjax>$\tilde{\Delta_{k_1}} = \Delta_{k_1} - \lambda_k$</mathjax> and
-<mathjax>$\tilde{\Delta_{k_2}} = \Delta_{k_2} + \lambda_k$</mathjax> and add <mathjax>$||\frac{1}{2}
-(\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})||_2^2$</mathjax> to the
+$$</p>
+<p>We can pull $\lambda_k$ out of $\Delta_{k_1}$ and $\Delta_{k_2}$ to get,</p>
+<p>$$
+\begin{align<em>}
+  ||\Delta_{k_1}||<em k_1>2^2 &amp; = ||\lambda_k||_2^2 + ||\Delta</em> - \lambda_k||<em k_1>2^2 + 2 \lambda_k^T (\Delta</em> - \lambda_k) \
+  ||\Delta_{k_2}||<em k_2>2^2 &amp; = ||\lambda_k||_2^2 + ||\Delta</em> + \lambda_k||<em k_2>2^2 - 2 \lambda_k^T (\Delta</em> + \lambda_k)
+\end{align</em>}
+$$</p>
+<p>Let's define $\tilde{\Delta_{k_1}} = \Delta_{k_1} - \lambda_k$ and
+$\tilde{\Delta_{k_2}} = \Delta_{k_2} + \lambda_k$ and add $||\frac{1}{2}
+(\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})||_2^2$ to the
 objective.</p>
-<p><mathjax>$$
-\begin{align*}
-  &amp; \underset{\lambda_k}{\min}  &amp; &amp; ||\lambda_k||_2^2
-                                    + 2 \frac{1}{2} \lambda_k^T (\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})
-                                    + ||\frac{1}{2} (\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})||_2^2 \\
-  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||_{p^{*}} \le \gamma w_k \\
-  &amp;                           &amp; &amp; \tilde{\Delta_{k_1}} = \sum_{l: l_1 = k_1; l \ne k} \lambda_l - \sum_{l : l_2 = k_1; l \ne k} \lambda_l \\
+<p>$$
+\begin{align<em>}
+  &amp; \underset{\lambda_k}{\min}  &amp; &amp; ||\lambda_k||<em k_1>2^2
+                                    + 2 \frac{1}{2} \lambda_k^T (\tilde{\Delta</em>} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})
+                                    + ||\frac{1}{2} (\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2})||<em>2^2 \
+  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||</em>{p^{</em>}} \le \gamma w_k \
+  &amp;                           &amp; &amp; \tilde{\Delta_{k_1}} = \sum_{l: l_1 = k_1; l \ne k} \lambda_l - \sum_{l : l_2 = k_1; l \ne k} \lambda_l \
   &amp;                           &amp; &amp; \tilde{\Delta_{k_2}} = \sum_{l: l_1 = k_2; l \ne k} \lambda_l - \sum_{l : l_2 = k_2; l \ne k} \lambda_l
 \end{align*}
-$$</mathjax></p>
+$$</p>
 <p>We can now factor the objective into a quadratic,</p>
-<p><mathjax>$$
-\begin{align*}
-  &amp; \underset{\lambda_k}{\min}  &amp; &amp; ||\lambda_k - \left( - \frac{1}{2}(\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2}) \right) ||_2^2 \\
-  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||_{p^{*}} \le \gamma w_k \\
-  &amp;                           &amp; &amp; \tilde{\Delta_{k_1}} = \sum_{l: l_1 = k_1; l \ne k} \lambda_l - \sum_{l : l_2 = k_1; l \ne k} \lambda_l \\
+<p>$$
+\begin{align<em>}
+  &amp; \underset{\lambda_k}{\min}  &amp; &amp; ||\lambda_k - \left( - \frac{1}{2}(\tilde{\Delta_{k_1}} - \tilde{\Delta_{k_2}} + x_{k_1} - x_{k_2}) \right) ||<em>2^2 \
+  &amp; \text{subject to}         &amp; &amp; ||\lambda_k||</em>{p^{</em>}} \le \gamma w_k \
+  &amp;                           &amp; &amp; \tilde{\Delta_{k_1}} = \sum_{l: l_1 = k_1; l \ne k} \lambda_l - \sum_{l : l_2 = k_1; l \ne k} \lambda_l \
   &amp;                           &amp; &amp; \tilde{\Delta_{k_2}} = \sum_{l: l_1 = k_2; l \ne k} \lambda_l - \sum_{l : l_2 = k_2; l \ne k} \lambda_l
 \end{align*}
-$$</mathjax></p>
+$$</p>
 <p>This problem is simply a Euclidean projection onto the ball defined by
-<mathjax>$||\cdot||_{p^{*}}$</mathjax>. We're now ready to write the algorithm,</p>
+$||\cdot||_{p^{*}}$. We're now ready to write the algorithm,</p>
 <div class="pseudocode">
-<p><strong>Input:</strong> Initial dual variables <mathjax>$\lambda^{(0)}$</mathjax>, weights <mathjax>$w_l$</mathjax>, and regularization parameter <mathjax>$\gamma$</mathjax></p>
+<p><strong>Input:</strong> Initial dual variables $\lambda^{(0)}$, weights $w_l$, and regularization parameter $\gamma$</p>
 <ol>
-<li>Initialize <mathjax>$\Delta_i^{(0)} = \sum_{l: l_1 = i} \lambda_l^{(0)} - \sum_{l: l_2 = i} \lambda_l^{(0)}$</mathjax></li>
-<li>For each iteration <mathjax>$m = 0,1,2,\ldots$</mathjax> until convergence<ol>
-<li>Let <mathjax>$\Delta^{(m+1)} = \Delta^{(m)}$</mathjax></li>
-<li>For each pair of points <mathjax>$l = (i,j)$</mathjax> with <mathjax>$w_{l} &gt; 0$</mathjax><ol>
-<li>Let <mathjax>$\Delta_i^{(m+1)} \leftarrow \Delta_i^{(m+1)} - \lambda_l^{(m)}$</mathjax> and <mathjax>$\Delta_j^{(m+1)} \leftarrow \Delta_i^{(m+1)} + \lambda_l^{(m)}$</mathjax></li>
-<li><mathjax>$\lambda_l^{(m+1)} = \text{project}(- \frac{1}{2}(\Delta_i^{(m+1)} - \Delta_j^{(m+1)} + x_{i} - x_{j}),
-                                       \{ \lambda : ||\lambda||_{p^{*}} \le \gamma w_l \}$</mathjax>)</li>
-<li><mathjax>$\Delta_i^{(m+1)} \leftarrow \Delta_i^{(m+1)} + \lambda_l^{(m+1)}$</mathjax> and <mathjax>$\Delta_j^{(m+1)} \leftarrow \Delta_j^{(m+1)} - \lambda_l^{(m+1)}$</mathjax></li>
+<li>Initialize $\Delta_i^{(0)} = \sum_{l: l_1 = i} \lambda_l^{(0)} - \sum_{l: l_2 = i} \lambda_l^{(0)}$</li>
+<li>For each iteration $m = 0,1,2,\ldots$ until convergence<ol>
+<li>Let $\Delta^{(m+1)} = \Delta^{(m)}$</li>
+<li>For each pair of points $l = (i,j)$ with $w_{l} &gt; 0$<ol>
+<li>Let $\Delta_i^{(m+1)} \leftarrow \Delta_i^{(m+1)} - \lambda_l^{(m)}$ and $\Delta_j^{(m+1)} \leftarrow \Delta_i^{(m+1)} + \lambda_l^{(m)}$</li>
+<li>$\lambda_l^{(m+1)} = \text{project}(- \frac{1}{2}(\Delta_i^{(m+1)} - \Delta_j^{(m+1)} + x_{i} - x_{j}),
+                                       { \lambda : ||\lambda||_{p^{*}} \le \gamma w_l }$)</li>
+<li>$\Delta_i^{(m+1)} \leftarrow \Delta_i^{(m+1)} + \lambda_l^{(m+1)}$ and $\Delta_j^{(m+1)} \leftarrow \Delta_j^{(m+1)} - \lambda_l^{(m+1)}$</li>
 </ol>
 </li>
 </ol>
 </li>
-<li>Return <mathjax>$u_i = \Delta_i + x_i$</mathjax> for all <mathjax>$i$</mathjax></li>
+<li>Return $u_i = \Delta_i + x_i$ for all $i$</li>
 </ol>
 </div>
 <p>Since we can easily construct the primal variables from the dual variables
@@ -345,7 +338,7 @@ ADMM and AMA-based algorithms specifically designed for convex clustering.</p>
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

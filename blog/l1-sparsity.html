@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -74,156 +67,156 @@ error -- it's low test-time error. Thus, parameters should be minimize training
 error while remaining "simple," where the definition of "simple" is left up to
 the regularization function. Typically, supervised learning can be phrased as
 minimizing the following objective function,</p>
-<p><mathjax>$$
+<p>$$
   w^{*} = \arg\min_{w} \sum_{i} L(y_i, f(x_i; w)) + \lambda \Omega(w)
-$$</mathjax></p>
-<p>where <mathjax>$L(y_i, f(x_i; w))$</mathjax> is the loss for predicting <mathjax>$f(x_i; w)$</mathjax> when the
-true label is for sample <mathjax>$i$</mathjax> is <mathjax>$y_i$</mathjax> and <mathjax>$\Omega(w)$</mathjax> is a regularization
+$$</p>
+<p>where $L(y_i, f(x_i; w))$ is the loss for predicting $f(x_i; w)$ when the
+true label is for sample $i$ is $y_i$ and $\Omega(w)$ is a regularization
 function.</p>
 <h1><a name="sparsifying-regularizers" href="#sparsifying-regularizers">Sparsifying Regularizers</a></h1>
-<p>There are many choices for <mathjax>$\Omega(w)$</mathjax>, but the ones I'm going to talk about
-today are so called "sparsifying regularizers" such as <mathjax>$||w||_1$</mathjax>. These norms
-are most often employed because they produce "sparse" <mathjax>$w^{*}$</mathjax> -- that is,
-<mathjax>$w^{*}$</mathjax> with many zeros. This is in stark contrast to other regularizers such
-as <mathjax>$\frac{1}{2}||w||_2^2$</mathjax> which leads to lots of small but nonzero entries in
-<mathjax>$w^{*}$</mathjax>.</p>
+<p>There are many choices for $\Omega(w)$, but the ones I'm going to talk about
+today are so called "sparsifying regularizers" such as $||w||_1$. These norms
+are most often employed because they produce "sparse" $w^{<em>}$ -- that is,
+$w^{</em>}$ with many zeros. This is in stark contrast to other regularizers such
+as $\frac{1}{2}||w||_2^2$ which leads to lots of small but nonzero entries in
+$w^{*}$.</p>
 <h1><a name="why-sparse-solutions" href="#why-sparse-solutions">Why Sparse Solutions?</a></h1>
 <p><strong>Feature Selection</strong> One of the key reasons people turn to sparsifying
 regularizers is that they lead to automatic feature selection. Quite often,
-many of the entries of <mathjax>$x_i$</mathjax> are irrelevant or uninformative to predicting
-the output <mathjax>$y_i$</mathjax>. Minimizing the objective function using these extra
-features will lead to lower training error, but when the learned <mathjax>$w^{*}$</mathjax> is
+many of the entries of $x_i$ are irrelevant or uninformative to predicting
+the output $y_i$. Minimizing the objective function using these extra
+features will lead to lower training error, but when the learned $w^{*}$ is
 employed at test-time it will depend on these features to be more informative
 than they are. By employing a sparsifying regularizer, the hope is that these
 features will automatically be eliminated.</p>
 <p><strong>Interpretability</strong> A second reason for favoring sparse solutions is that
 the model is easier to interpret. For example, a simple sentiment classifier
 might use a binary vector where an entry is 1 if a word is present and 0
-otherwise. If the resulting learned weights <mathjax>$w^{*}$</mathjax> has only a few non-zero
+otherwise. If the resulting learned weights $w^{*}$ has only a few non-zero
 entries, we might believe that those are the most indicative words in deciding
 sentiment.</p>
 <h1><a name="nonsmooth-regularizers" href="#nonsmooth-regularizers">Non-smooth Regularizers and their Solutions</a></h1>
 <p>We now come to the \$ 100 million question: why do regularizers like the 1-norm
 lead to sparse solutions? At some point someone probably told you "they're our
-best convex approximation to <mathjax>$\ell_0$</mathjax> norm," but there's a better reason than
-that.  In fact, I claim that any regularizer that is non-differentiable at <mathjax>$w_i
-= 0$</mathjax> and can be decomposed into a sum can lead to sparse solutions.</p>
+best convex approximation to $\ell_0$ norm," but there's a better reason than
+that.  In fact, I claim that any regularizer that is non-differentiable at $w_i
+= 0$ and can be decomposed into a sum can lead to sparse solutions.</p>
 <p><strong>Intuition</strong> The intuition lies in the idea of subgradients. Recall that the
-subgradient of a (convex) function <mathjax>$\Omega$</mathjax> at <mathjax>$x$</mathjax> is any vector <mathjax>$v$</mathjax> such that,</p>
-<p><mathjax>$$
+subgradient of a (convex) function $\Omega$ at $x$ is any vector $v$ such that,</p>
+<p>$$
   \Omega(y) \ge \Omega(x) + v^T (y-x)
-$$</mathjax></p>
-<p>The set of all subgradients for <mathjax>$\Omega$</mathjax> at <mathjax>$x$</mathjax> is called the subdifferential
-and is denoted <mathjax>$\partial \Omega(x)$</mathjax>. If <mathjax>$\Omega$</mathjax> is differentiable at <mathjax>$x$</mathjax>,
-then <mathjax>$\partial \Omega(x) = \{ \nabla \Omega(x) \}$</mathjax> -- in other words,
-<mathjax>$\partial \Omega(x)$</mathjax> contains 1 vector, the gradient. Where the
-subdifferential begins to matter is when <mathjax>$\Omega$</mathjax> <em>isn't</em> differentiable at
-<mathjax>$x$</mathjax>. Then, it becomes something more interesting.</p>
+$$</p>
+<p>The set of all subgradients for $\Omega$ at $x$ is called the subdifferential
+and is denoted $\partial \Omega(x)$. If $\Omega$ is differentiable at $x$,
+then $\partial \Omega(x) = { \nabla \Omega(x) }$ -- in other words,
+$\partial \Omega(x)$ contains 1 vector, the gradient. Where the
+subdifferential begins to matter is when $\Omega$ <em>isn't</em> differentiable at
+$x$. Then, it becomes something more interesting.</p>
 <p>Suppose we want to minimize an unconstrained objective like the following,</p>
-<p><mathjax>$$
+<p>$$
   \min_{x} f(x) + \lambda \Omega(x)
-$$</mathjax></p>
+$$</p>
 <p>By the <a href="http://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions">KKT conditions</a>, 0 must be in the subdifferential at
-the minimizer <mathjax>$x^{*}$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
-  0 &amp; \in \nabla f(x^{*}) + \partial \lambda \Omega(x^{*}) \\
-  - \frac{1}{\lambda} \nabla f(x^{*}) &amp; \in \partial \Omega(x^{*}) \\
-\end{align*}
-$$</mathjax></p>
+the minimizer $x^{*}$,</p>
+<p>$$
+\begin{align<em>}
+  0 &amp; \in \nabla f(x^{</em>}) + \partial \lambda \Omega(x^{<em>}) \
+  - \frac{1}{\lambda} \nabla f(x^{</em>}) &amp; \in \partial \Omega(x^{<em>}) \
+\end{align</em>}
+$$</p>
 <p>Looking forward, we're particularly interested in when the previous
-inequality holds when <mathjax>$x^{*} = 0$</mathjax>. What conditions are necessary for this to be
+inequality holds when $x^{*} = 0$. What conditions are necessary for this to be
 true?</p>
-<p><strong>Dual Norms</strong> Since we're primarily concerned with <mathjax>$\Omega(x) = ||x||_1$</mathjax>,
+<p><strong>Dual Norms</strong> Since we're primarily concerned with $\Omega(x) = ||x||_1$,
 let's plug that in. In the following, it'll actually be easier to prove things
 about any norm, so we'll drop the 1 for the rest of this section.</p>
 <p>Recal the definition of a dual norm. In particular, the dual norm of a norm
-<mathjax>$||\cdot||$</mathjax> is defined as,</p>
-<p><mathjax>$$
-  ||y||_{*} = \sup_{||x|| \le 1} x^{T} y
-$$</mathjax></p>
+$||\cdot||$ is defined as,</p>
+<p>$$
+  ||y||<em 1 _le="\le" _x_="||x||">{*} = \sup</em> x^{T} y
+$$</p>
 <p>A cool fact is that the dual of a dual norm is the original norm. In other words,</p>
-<p><mathjax>$$
+<p>$$
   ||x|| = \sup_{||y||_{*} \le 1} y^{T} x
-$$</mathjax></p>
+$$</p>
 <p>Let's take the gradient of the previous expression on both sides. A nice fact
 to keep in mind is that if we take the gradient of an expression of the form
-<mathjax>$\sup_{y} g(y, x)$</mathjax>, then its gradient with respect to x is <mathjax>$\nabla_x g(y^{*},
-x)$</mathjax> where <mathjax>$y^{*}$</mathjax> is any <mathjax>$y$</mathjax> that achieves the <mathjax>$\sup$</mathjax>. Since <mathjax>$g(y, x) = y^{T}
-x$</mathjax>, that means,</p>
-<p><mathjax>$$
-  \nabla_x \sup_{y} g(y, x) = \nabla_x \left( (y^{*})^T x \right) = y^{*} = \arg\max_{||y||_{*} \le 1} y^{T} x
-$$</mathjax></p>
-<p><mathjax>$$
-  \partial ||x|| = \{ y^{*} :  y^{*} = \arg\max_{||y||_{*} \le 1} y^{T} x \}
-$$</mathjax></p>
-<p>Now let <mathjax>$x = 0$</mathjax>. Then <mathjax>$y^{T} x = 0$</mathjax> for all <mathjax>$y$</mathjax>, so any <mathjax>$y$</mathjax> with <mathjax>$||y||_{*}
-\le 1$</mathjax> is in <mathjax>$\partial ||x||$</mathjax> for <mathjax>$x = 0$</mathjax>.</p>
+$\sup_{y} g(y, x)$, then its gradient with respect to x is $\nabla_x g(y^{<em>},
+x)$ where $y^{</em>}$ is any $y$ that achieves the $\sup$. Since $g(y, x) = y^{T}
+x$, that means,</p>
+<p>$$
+  \nabla_x \sup_{y} g(y, x) = \nabla_x \left( (y^{<em>})^T x \right) = y^{</em>} = \arg\max_{||y||_{*} \le 1} y^{T} x
+$$</p>
+<p>$$
+  \partial ||x|| = { y^{<em>} :  y^{</em>} = \arg\max_{||y||_{*} \le 1} y^{T} x }
+$$</p>
+<p>Now let $x = 0$. Then $y^{T} x = 0$ for all $y$, so any $y$ with $||y||_{*}
+\le 1$ is in $\partial ||x||$ for $x = 0$.</p>
 <p>Back to our original goal, recall that</p>
-<p><mathjax>$$
+<p>$$
   -\frac{1}{\lambda} \nabla f(x) \in \partial ||x||
-$$</mathjax></p>
-<p>If <mathjax>$||-\frac{1}{\lambda} \nabla f(x)||_{*} \le 1$</mathjax> when <mathjax>$x=0$</mathjax>, then we've
-already established that <mathjax>$-\frac{1}{\lambda} \nabla f(0)$</mathjax> is in <mathjax>$\partial
-||0||$</mathjax>. In other words, <mathjax>$x^{*} = 0$</mathjax> solves the original problem!</p>
+$$</p>
+<p>If $||-\frac{1}{\lambda} \nabla f(x)||_{<em>} \le 1$ when $x=0$, then we've
+already established that $-\frac{1}{\lambda} \nabla f(0)$ is in $\partial
+||0||$. In other words, $x^{</em>} = 0$ solves the original problem!</p>
 <h1><a name="coordinate-sparsity" href="#coordinate-sparsity">Onto Coordinate-wise Sparsity</a></h1>
-<p>We've just established that <mathjax>$||\frac{1}{\lambda} \nabla f(0)||_{*} \le 1$</mathjax>
-implies <mathjax>$x^{*} = 0$</mathjax>, but we don't want all of <mathjax>$x^{*}$</mathjax> to be 0, we want <em>some
-coordinates</em> of <mathjax>$x^{*}$</mathjax> to be 0. How can we take what we just concluded and
-apply it only a subvector of <mathjax>$x^{*}$</mathjax>?</p>
-<p>Rather than a general norm, let's return once again to the <mathjax>$L_1$</mathjax> norm. The
-<mathjax>$L_1$</mathjax> norm has a very special property that will be of use here:
-separability. In words, this means that the <mathjax>$L_1$</mathjax> norm can be expressed as a
-sum of functions over <mathjax>$x$</mathjax>'s individual coordinates, each independent of every
-other. In particular, <mathjax>$||x||_1 = \sum_{i} |x_{i}|$</mathjax>.  It's easy to see that the
-function <mathjax>$\Omega_i(x) = |x_i|$</mathjax> is independent of the rest of <mathjax>$x$</mathjax>'s elements.</p>
+<p>We've just established that $||\frac{1}{\lambda} \nabla f(0)||_{<em>} \le 1$
+implies $x^{</em>} = 0$, but we don't want all of $x^{<em>}$ to be 0, we want </em>some
+coordinates<em> of $x^{</em>}$ to be 0. How can we take what we just concluded and
+apply it only a subvector of $x^{*}$?</p>
+<p>Rather than a general norm, let's return once again to the $L_1$ norm. The
+$L_1$ norm has a very special property that will be of use here:
+separability. In words, this means that the $L_1$ norm can be expressed as a
+sum of functions over $x$'s individual coordinates, each independent of every
+other. In particular, $||x||<em i>1 = \sum</em> |x_{i}|$.  It's easy to see that the
+function $\Omega_i(x) = |x_i|$ is independent of the rest of $x$'s elements.</p>
 <p>Let's take another look at our objective function,</p>
-<p><mathjax>$$
-\begin{align*}
-  \min_{x} f(x) + \lambda ||x||_1
-  &amp; = \min_{x_i} \left( \min_{x_{-i}} f(x_i, x_{-i}) + \lambda \sum_{j} |x_j| \right) \\
+<p>$$
+\begin{align<em>}
+  \min_{x} f(x) + \lambda ||x||<em x_i>1
+  &amp; = \min</em> \left( \min_{x_{-i}} f(x_i, x_{-i}) + \lambda \sum_{j} |x_j| \right) \
   &amp; = \min_{x_i} g(x_i) + \lambda |x_i|
+\end{align</em>}
+$$</p>
+<p>where $x_{-i}$ is all coordinates of $x$ except $x_i$ and $g(x_i) =
+\min_{x_{-i}} f(x_i, x_{-i}) + \lambda \sum_{j \ne i} |x_j|$. Taking the
+derivative of $g(x_i)$ with respect to $x_i$, we again require that,</p>
+<p>$$
+\begin{align<em>}
+  0 &amp;\in \nabla_{x_i} g(x_i) + \lambda \partial |x_i| \
+  -\frac{1}{\lambda} \nabla_{x_i} g(x_i) &amp; \in \partial |x_i| \
+  -\frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{</em>}) &amp; \in \partial |x_i|
 \end{align*}
-$$</mathjax></p>
-<p>where <mathjax>$x_{-i}$</mathjax> is all coordinates of <mathjax>$x$</mathjax> except <mathjax>$x_i$</mathjax> and <mathjax>$g(x_i) =
-\min_{x_{-i}} f(x_i, x_{-i}) + \lambda \sum_{j \ne i} |x_j|$</mathjax>. Taking the
-derivative of <mathjax>$g(x_i)$</mathjax> with respect to <mathjax>$x_i$</mathjax>, we again require that,</p>
-<p><mathjax>$$
-\begin{align*}
-  0 &amp;\in \nabla_{x_i} g(x_i) + \lambda \partial |x_i| \\
-  -\frac{1}{\lambda} \nabla_{x_i} g(x_i) &amp; \in \partial |x_i| \\
-  -\frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{*}) &amp; \in \partial |x_i|
-\end{align*}
-$$</mathjax></p>
-<p>Hmm, that looks familiar. And isn't <mathjax>$|x_i| = ||x_i||_1$</mathjax>? That means that if</p>
-<p><mathjax>$$
-  \left| \left| \frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{*}) \right| \right|_{\infty}
-  = \left| \frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{*}) \right| \le 1
-$$</mathjax></p>
-<p>when <mathjax>$x_i = 0$</mathjax>, then <mathjax>$x_i^{*} = 0$</mathjax>. In other words, given the optimal values
-for all coordinates other than <mathjax>$i$</mathjax>, we can evaluate the derivative of
-<mathjax>$\frac{1}{\lambda} f$</mathjax> with respect to <mathjax>$x_i$</mathjax> and check if the absolute value
-of that is less than 1. If it is, then <mathjax>$x_i = 0$</mathjax> is optimal!</p>
+$$</p>
+<p>Hmm, that looks familiar. And isn't $|x_i| = ||x_i||_1$? That means that if</p>
+<p>$$
+  \left| \left| \frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{<em>}) \right| \right|<em x_i>{\infty}
+  = \left| \frac{1}{\lambda} \nabla</em> f(x_i, x_{-i}^{</em>}) \right| \le 1
+$$</p>
+<p>when $x_i = 0$, then $x_i^{*} = 0$. In other words, given the optimal values
+for all coordinates other than $i$, we can evaluate the derivative of
+$\frac{1}{\lambda} f$ with respect to $x_i$ and check if the absolute value
+of that is less than 1. If it is, then $x_i = 0$ is optimal!</p>
 <h1><a name="conclusion" href="#conclusion">Conclusion</a></h1>
 <p>In the first section, we showed that in order to solve the problem
-<mathjax>$\min_{x} f(x) + \lambda \Omega(x)$</mathjax>, it is necessary that <mathjax>$-\frac{1}{\lambda}
-\nabla f(x^{*}) \in \partial \Omega(x^{*})$</mathjax>. If <mathjax>$\Omega(x^{*})$</mathjax> is
-differentiable at <mathjax>$x^{*}$</mathjax>, then there can be only 1 possible choice for
-<mathjax>$x^{*}$</mathjax>, but in all other cases there are a multitude of potential solutions.
-When <mathjax>$\Omega(x)$</mathjax> isn't differentiable at <mathjax>$x = 0$</mathjax>, there is a non-singleton set
-of values which <mathjax>$-\frac{1}{\lambda} \nabla f(x^{*})$</mathjax> can be in such that <mathjax>$x^{*}
-= 0$</mathjax> is an optimal solution. If <mathjax>$\Omega(x) = ||x||$</mathjax>, then a sufficient
-condition for <mathjax>$x^{*} = 0$</mathjax> to be optimal is <mathjax>$||\frac{1}{\lambda} \nabla
-f(x)||_{*} \le 1$</mathjax> at <mathjax>$x = 0$</mathjax>.</p>
-<p>In the next section, we showed that in the special case of the <mathjax>$L_1$</mathjax> norm, we
-can express the norm as the sum of <mathjax>$L_1$</mathjax> norms applied to <mathjax>$x$</mathjax>'s individual
+$\min_{x} f(x) + \lambda \Omega(x)$, it is necessary that $-\frac{1}{\lambda}
+\nabla f(x^{<em>}) \in \partial \Omega(x^{</em>})$. If $\Omega(x^{<em>})$ is
+differentiable at $x^{</em>}$, then there can be only 1 possible choice for
+$x^{<em>}$, but in all other cases there are a multitude of potential solutions.
+When $\Omega(x)$ isn't differentiable at $x = 0$, there is a non-singleton set
+of values which $-\frac{1}{\lambda} \nabla f(x^{</em>})$ can be in such that $x^{<em>}
+= 0$ is an optimal solution. If $\Omega(x) = ||x||$, then a sufficient
+condition for $x^{</em>} = 0$ to be optimal is $||\frac{1}{\lambda} \nabla
+f(x)||_{*} \le 1$ at $x = 0$.</p>
+<p>In the next section, we showed that in the special case of the $L_1$ norm, we
+can express the norm as the sum of $L_1$ norms applied to $x$'s individual
 coordinates. Because of this, we can rewrite the original optimization problem
-as <mathjax>$\min_{x_i} g(x_i) + \lambda ||x_i||_1$</mathjax> where <mathjax>$g(x_i) = \min_{x_{-i}} f(x_i,
-x_{-i}) + \lambda ||x_{-i}||_1$</mathjax>. Using the same results from the previous
-section, we showed that as long as <mathjax>$|\frac{1}{\lambda} \nabla_{x_i} f(x_i,
-x_{-i}^{*})| \le 1$</mathjax> when <mathjax>$x_i = 0$</mathjax>, then <mathjax>$x_i^{*} = 0$</mathjax> is an optimal choice. In
+as $\min_{x_i} g(x_i) + \lambda ||x_i||<em x__-i="x_{-i">1$ where $g(x_i) = \min</em>} f(x_i,
+x_{-i}) + \lambda ||x_{-i}||<em x_i>1$. Using the same results from the previous
+section, we showed that as long as $|\frac{1}{\lambda} \nabla</em> f(x_i,
+x_{-i}^{<em>})| \le 1$ when $x_i = 0$, then $x_i^{</em>} = 0$ is an optimal choice. In
 other words, we established conditions upon which a coordinate will be 0. This
-is why the <mathjax>$L_1$</mathjax> norm causes sparsity.</p>
+is why the $L_1$ norm causes sparsity.</p>
 <h1><a name="references" href="#references">References</a></h1>
 <p>Everything written here was explained to me by the ever-knowledgable
 MetaOptimize king, <a href="https://twitter.com/atpassos">Alexandre Passos</a>.</p>
@@ -261,7 +254,7 @@ MetaOptimize king, <a href="https://twitter.com/atpassos">Alexandre Passos</a>.<
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -80,39 +73,39 @@ the bottom. You'd probably do something like this,</p>
 <h1><a name="implementation" href="#implementation">How does it work?</a></h1>
 <p>So how do we frame Gradient Descent mathematically? As usual, we define our
 problem in terms of minimizing a function,</p>
-<p><mathjax>$$
+<p>$$
   \min_{x} \, f(x)
-$$</mathjax></p>
-<p>We assume that <mathjax>$f$</mathjax> is differentiable. That is, we can easily compute,</p>
-<p><mathjax>$$
+$$</p>
+<p>We assume that $f$ is differentiable. That is, we can easily compute,</p>
+<p>$$
   \nabla_x \, f(x) = \begin{pmatrix}
-    \frac{d f(x)}{d x_1} \\
-    \frac{d f(x)}{d x_2} \\
-    \vdots \\
+    \frac{d f(x)}{d x_1} \
+    \frac{d f(x)}{d x_2} \
+    \vdots \
   \end{pmatrix}
-$$</mathjax></p>
+$$</p>
 <p>Given this, Gradient Descent is simply the following,</p>
 <p><!-- TODO Replace well with something more contextually meaningful -->
 <div class="pseudocode" markdown>
-  <strong>Input</strong>: initial iterate <mathjax>$x^{(0)}$</mathjax></p>
+  <strong>Input</strong>: initial iterate $x^{(0)}$</p>
 <ol>
-<li>For <mathjax>$t = 0, 1, \ldots$</mathjax><ol>
-<li>if converged, return <mathjax>$x^{(t)}$</mathjax></li>
-<li>Compute the <a href="http://en.wikipedia.org/wiki/Gradient">gradient</a> of <mathjax>$f$</mathjax> at <mathjax>$x^{(t)}$</mathjax>, <mathjax>$g^{(t)}
-   \triangleq \nabla f(x^{(t)})$</mathjax></li>
-<li><mathjax>$x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}$</mathjax>
+<li>For $t = 0, 1, \ldots$<ol>
+<li>if converged, return $x^{(t)}$</li>
+<li>Compute the <a href="http://en.wikipedia.org/wiki/Gradient">gradient</a> of $f$ at $x^{(t)}$, $g^{(t)}
+   \triangleq \nabla f(x^{(t)})$</li>
+<li>$x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}$
 </div></li>
 </ol>
 </li>
 </ol>
-<p>The initial iterate <mathjax>$x^{(0)}$</mathjax> can be selected arbitrarily, and step size
-<mathjax>$\alpha^{(t)}$</mathjax> can be selected by <a href="#line_search">Line Search</a>, a small constant, or
-simply <mathjax>$\frac{1}{t}$</mathjax>.</p>
+<p>The initial iterate $x^{(0)}$ can be selected arbitrarily, and step size
+$\alpha^{(t)}$ can be selected by <a href="#line_search">Line Search</a>, a small constant, or
+simply $\frac{1}{t}$.</p>
 <h1><a name="example" href="#example">A Small Example</a></h1>
 <p>Let's look at Gradient Descent in action. We'll use the objective function
-<mathjax>$f(x) = x^4$</mathjax>, meaning that <mathjax>$\nabla_x f(x) = 4 x^3$</mathjax>. For a step size, we'll
-choose a constant step size <mathjax>$\alpha_t = 0.05$</mathjax>. Finally, we'll start at <mathjax>$x^{(0)}
-= 1$</mathjax>.</p>
+$f(x) = x^4$, meaning that $\nabla_x f(x) = 4 x^3$. For a step size, we'll
+choose a constant step size $\alpha_t = 0.05$. Finally, we'll start at $x^{(0)}
+= 1$.</p>
 <div class="img-center">
   <img src="/assets/img/gradient_descent/animation.gif"></img>
   <span class="caption">
@@ -140,118 +133,118 @@ choose a constant step size <mathjax>$\alpha_t = 0.05$</mathjax>. Finally, we'll
 
 <h1><a name="proof" href="#proof">Why does it work?</a></h1>
 <p>Gradient Descent works, but it isn't guaranteed to find the optimal solution
-to our problem (that is, <mathjax>$x^{*} = \arg\min_{x} f(x)$</mathjax>) without a few assumptions.
+to our problem (that is, $x^{*} = \arg\min_{x} f(x)$) without a few assumptions.
 In particular,</p>
 <ol>
-<li><mathjax>$f$</mathjax> is convex and finite for all <mathjax>$x$</mathjax></li>
-<li>a finite solution <mathjax>$x^{*}$</mathjax> exists</li>
-<li><mathjax>$\nabla f(x)$</mathjax> is Lipschitz continuous with constant <mathjax>$L$</mathjax>. If <mathjax>$f$</mathjax> is twice
+<li>$f$ is convex and finite for all $x$</li>
+<li>a finite solution $x^{*}$ exists</li>
+<li>$\nabla f(x)$ is Lipschitz continuous with constant $L$. If $f$ is twice
    differentiable, this means that the largest eigenvalue of the Hessian is
-   bounded by <mathjax>$L$</mathjax> (<mathjax>$\nabla^2 f(x) \preceq LI$</mathjax>). But more directly, there must
-   be an <mathjax>$L$</mathjax> such that,</li>
+   bounded by $L$ ($\nabla^2 f(x) \preceq LI$). But more directly, there must
+   be an $L$ such that,</li>
 </ol>
-<p><mathjax>$$
+<p>$$
   || \nabla f(x) - \nabla f(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
-$$</mathjax></p>
+$$</p>
 <p><strong>Assumptions</strong> So what do these assumptions give us?  Assumption 1 tells us
-that <mathjax>$f$</mathjax> is lower bounded by an affine function,</p>
-<p><mathjax>$$
+that $f$ is lower bounded by an affine function,</p>
+<p>$$
   f(y) \ge f(x) + \nabla f(x)^T (y - x)  \qquad \forall x,y
-$$</mathjax></p>
-<p>Assumption 3 also tells us that <mathjax>$f$</mathjax> is upper bounded by a quadratic (this is
+$$</p>
+<p>Assumption 3 also tells us that $f$ is upper bounded by a quadratic (this is
 not obvious),</p>
-<p><mathjax>$$
+<p>$$
   f(y) \le f(x) + \nabla f(x)^T (y - x) + \frac{L}{2} || y - x ||_2^2
-$$</mathjax></p>
+$$</p>
 <p><strong>Proof Outline</strong> Now let's dive into the proof. Our plan of attack is as
-follows. First, we upper bound the error <mathjax>$f(x^{(t+1)}) - f(x^{*})$</mathjax> in terms of
-<mathjax>$||x^{(t)} - x^{*}||_2^2$</mathjax> and <mathjax>$||x^{(t+1)} - x^{*}||_2^2$</mathjax>.  We then sum these upper
-bounds across <mathjax>$t$</mathjax> to upper bound the sum of errors in terms of <mathjax>$||x^{(0)} -
-x^{*}||_2^2$</mathjax>. Finally, we use the fact that <mathjax>$f(x^{(t)})$</mathjax> is decreasing in <mathjax>$t$</mathjax> to
-take an average of that sum to bound <mathjax>$f(x^{(t+1)}) - f(x^{*})$</mathjax> in terms of <mathjax>$||x^{(0)}
-- x^{*}||_2^2$</mathjax> and <mathjax>$t$</mathjax>.</p>
-<p><strong>Step 1</strong>: upper bounding <mathjax>$f(x^{(t+1)}) - f(x^{*})$</mathjax>.  Let <mathjax>$x^{+} \triangleq
-x^{(t+1)}$</mathjax>, <mathjax>$x \triangleq x^{(t)}$</mathjax>, and <mathjax>$\alpha \triangleq \alpha^{(t)}$</mathjax>.</p>
-<p><mathjax>$$
-\begin{align*}
+follows. First, we upper bound the error $f(x^{(t+1)}) - f(x^{<em>})$ in terms of
+$||x^{(t)} - x^{</em>}||_2^2$ and $||x^{(t+1)} - x^{<em>}||_2^2$.  We then sum these upper
+bounds across $t$ to upper bound the sum of errors in terms of $||x^{(0)} -
+x^{</em>}||_2^2$. Finally, we use the fact that $f(x^{(t)})$ is decreasing in $t$ to
+take an average of that sum to bound $f(x^{(t+1)}) - f(x^{<em>})$ in terms of $||x^{(0)}
+- x^{</em>}||_2^2$ and $t$.</p>
+<p><strong>Step 1</strong>: upper bounding $f(x^{(t+1)}) - f(x^{*})$.  Let $x^{+} \triangleq
+x^{(t+1)}$, $x \triangleq x^{(t)}$, and $\alpha \triangleq \alpha^{(t)}$.</p>
+<p>$$
+\begin{align<em>}
   f(x^{+})
-  \le &amp; f(x) + \nabla f(x)^T (x^{+} - x) + \frac{L}{2}||x^{+} - x||_2^2 &amp;&amp; \text{# Quadratic upper bound} \\
-  = &amp; f(x) + \nabla f(x)^T (- \alpha \nabla f(x)) + \frac{L}{2}||- \alpha \nabla f(x)||_2^2 &amp;&amp; \text{# Definition of $x^{+}$} \\
-  = &amp; f(x) - \alpha || \nabla f(x) ||_2^2 + \frac{\alpha^2 L}{2} ||\nabla f(x)||_2^2 \\
-  = &amp; f(x) - \alpha\left( 1 - \frac{\alpha L}{2} \right) || \nabla f(x) ||_2^2  \\
-  \le &amp; f(x) - \frac{\alpha}{2} || \nabla f(x) ||_2^2  &amp;&amp; \text{# Assuming $\frac{\alpha L}{2} \leq \frac{1}{2}$} \\
-  \le &amp; f(x^{*}) + \nabla f(x)^T (x - x^{*}) - \frac{\alpha}{2} || \nabla f(x) ||_2^2  &amp;&amp; \text{# Linear lower bound on $f(x)$} \\
-  = &amp; f(x^{*}) + \nabla f(x)^T (x - x^{*}) - \frac{\alpha}{2} || \nabla f(x) ||_2^2 \\
-    &amp; \quad \pm \frac{1}{2 \alpha} \left( ||x||_2^2 + ||x^{*}||_2^2 + x^T x^{*} \right)\\
-  = &amp; f(x^{*}) + \frac{1}{2 \alpha} \left(
-      ||x - x^{*}||_2^2 - ||(x - \alpha \nabla f(x)) - x^{*}||_2^2
-    \right) \\
-  = &amp; f(x^{*}) + \frac{1}{2 \alpha} \left(
-      ||x - x^{*}||_2^2 - ||x^{+} - x^{*}||_2^2
-    \right) \\
-\end{align*}
-$$</mathjax></p>
-<p><strong>Step 2</strong>: Upper bound <mathjax>$\sum_{t=1}^{T} f(x^{(t)}) - f(x^{*})$</mathjax> by summing across
-all <mathjax>$t$</mathjax>. At this point we'll assume that <mathjax>$\alpha^{(t)}$</mathjax> is the same for all
-<mathjax>$t$</mathjax>.</p>
-<p><mathjax>$$
-\begin{align*}
-  f(x^{(t)}) - f(x^{*})
+  \le &amp; f(x) + \nabla f(x)^T (x^{+} - x) + \frac{L}{2}||x^{+} - x||_2^2 &amp;&amp; \text{# Quadratic upper bound} \
+  = &amp; f(x) + \nabla f(x)^T (- \alpha \nabla f(x)) + \frac{L}{2}||- \alpha \nabla f(x)||_2^2 &amp;&amp; \text{# Definition of $x^{+}$} \
+  = &amp; f(x) - \alpha || \nabla f(x) ||_2^2 + \frac{\alpha^2 L}{2} ||\nabla f(x)||_2^2 \
+  = &amp; f(x) - \alpha\left( 1 - \frac{\alpha L}{2} \right) || \nabla f(x) ||_2^2  \
+  \le &amp; f(x) - \frac{\alpha}{2} || \nabla f(x) ||_2^2  &amp;&amp; \text{# Assuming $\frac{\alpha L}{2} \leq \frac{1}{2}$} \
+  \le &amp; f(x^{</em>}) + \nabla f(x)^T (x - x^{<em>}) - \frac{\alpha}{2} || \nabla f(x) ||_2^2  &amp;&amp; \text{# Linear lower bound on $f(x)$} \
+  = &amp; f(x^{</em>}) + \nabla f(x)^T (x - x^{<em>}) - \frac{\alpha}{2} || \nabla f(x) ||_2^2 \
+    &amp; \quad \pm \frac{1}{2 \alpha} \left( ||x||_2^2 + ||x^{</em>}||_2^2 + x^T x^{<em>} \right)\
+  = &amp; f(x^{</em>}) + \frac{1}{2 \alpha} \left(
+      ||x - x^{<em>}||_2^2 - ||(x - \alpha \nabla f(x)) - x^{</em>}||_2^2
+    \right) \
+  = &amp; f(x^{<em>}) + \frac{1}{2 \alpha} \left(
+      ||x - x^{</em>}||_2^2 - ||x^{+} - x^{<em>}||_2^2
+    \right) \
+\end{align</em>}
+$$</p>
+<p><strong>Step 2</strong>: Upper bound $\sum_{t=1}^{T} f(x^{(t)}) - f(x^{*})$ by summing across
+all $t$. At this point we'll assume that $\alpha^{(t)}$ is the same for all
+$t$.</p>
+<p>$$
+\begin{align<em>}
+  f(x^{(t)}) - f(x^{</em>})
   &amp; \le \frac{1}{2 \alpha^{(t)}} \left(
-    ||x^{(t)} - x^{*}||_2^2 - ||x^{(t+1)} - x^{*}||_2^2
-  \right) \\
-  \sum_{t=1}^{T} f(x^{(t)}) - f(x^{*})
+    ||x^{(t)} - x^{<em>}||_2^2 - ||x^{(t+1)} - x^{</em>}||<em t="1">2^2
+  \right) \
+  \sum</em>^{T} f(x^{(t)}) - f(x^{<em>})
   &amp; \le \frac{1}{2 \alpha} \sum_{t=1}^{T} \left(
-    ||x^{(t)} - x^{*}||_2^2 - ||x^{(t+1)} - x^{*}||_2^2
-  \right) \\
+    ||x^{(t)} - x^{</em>}||_2^2 - ||x^{(t+1)} - x^{<em>}||_2^2
+  \right) \
   &amp; = \frac{1}{2 \alpha} \left(
-    ||x^{(0)} - x^{*}||_2^2 - ||x_1 - x^{*}||_2^2 + ||x_1 - x^{*}||_2^2 - ||x_2 - x^{*}||_2^2 + \ldots
-  \right) \\
-  &amp; = \frac{1}{2 \alpha} \left( ||x^{(0)} - x^{*}||_2^2 - ||x^{(t)} - x^{*}||_2^2
-  \right) \\
-  &amp; \le \frac{1}{2 \alpha} ||x^{(0)} - x^{*}||_2^2 \\
+    ||x^{(0)} - x^{</em>}||_2^2 - ||x_1 - x^{<em>}||_2^2 + ||x_1 - x^{</em>}||_2^2 - ||x_2 - x^{<em>}||_2^2 + \ldots
+  \right) \
+  &amp; = \frac{1}{2 \alpha} \left( ||x^{(0)} - x^{</em>}||_2^2 - ||x^{(t)} - x^{<em>}||_2^2
+  \right) \
+  &amp; \le \frac{1}{2 \alpha} ||x^{(0)} - x^{</em>}||_2^2 \
 \end{align*}
-$$</mathjax></p>
-<p><strong>Step 3</strong>: Upper bound <mathjax>$f(x^{(t+1)}) - f(x^{*})$</mathjax> by using the fact that
-<mathjax>$f(x^{(t+1)}) &lt; f(x^{(t)})$</mathjax></p>
-<p><mathjax>$$
-\begin{align*}
-  f(x^{(T)}) - f(x^{*})
-  &amp; \le \frac{1}{T} \sum_{t=1}^{T} ( f(x^{(t)}) - f(x^{*}) ) \\
-  &amp; \le \frac{1}{2 \alpha T} ||x^{(0)} - x^{*}||_2^2
+$$</p>
+<p><strong>Step 3</strong>: Upper bound $f(x^{(t+1)}) - f(x^{*})$ by using the fact that
+$f(x^{(t+1)}) &lt; f(x^{(t)})$</p>
+<p>$$
+\begin{align<em>}
+  f(x^{(T)}) - f(x^{</em>})
+  &amp; \le \frac{1}{T} \sum_{t=1}^{T} ( f(x^{(t)}) - f(x^{<em>}) ) \
+  &amp; \le \frac{1}{2 \alpha T} ||x^{(0)} - x^{</em>}||_2^2
 \end{align*}
-$$</mathjax></p>
-<p>Thus, we can conclude that if we want to reach an error tolerance <mathjax>$f(x^{T}) -
-f(x^{*}) \le \epsilon$</mathjax>, we need <mathjax>$O(\frac{1}{\epsilon})$</mathjax> iterations.  In other
-words, Gradient Descent has a "convergence rate" of <mathjax>$O(\frac{1}{T})$</mathjax>.</p>
+$$</p>
+<p>Thus, we can conclude that if we want to reach an error tolerance $f(x^{T}) -
+f(x^{*}) \le \epsilon$, we need $O(\frac{1}{\epsilon})$ iterations.  In other
+words, Gradient Descent has a "convergence rate" of $O(\frac{1}{T})$.</p>
 <h1><a name="usage" href="#usage">When should I use it?</a></h1>
 <p>Because it's so easy to implement, Gradient Descent should be the first thing
 to try if you need to implement an optimization from scratch. So long as you
 calculate the gradient right, it's practically impossible to make a mistake.
 If you have access to an <a href="http://justindomke.wordpress.com/2009/02/17/automatic-differentiation-the-most-criminally-underused-tool-in-the-potential-machine-learning-toolbox/">automatic differentiation library</a> to do
 the gradient computation for you, even better!  In addition, Gradient Descent
-requires a minimal memory footprint, making it ideal for problems where <mathjax>$x$</mathjax> is
+requires a minimal memory footprint, making it ideal for problems where $x$ is
 very high dimensional.</p>
 <p>As we'll see in later posts, Gradient Descent trades memory for speed. The
 number of iterations required to reach a desired accuracy is actually quite
-large if you want accuracy on the order of <mathjax>$10^{-8}$</mathjax>, and there are algorithms
+large if you want accuracy on the order of $10^{-8}$, and there are algorithms
 that are much faster if computation of the <a href="http://en.wikipedia.org/wiki/Hessian_matrix">Hessian</a> is feasible.
 Even when considering the same memory requirements, there is another
 gradient-based method with better convergence rates. </p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
 <p><strong>Step Size</strong> The proof above relies on a constant step size, but quicker
 convergence can be obtained when using <a href="#line_search">Line Search</a>, wherein
-<mathjax>$\alpha^{(t)}$</mathjax> is chosen to (approximately) find <mathjax>$\alpha^{(t)} = \arg\min_{\alpha}
-f(x^{(t)} - \alpha \nabla f(x^{(t)}))$</mathjax>. Keep in mind that unless <mathjax>$0 \le t \le
-\frac{1}{L}$</mathjax>, <em>Gradient Descent will not converge!</em></p>
+$\alpha^{(t)}$ is chosen to (approximately) find $\alpha^{(t)} = \arg\min_{\alpha}
+f(x^{(t)} - \alpha \nabla f(x^{(t)}))$. Keep in mind that unless $0 \le t \le
+\frac{1}{L}$, <em>Gradient Descent will not converge!</em></p>
 <p><strong>Checking Convergence</strong> We have shown that the algorithm's error at iteration
-<mathjax>$T$</mathjax> relies on <mathjax>$T$</mathjax> and the distance between <mathjax>$x^{(0)}$</mathjax> and <mathjax>$x^{*}$</mathjax>, the latter of
+$T$ relies on $T$ and the distance between $x^{(0)}$ and $x^{<em>}$, the latter of
 which is unknown.  How then can we check if we're "close enough"? A typical
 choice is simply to stop after a fixed number of iterations, but another common
-alternative is to quit when <mathjax>$||\nabla f(x^{(t)})||_2 &lt; \epsilon_{g}$</mathjax> for a
-chosen <mathjax>$\epsilon_{g}$</mathjax>.  The intuition for this comes from the assumption that
-<mathjax>$f$</mathjax> is "strongly convex" with constant <mathjax>$m$</mathjax>, which then implies that <mathjax>$||x -
-x^{*}||_2 \le \frac{2}{m}||\nabla f(x)||_2$</mathjax> (see <a href="http://www.stanford.edu/~boyd/cvxbook/">Convex
+alternative is to quit when $||\nabla f(x^{(t)})||<em g>2 &lt; \epsilon</em>$ for a
+chosen $\epsilon_{g}$.  The intuition for this comes from the assumption that
+$f$ is "strongly convex" with constant $m$, which then implies that $||x -
+x^{</em>}||_2 \le \frac{2}{m}||\nabla f(x)||_2$ (see <a href="http://www.stanford.edu/~boyd/cvxbook/">Convex
 Optimization</a>, page 460, equation 9.10).</p>
 <h1><a name="references" href="#references">References</a></h1>
 <p><strong>Proof of Convergence</strong> The proof of convergence for Gradient Descent is
@@ -291,7 +284,7 @@ on unconstrained optimization</a>.</p>
   <span class="k">return</span> <span class="n">xs</span>
 
 <span class="c1"># This generates the plots that appear above</span>
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="kn">import</span> <span class="nn">os</span>
 
   <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -383,7 +376,7 @@ on unconstrained optimization</a>.</p>
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script

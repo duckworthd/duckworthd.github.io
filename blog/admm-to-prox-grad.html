@@ -46,13 +46,6 @@
           <hr></hr>
 			</ul>
 		</div>
-		<footer>
-			<address>
-				Powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
-		    Theme by <a href="https://github.com/wting/pelican-svbtle">wting</a>
-        with edits by <a href="https://github.com/duckworthd">duckworthd</a>
-			</address>
-		</footer>
 	</section>
 
 	<section id="posts">
@@ -85,20 +78,20 @@ two algorithms are equivalent.</p>
 Paul Tseng in 1988, is an algorithm very similar to ADMM. In fact, the only
 difference between these two methods is in the first step of each iteration.
 Recall the pseudocode for ADMM; whereas ADMM minimizes the <em>Augmented</em>
-Lagrangian with respect to <mathjax>$x$</mathjax>, AMA minimizes the <em>Non-Augmented</em> Lagrangian,</p>
+Lagrangian with respect to $x$, AMA minimizes the <em>Non-Augmented</em> Lagrangian,</p>
 <div class="pseudocode">
-<p><strong>Input</strong> Step size <mathjax>$\rho$</mathjax>, initial primal iterates <mathjax>$x^{(0)}$</mathjax> and <mathjax>$z^{(0)}$</mathjax>,
-            initial dual iterate <mathjax>$y^{(0)}$</mathjax></p>
+<p><strong>Input</strong> Step size $\rho$, initial primal iterates $x^{(0)}$ and $z^{(0)}$,
+            initial dual iterate $y^{(0)}$</p>
 <ol>
-<li>For <mathjax>$t = 0, 1, \ldots$</mathjax><ol>
-<li>Let <mathjax>$x^{(t+1)} = \underset{x}{\text{argmin}} \quad L_{   0}( x        , z^{(t)}, y^{(t)} )$</mathjax></li>
-<li>Let <mathjax>$z^{(t+1)} = \underset{z}{\text{argmin}} \quad L_{\rho}( x^{(t+1)}, z      , y^{(t)} )$</mathjax></li>
-<li>Let <mathjax>$y^{(t+1)} = y^{(t)} + \rho ( Ax^{(t+1)} + Bz^{(t+1)} - c )$</mathjax></li>
+<li>For $t = 0, 1, \ldots$<ol>
+<li>Let $x^{(t+1)} = \underset{x}{\text{argmin}} \quad L_{   0}( x        , z^{(t)}, y^{(t)} )$</li>
+<li>Let $z^{(t+1)} = \underset{z}{\text{argmin}} \quad L_{\rho}( x^{(t+1)}, z      , y^{(t)} )$</li>
+<li>Let $y^{(t+1)} = y^{(t)} + \rho ( Ax^{(t+1)} + Bz^{(t+1)} - c )$</li>
 </ol>
 </li>
 </ol>
 </div>
-<p>Notice the <mathjax>$0$</mathjax> instead of <mathjax>$\rho$</mathjax> in the definition of <mathjax>$x^{(t+1)}$</mathjax>. This tiny
+<p>Notice the $0$ instead of $\rho$ in the definition of $x^{(t+1)}$. This tiny
 change, we'll see, is all that's necessary to turn ADMM into ProxGrad.</p>
 <h1><a name="vi" href="#vi">Variational Inequalties</a></h1>
 <p>To show the similarity between AMA and ProxGrad, we'll show that both
@@ -107,223 +100,223 @@ algorithms we've considered, FOBOS isn't about minimizing a real-valued
 objective function subject to constraints. Instead, FOBOS solves Variational
 Inequality problems, which we'll now describe.</p>
 <p>Variational Inequality (VI) problems involve a vector-to-vector function
-<mathjax>$F: \mathbb{R}^n \rightarrow \mathbb{R}^n$</mathjax> and a convex set <mathjax>$\mathcal{C}$</mathjax>. The
-goal is to find an input <mathjax>$w^{*}$</mathjax> such that,</p>
-<p><mathjax>$$
-\begin{equation*}
+$F: \mathbb{R}^n \rightarrow \mathbb{R}^n$ and a convex set $\mathcal{C}$. The
+goal is to find an input $w^{*}$ such that,</p>
+<p>$$
+\begin{equation<em>}
   \forall w \in \mathcal{C} \quad
-  \langle F(w^{*}), w - w^{*} \rangle \ge 0
-\end{equation*}
-$$</mathjax></p>
-<p>If <mathjax>$\mathcal{C} = \mathcal{R}^n$</mathjax>, then this inequality can only hold when
-<mathjax>$F(w^{*}) = 0$</mathjax>. For example, if <mathjax>$F = \nabla f$</mathjax> for a differentiable convex
-objective function <mathjax>$f$</mathjax>, then finding <mathjax>$F(w^{*}) = 0$</mathjax> is the same as a finding
-<mathjax>$f$</mathjax>'s unconstrained global minimum. Incorporating constraints is as simple as
-letting <mathjax>$F(w) = [\nabla_x L(x,y); -\nabla_y L(x,y)]$</mathjax> for Lagrangian <mathjax>$L(x,y)$</mathjax>
-with primal variable <mathjax>$x$</mathjax> and dual variable <mathjax>$y$</mathjax> and <mathjax>$w = [x; y]$</mathjax>.</p>
-<p>What is not covered in this setup, however, is the case when <mathjax>$L$</mathjax> is not
+  \langle F(w^{</em>}), w - w^{<em>} \rangle \ge 0
+\end{equation</em>}
+$$</p>
+<p>If $\mathcal{C} = \mathcal{R}^n$, then this inequality can only hold when
+$F(w^{<em>}) = 0$. For example, if $F = \nabla f$ for a differentiable convex
+objective function $f$, then finding $F(w^{</em>}) = 0$ is the same as a finding
+$f$'s unconstrained global minimum. Incorporating constraints is as simple as
+letting $F(w) = [\nabla_x L(x,y); -\nabla_y L(x,y)]$ for Lagrangian $L(x,y)$
+with primal variable $x$ and dual variable $y$ and $w = [x; y]$.</p>
+<p>What is not covered in this setup, however, is the case when $L$ is not
 differentiable with respect to all parameters. We can expand on the concept of
-Variational Inequalties a bit by letting <mathjax>$F(w)$</mathjax> be a <em>subset</em> of
-<mathjax>$\mathcal{R}^{n}$</mathjax> instead of a single value (that is,
-<mathjax>$F: \mathcal{R}^n \rightarrow 2^{\mathcal{R}^{n}}$</mathjax>). We'll say that <mathjax>$F$</mathjax> is
+Variational Inequalties a bit by letting $F(w)$ be a <em>subset</em> of
+$\mathcal{R}^{n}$ instead of a single value (that is,
+$F: \mathcal{R}^n \rightarrow 2^{\mathcal{R}^{n}}$). We'll say that $F$ is
 a <em>monotone operator</em> if,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   \forall w,w' \in \mathcal{C}; \,
   \forall u \in F(w);           \,
   \forall v \in F(w')           \quad
   \langle u-v, w-w' \rangle \ge 0
-\end{align*}
-$$</mathjax></p>
-<p>Now if <mathjax>$\mathcal{C} = \mathcal{R}^n$</mathjax> and
-<mathjax>$F = [\partial_x L(x,y); -\partial_y L(x,y)]$</mathjax>, we can see that finding
-<mathjax>$0 \in F(w^{*})$</mathjax> is the same as solving the optimization described by <mathjax>$L$</mathjax> for
+\end{align</em>}
+$$</p>
+<p>Now if $\mathcal{C} = \mathcal{R}^n$ and
+$F = [\partial_x L(x,y); -\partial_y L(x,y)]$, we can see that finding
+$0 \in F(w^{*})$ is the same as solving the optimization described by $L$ for
 non-smooth objective and constraint functions.</p>
 <h1><a name="fobos" href="#fobos">Forward-Backward Splitting</a></h1>
 <p><a href="http://machinelearning.wustl.edu/mlpapers/paper_files/jmlr10_duchi09a.pdf">Forward-Backward Splitting</a> FOBOS is an algorithm for finding
-a <mathjax>$w^{*}$</mathjax> that solves VI problems for particular choices of <mathjax>$F$</mathjax>. Namely,
+a $w^{*}$ that solves VI problems for particular choices of $F$. Namely,
 we'll make the following assumptions.</p>
 <ol>
-<li><mathjax>$F(w) = \Psi(w) + \Theta(w)$</mathjax> for <a href="http://web.stanford.edu/class/ee364b/lectures/monotone_slides.pdf">monotone operators</a> <mathjax>$\Psi$</mathjax> and
-  <mathjax>$\Theta$</mathjax>.</li>
-<li><mathjax>$\Psi(w)$</mathjax> has exactly one value for each <mathjax>$w$</mathjax> in its domain.</li>
+<li>$F(w) = \Psi(w) + \Theta(w)$ for <a href="http://web.stanford.edu/class/ee364b/lectures/monotone_slides.pdf">monotone operators</a> $\Psi$ and
+  $\Theta$.</li>
+<li>$\Psi(w)$ has exactly one value for each $w$ in its domain.</li>
 </ol>
-<p>Given this, FOBOS will converge to a <mathjax>$w^{*}$</mathjax> such that <mathjax>$0 \in F(w^{*})$</mathjax>. The
+<p>Given this, FOBOS will converge to a $w^{<em>}$ such that $0 \in F(w^{</em>})$. The
 algorithm itself is,</p>
 <div class="pseudocode">
-<p><strong>Input</strong> Step sizes <mathjax>$\{ \rho_t \}_{t=1}^{\infty}$</mathjax>, initial iterate <mathjax>$w^{(0)}$</mathjax></p>
+<p><strong>Input</strong> Step sizes ${ \rho_t }_{t=1}^{\infty}$, initial iterate $w^{(0)}$</p>
 <ol>
-<li>For <mathjax>$t = 0, 1, \ldots$</mathjax><ol>
-<li>Let <mathjax>$w^{(t+1/2)} = w^{(t)} - \rho_t \Psi(w^{(t)})$</mathjax></li>
-<li>Let <mathjax>$w^{(t+1)}$</mathjax> be such that <mathjax>$w^{(t+1)} + \rho_t \Theta(w^{(t+1)}) = w^{(t+1/2)}$</mathjax></li>
+<li>For $t = 0, 1, \ldots$<ol>
+<li>Let $w^{(t+1/2)} = w^{(t)} - \rho_t \Psi(w^{(t)})$</li>
+<li>Let $w^{(t+1)}$ be such that $w^{(t+1)} + \rho_t \Theta(w^{(t+1)}) = w^{(t+1/2)}$</li>
 </ol>
 </li>
 </ol>
 </div>
 <p>An equivalent, more concise way to describe FOBOS is with
-<mathjax>$w^{(t+1)} = (I + \rho_t \Theta)^{-1} (I - \rho_t \Psi) (w^{(t)})$</mathjax>. With this
+$w^{(t+1)} = (I + \rho_t \Theta)^{-1} (I - \rho_t \Psi) (w^{(t)})$. With this
 formulation in mind, we'll now show that both AMA and ProxGrad are instances of
 FOBOS performing the same set of operations.</p>
 <h1><a name="reductions" href="#reductions">Reductions to FOBOS</a></h1>
 <p>We'll now show that for the specific optimization problem tackled by ADMM,
 AMA is the same as Proximal Gradient Descent on the dual problem. First, recall
 the problem ADMM is solving,</p>
-<p><mathjax>$$
+<p>$$
 \begin{align}
 \begin{split}
   \underset{x,z}{\text{minimize}} \qquad
-    &amp; f(x) + g(z) \\
+    &amp; f(x) + g(z) \
   \text{s.t.}                     \qquad
-    &amp; Ax + Bz = c \\
+    &amp; Ax + Bz = c \
 \end{split} \label{eqn:primal}
 \end{align}
-$$</mathjax></p>
+$$</p>
 <p>The dual problem to this is then,</p>
-<p><mathjax>$$
+<p>$$
 \begin{align}
 \begin{split}
   - \underset{y}{\text{minimize}} \qquad
-    &amp; f^{*}(A^{T} y) + g^{*}(B^{T} z) - \langle y, c \rangle \\
+    &amp; f^{<em>}(A^{T} y) + g^{</em>}(B^{T} z) - \langle y, c \rangle \
 \end{split} \label{eqn:dual}
 \end{align}
-$$</mathjax></p>
-<p>where <mathjax>$f^{*}$</mathjax> and <mathjax>$g^{*}$</mathjax> are the <a href="http://en.wikipedia.org/wiki/Convex_conjugate">convex conjugates</a> to
-<mathjax>$f$</mathjax> and <mathjax>$g$</mathjax>, respectively. We'll now show that both AMA and Proximal Gradient
+$$</p>
+<p>where $f^{<em>}$ and $g^{</em>}$ are the <a href="http://en.wikipedia.org/wiki/Convex_conjugate">convex conjugates</a> to
+$f$ and $g$, respectively. We'll now show that both AMA and Proximal Gradient
 Descent are optimizing this same dual.</p>
 <h2><a name="prox-grad-to-fobos" href="#prox-grad-to-fobos">Proximal Gradient Descent to FOBOS</a></h2>
-<p>Suppose we want to minimize <mathjax>$f^{*}(A^T y) + g^{*}(B^T y)$</mathjax>. If the problem is
+<p>Suppose we want to minimize $f^{<em>}(A^T y) + g^{</em>}(B^T y)$. If the problem is
 unconstrained, this is equivalent to finding</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   0 \in F(y)
-  &amp;= \partial_y \left( f^{*}(A^T y) + g(B^T y) - \langle y, c \rangle \right) \\
-  &amp;= A (\nabla_y f^{*})(A^T y) + B (\partial_y g^{*})(B^T y) - c
+  &amp;= \partial_y \left( f^{</em>}(A^T y) + g(B^T y) - \langle y, c \rangle \right) \
+  &amp;= A (\nabla_y f^{<em>})(A^T y) + B (\partial_y g^{</em>})(B^T y) - c
   \end{align*}
-$$</mathjax></p>
+$$</p>
 <p>Let's now define,</p>
-<p><mathjax>$$
+<p>$$
 \begin{align}
-  \Psi(y)   &amp;= A (\nabla_y   f^{*})(A^T y)     &amp;
-  \Theta(y) &amp;= B (\partial_y g^{*})(B^T y) - c
+  \Psi(y)   &amp;= A (\nabla_y   f^{<em>})(A^T y)     &amp;
+  \Theta(y) &amp;= B (\partial_y g^{</em>})(B^T y) - c
   \label{eqn:fobos-def}
 \end{align}
-$$</mathjax></p>
-<p>Clearly, <mathjax>$(I - \rho_{t} \Psi)(y) = y - \rho_{t} A (\nabla_y f^{*})(A^T y)$</mathjax>
+$$</p>
+<p>Clearly, $(I - \rho_{t} \Psi)(y) = y - \rho_{t} A (\nabla_y f^{*})(A^T y)$
 matches the first part of FOBOS and the "gradient step" part of ProxGrad, but
 we also need to show that,</p>
-<p><mathjax>$$
-\begin{align*}
-  \text{prox}_{\rho_t g^{*}(B^T \cdot) - \langle \cdot, c \rangle}(y)
+<p>$$
+\begin{align<em>}
+  \text{prox}_{\rho_t g^{</em>}(B^T \cdot) - \langle \cdot, c \rangle}(y)
   &amp; = (I + \rho_{t} \Theta)^{-1}(y)
 \end{align*}
-$$</mathjax></p>
+$$</p>
 <p>To do this, let's recall the definition of the prox operator,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   \bar{y}
-  &amp; = \text{prox}_{\rho_t g^{*}(B^T \cdot) - \langle \cdot, c \rangle}(y) \\
-  &amp; = \argmin_{y'}  g^{*}(B^T y')
+  &amp; = \text{prox}_{\rho_t g^{</em>}(B^T \cdot) - \langle \cdot, c \rangle}(y) \
+  &amp; = \argmin_{y'}  g^{<em>}(B^T y')
                     - \langle y', c \rangle
                     + \frac{1}{2\rho_t}\norm{y'-y}_2^2
-\end{align*}
-$$</mathjax></p>
-<p>Since this is an unconstrained minimization problem, we know that <mathjax>$0$</mathjax> must be
-in the subgradient of this expression at <mathjax>$\bar{y}$</mathjax>.</p>
-<p><mathjax>$$
-\begin{align*}
+\end{align</em>}
+$$</p>
+<p>Since this is an unconstrained minimization problem, we know that $0$ must be
+in the subgradient of this expression at $\bar{y}$.</p>
+<p>$$
+\begin{align<em>}
   0
-  &amp; \in B (\partial_{\bar{y}} g^{*})(B^T \bar{y}) - c + \frac{1}{\rho_t} (\bar{y}-y)  \\
+  &amp; \in B (\partial_{\bar{y}} g^{</em>})(B^T \bar{y}) - c + \frac{1}{\rho_t} (\bar{y}-y)  \
   y
-  &amp; \in \bar{y} + \rho_t \left( B (\partial_{\bar{y}} g^{*})(B^T \bar{y}) - c \right) \\
+  &amp; \in \bar{y} + \rho_t \left( B (\partial_{\bar{y}} g^{<em>})(B^T \bar{y}) - c \right) \
   &amp; = (I + \rho_t \Theta)(\bar{y})
-\end{align*}
-$$</mathjax></p>
-<p>Apply <mathjax>$(I + \rho_t \Theta)^{-1}$</mathjax> to both sides gives us the desired result,
-We now have that for the above choices of <mathjax>$\Psi$</mathjax> and <mathjax>$\Theta$</mathjax>, ProxGrad can
+\end{align</em>}
+$$</p>
+<p>Apply $(I + \rho_t \Theta)^{-1}$ to both sides gives us the desired result,
+We now have that for the above choices of $\Psi$ and $\Theta$, ProxGrad can
 be reframed as identical to FOBOS,</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   y^{(t+1)} = (I + \rho_t \Theta)^{-1} (I - \rho_t \Psi) (y^{(t)})
-\end{align*}
-$$</mathjax></p>
+\end{align</em>}
+$$</p>
 <h2><a name="ama-to-fobos" href="#ama-to-fobos">AMA to FOBOS</a></h2>
 <p>We'll now show that AMA as applied to the ADMM objective is
 simply an instance of FOBOS. Similar to the <a href="#prox-grad-to-fobos">ProxGrad
 reduction</a>, we'll use the following definitions for
-<mathjax>$\Psi$</mathjax> and <mathjax>$\Theta$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
-  \Psi(y)   &amp;= A (\nabla   f^{*})(A^T y)      &amp;
-  \Theta(y) &amp;= B (\partial g^{*})(B^T y) - c
-\end{align*}
-$$</mathjax></p>
+$\Psi$ and $\Theta$,</p>
+<p>$$
+\begin{align<em>}
+  \Psi(y)   &amp;= A (\nabla   f^{</em>})(A^T y)      &amp;
+  \Theta(y) &amp;= B (\partial g^{<em>})(B^T y) - c
+\end{align</em>}
+$$</p>
 <p>First, recall the subgradient optimality condition as applied to Step B of
-ADMM (same as AMA). In particular, for <mathjax>$z^{(t+1)}$</mathjax> to be the argmin of
-<mathjax>$L(x^{(t+1)}, z, y^{(t)})$</mathjax>, it must be the case that,</p>
-<p><mathjax>$$
-\begin{align*}
+ADMM (same as AMA). In particular, for $z^{(t+1)}$ to be the argmin of
+$L(x^{(t+1)}, z, y^{(t)})$, it must be the case that,</p>
+<p>$$
+\begin{align<em>}
   0
-  &amp;\in \partial g(z^{(t+1)}) - B^T y^{(t)} - \rho B^T (c - Ax^{(t+1)} - Bz^{(t+1)}) \\
+  &amp;\in \partial g(z^{(t+1)}) - B^T y^{(t)} - \rho B^T (c - Ax^{(t+1)} - Bz^{(t+1)}) \
   B^T ( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
   &amp;\in \partial g(z^{(t+1)})
-\end{align*}
-$$</mathjax></p>
-<p>Using <mathjax>$y \in \partial f(x) \Rightarrow x \in \partial f^{*}(y)$</mathjax>, we obtain,</p>
-<p><mathjax>$$
-\begin{align*}
+\end{align</em>}
+$$</p>
+<p>Using $y \in \partial f(x) \Rightarrow x \in \partial f^{*}(y)$, we obtain,</p>
+<p>$$
+\begin{align<em>}
   z^{(t+1)}
-  &amp; \in \partial g^{*}(B^T ( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) ))
+  &amp; \in \partial g^{</em>}(B^T ( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) ))
 \end{align*}
-$$</mathjax></p>
-<p>We now left-multiply by <mathjax>$B$</mathjax>, subtract <mathjax>$c$</mathjax> from both sides to obtain, and use
-the definition of <mathjax>$\Theta$</mathjax> to obtain,</p>
-<p><mathjax>$$
-\begin{align*}
+$$</p>
+<p>We now left-multiply by $B$, subtract $c$ from both sides to obtain, and use
+the definition of $\Theta$ to obtain,</p>
+<p>$$
+\begin{align<em>}
   B z^{(t+1)} - c
   &amp; \in \Theta( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
-\end{align*}
-$$</mathjax></p>
-<p>Now we multiply both sides by <mathjax>$\rho$</mathjax> and add,
-<mathjax>$y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)})$</mathjax>,</p>
-<p><mathjax>$$
-\begin{align*}
+\end{align</em>}
+$$</p>
+<p>Now we multiply both sides by $\rho$ and add,
+$y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)})$,</p>
+<p>$$
+\begin{align<em>}
   y^{(t)} - \rho Ax^{(t+1)}
   &amp; \in (I + \rho \Theta)( y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)}) )
-\end{align*}
-$$</mathjax></p>
-<p>We can invert <mathjax>$I + \rho \Theta$</mathjax> and notice that the other side is
+\end{align</em>}
+$$</p>
+<p>We can invert $I + \rho \Theta$ and notice that the other side is
 single-valued to obtain,</p>
-<p><mathjax>$$
+<p>$$
 \begin{align}
   (I + \rho \Theta)^{-1} (y^{(t)} - \rho Ax^{(t+1)})
-  &amp; = y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)})   \notag \\
+  &amp; = y^{(t)} + \rho (c - Ax^{(t+1)} - Bz^{(t+1)})   \notag \
   (I + \rho \Theta)^{-1} (y^{(t)} - \rho Ax^{(t+1)})
-  &amp; = y^{(t+1)}                                                 \label{eqn:ama1} \\
+  &amp; = y^{(t+1)}                                                 \label{eqn:ama1} \
 \end{align}
-$$</mathjax></p>
+$$</p>
 <p>Now, let's apply the same subgradient optimality to Step A of AMA.</p>
-<p><mathjax>$$
-\begin{align*}
+<p>$$
+\begin{align<em>}
   0
-  &amp;\in \partial f(x^{(t+1)}) - A^T y^{(t)} \\
+  &amp;\in \partial f(x^{(t+1)}) - A^T y^{(t)} \
   A^T y^{(t)}
   &amp;= \nabla f(x^{(t+1)})
-\end{align*}
-$$</mathjax></p>
-<p>Using <mathjax>$y = \nabla f(x) \Rightarrow x = \nabla f^{*}(y)$</mathjax> for strongly convex
-<mathjax>$f$</mathjax> and multiplying both sides by <mathjax>$A$</mathjax>,</p>
-<p><mathjax>$$
+\end{align</em>}
+$$</p>
+<p>Using $y = \nabla f(x) \Rightarrow x = \nabla f^{*}(y)$ for strongly convex
+$f$ and multiplying both sides by $A$,</p>
+<p>$$
 \begin{align}
-  A f^{*} (A^T y^{(t)}) &amp;= A f(x^{(t+1)}) \notag            \\
+  A f^{*} (A^T y^{(t)}) &amp;= A f(x^{(t+1)}) \notag            \
   \Psi(y^{(t)})         &amp;= A x^{(t+1)}    \label{eqn:ama2}
 \end{align}
-$$</mathjax></p>
-<p>Substituting in equation <mathjax>$\ref{eqn:ama2}$</mathjax> into <mathjax>$\ref{eqn:ama1}$</mathjax>, we obtain,</p>
-<p><mathjax>$$
-\begin{align*}
+$$</p>
+<p>Substituting in equation $\ref{eqn:ama2}$ into $\ref{eqn:ama1}$, we obtain,</p>
+<p>$$
+\begin{align<em>}
   y^{(t+1)} = (I + \rho \Theta)^{-1} (I - \rho \Psi) (y^{(t)})
-\end{align*}
-$$</mathjax></p>
+\end{align</em>}
+$$</p>
 <p>Notice that this is exactly the same thing we concluded in the reduction from
 ProxGrad to FOBOS. Thus, we have shown that both AMA and ProxGrad are the same
 algorithm for the ADMM objective.</p>
@@ -374,7 +367,7 @@ al</a>'s work on Accelerated ADMM and AMA.</p>
   <!-- scripts -->
   <script
     type= "text/javascript"
-    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
     >
   </script>
   <script
