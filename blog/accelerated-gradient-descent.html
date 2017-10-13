@@ -62,8 +62,8 @@
   <article>
     <p>In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
 At the same time, he established the Accelerated Gradient Method, proved that
-its convergence rate superior to Gradient Descent ($O(1/\sqrt{\epsilon})$
-iterations instead of $O(1/\epsilon)$), and then proved that no other
+its convergence rate superior to Gradient Descent (<span class="math">\(O(1/\sqrt{\epsilon})\)</span>
+iterations instead of <span class="math">\(O(1/\epsilon)\)</span>), and then proved that no other
 first-order (that is, gradient-based) algorithm could ever hope to beat it.
 What a boss.</p>
 <p><a href="/blog/gradient-descent.html">Continuing</a> <a href="/blog/subgradient-descent.html">my analogy</a>, imagine
@@ -81,20 +81,20 @@ this,</p>
 <p>As we'll see, that last unintuitive bit is the key to Accelerated Gradient
 Descent's speed.</p>
 <h1><a name="implementation" href="#implementation">How does it work?</a></h1>
-<p>We begin by assuming the we want to minimize an unconstrained function $f$,</p>
-<p>$$
+<p>We begin by assuming the we want to minimize an unconstrained function <span class="math">\(f\)</span>,</p>
+<div class="math">$$
   \min_{x} \, f(x)
-$$</p>
-<p>As with Gradient Descent, we'll assume that $f$ is differentiable and that we
-can easily compute its gradient $\nabla f(x)$. Then the Accelerated Gradient
+$$</div>
+<p>As with Gradient Descent, we'll assume that <span class="math">\(f\)</span> is differentiable and that we
+can easily compute its gradient <span class="math">\(\nabla f(x)\)</span>. Then the Accelerated Gradient
 Method is defined as,</p>
 <div class="pseudocode">
-<p><strong>Input</strong>: initial iterate $y^{(0)}$</p>
+<p><strong>Input</strong>: initial iterate <span class="math">\(y^{(0)}\)</span></p>
 <ol>
-<li>For $t = 1, 2, \ldots$<ol>
-<li>Let $x^{(t)} = y^{(t-1)} - \alpha^{(t)} \nabla f(y^{(t-1)})$</li>
-<li>if converged, return $x^{(t)}$</li>
-<li>Let $y^{(t)} = x^{(t)} + \frac{t-1}{t+2} (x^{(t)} - x^{(t-1)})$</li>
+<li>For <span class="math">\(t = 1, 2, \ldots\)</span><ol>
+<li>Let <span class="math">\(x^{(t)} = y^{(t-1)} - \alpha^{(t)} \nabla f(y^{(t-1)})\)</span></li>
+<li>if converged, return <span class="math">\(x^{(t)}\)</span></li>
+<li>Let <span class="math">\(y^{(t)} = x^{(t)} + \frac{t-1}{t+2} (x^{(t)} - x^{(t-1)})\)</span></li>
 </ol>
 </li>
 </ol>
@@ -102,9 +102,9 @@ Method is defined as,</p>
 <h1><a name="example" href="#example">A Small Example</a></h1>
 <p>We'll try out Accelerated Gradient on the <a href="/blog/gradient-descent.html#example">same example used to showcase
 Gradient Descent</a>. We'll use the objective function
-$f(x) = x^4$, meaning that $\nabla_x f(x) = 4 x^3$. For a step size, we'll use
-Backtracking Line Search where the largest acceptable step size is $0.05$.
-Finally, we'll start at $x^{(0)} = 1$.  Compare these 2 graphs to the ones for
+<span class="math">\(f(x) = x^4\)</span>, meaning that <span class="math">\(\nabla_x f(x) = 4 x^3\)</span>. For a step size, we'll use
+Backtracking Line Search where the largest acceptable step size is <span class="math">\(0.05\)</span>.
+Finally, we'll start at <span class="math">\(x^{(0)} = 1\)</span>.  Compare these 2 graphs to the ones for
 Gradient Descent.</p>
 <div class="img-center">
   <img src="/assets/img/accelerated_gradient/convergence.png"></img>
@@ -126,191 +126,191 @@ Gradient Descent.</p>
 <p>The assumptions for the Accelerated Gradient Method are identical to Gradient
 Descent's. In particular, we assume,</p>
 <ol>
-<li>$f$ is convex, differentiable, and finite for all $x$</li>
-<li>a finite solution $x^{*}$ exists</li>
-<li>$\nabla f(x)$ is Lipschitz continuous with constant $L$. That is, there must
-   be an $L$ such that,</li>
+<li><span class="math">\(f\)</span> is convex, differentiable, and finite for all <span class="math">\(x\)</span></li>
+<li>a finite solution <span class="math">\(x^{*}\)</span> exists</li>
+<li><span class="math">\(\nabla f(x)\)</span> is Lipschitz continuous with constant <span class="math">\(L\)</span>. That is, there must
+   be an <span class="math">\(L\)</span> such that,</li>
 </ol>
-<p>$$
+<div class="math">$$
   || \nabla f(x) - \nabla f(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
-$$</p>
+$$</div>
 <p><strong>Assumptions</strong> As explained in my post on <a href="/blog/gradient-descent.html">Gradient
 Descent</a>, these assumptions give us 2 things. Assumption 1
-gives us a linear lower bound on $f$,</p>
-<p>$$
+gives us a linear lower bound on <span class="math">\(f\)</span>,</p>
+<div class="math">$$
   f(y) \ge f(x) + \nabla f(x)^T (y-x) \qquad \forall x, y
-$$</p>
-<p>Assumption 3 then gives us a quadratic upper bound on $f$,</p>
-<p>$$
+$$</div>
+<p>Assumption 3 then gives us a quadratic upper bound on <span class="math">\(f\)</span>,</p>
+<div class="math">$$
   f(y) \le f(x) + \nabla f(x)^T (y-x) + \frac{L}{2} ||x - y||_2^2 \qquad \forall x, y
-$$</p>
+$$</div>
 <p>Both of these will prove critical in the following proof.</p>
 <p><strong>Proof Outline</strong> The proof for the Accelerated Gradient Method is the
 trickiest one yet. We'll see that everything fits into place just right, but
 that there's very little intuition as to where it all came from.</p>
-<p>We begin in Step 1 by defining a third iterate $v^{(t)}$ that's a
-linear combination of $x^{(t)}$ and $x^{(t-1)}$. These iterates are purely for
+<p>We begin in Step 1 by defining a third iterate <span class="math">\(v^{(t)}\)</span> that's a
+linear combination of <span class="math">\(x^{(t)}\)</span> and <span class="math">\(x^{(t-1)}\)</span>. These iterates are purely for
 the sake of the proof and are not computed during the algorithm. Using these
-iterates, we upper bound $f(x^{(t+1)})$ in terms of $f(x^{(t)})$, $f(x^{<em>})$,
-the distance between $v^{(t+1)}$ and $x^{</em>}$, and the distance between
-$v^{(t)}$ and $x^{*}$.</p>
-<p>Step 2 involves upper bounding the error $f(x^{(t+1)}) - f(x^{<em>})$ by $f(x^{0})
-- f(x^{</em>})$ and the distance between $v^{(0)}$ and $x^{*}$ using our very
-careful choice of $\frac{t-1}{t+2}$.</p>
-<p>Finally, Step 3 brings it all together by bounding $f(x^{(t+1)}) - f(x^{*})$ by
-a term depending on $1/(t+2)^2$.</p>
-<p><strong>Step 1</strong> upper bounding $f(x^{(t+1)})$.  First, define the following and assume that $\theta^{(0)} = 1$, $v^{(0)} = x^{(0)}$,</p>
-<p>$$
+iterates, we upper bound <span class="math">\(f(x^{(t+1)})\)</span> in terms of <span class="math">\(f(x^{(t)})\)</span>, <span class="math">\(f(x^{*})\)</span>,
+the distance between <span class="math">\(v^{(t+1)}\)</span> and <span class="math">\(x^{*}\)</span>, and the distance between
+<span class="math">\(v^{(t)}\)</span> and <span class="math">\(x^{*}\)</span>.</p>
+<p>Step 2 involves upper bounding the error <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span> by <span class="math">\(f(x^{0})
+- f(x^{*})\)</span> and the distance between <span class="math">\(v^{(0)}\)</span> and <span class="math">\(x^{*}\)</span> using our very
+careful choice of <span class="math">\(\frac{t-1}{t+2}\)</span>.</p>
+<p>Finally, Step 3 brings it all together by bounding <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span> by
+a term depending on <span class="math">\(1/(t+2)^2\)</span>.</p>
+<p><strong>Step 1</strong> upper bounding <span class="math">\(f(x^{(t+1)})\)</span>.  First, define the following and assume that <span class="math">\(\theta^{(0)} = 1\)</span>, <span class="math">\(v^{(0)} = x^{(0)}\)</span>,</p>
+<div class="math">$$
   v^{(t)}
   = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} \qquad
   \theta^{(t)}
   = \frac{2}{t+2}
-$$</p>
-<p>There are 2 consequences of this definition for $v^{(t)}$. The first is that $y^{(t)}$ is a linear combination of $v^{(t)}$ and $x^{(t)}$,</p>
-<p>$$
-\begin{align<em>}
+$$</div>
+<p>There are 2 consequences of this definition for <span class="math">\(v^{(t)}\)</span>. The first is that <span class="math">\(y^{(t)}\)</span> is a linear combination of <span class="math">\(v^{(t)}\)</span> and <span class="math">\(x^{(t)}\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   \color{fuchsia} y^{(t)}
-  &amp; = x^{(t)} + \frac{t-1}{t+2} ( x^{(t)} - x^{(t-1)} ) \
-  &amp; = \frac{(t+2) + (t-1)}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} \
-  &amp; = \frac{t+1}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} + \frac{t}{t+2} x^{(t)} \
-  &amp; = \frac{2}{t+2} \left( \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} \right) + (1 - \frac{2}{t+2}) x^{(t)} \
-  &amp; = \color{fuchsia} \theta^{(t)} v^{(t)} + (1 - \theta^{(t)}) x^{(t)} \
-\end{align</em>}
-$$</p>
-<p>The second is that $v^{(t)}$ is a gradient step on $v^{(t)}$, except that the gradient is evaluated at $y^{(t)}$ (work backwards from the following),</p>
-<p>$$
-\begin{align<em>}
+  &amp; = x^{(t)} + \frac{t-1}{t+2} ( x^{(t)} - x^{(t-1)} ) \\
+  &amp; = \frac{(t+2) + (t-1)}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} \\
+  &amp; = \frac{t+1}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} + \frac{t}{t+2} x^{(t)} \\
+  &amp; = \frac{2}{t+2} \left( \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} \right) + (1 - \frac{2}{t+2}) x^{(t)} \\
+  &amp; = \color{fuchsia} \theta^{(t)} v^{(t)} + (1 - \theta^{(t)}) x^{(t)} \\
+\end{align*}
+$$</div>
+<p>The second is that <span class="math">\(v^{(t)}\)</span> is a gradient step on <span class="math">\(v^{(t)}\)</span>, except that the gradient is evaluated at <span class="math">\(y^{(t)}\)</span> (work backwards from the following),</p>
+<div class="math">$$
+\begin{align*}
   \color{OrangeRed} v^{(t+1)}
-  &amp; = \color{OrangeRed} v^{(t)} - \frac{\alpha^{(t+1)}}{\theta^{(t)}} \nabla f(y^{(t)}) \
-  &amp; = v^{(t)} + \frac{1}{\theta^{(t)}} ( y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)}) - y^{(t)} ) \
-  &amp; = v^{(t)} + \frac{1}{\theta^{(t)}} ( x^{(t+1)} - y^{(t)} ) \
+  &amp; = \color{OrangeRed} v^{(t)} - \frac{\alpha^{(t+1)}}{\theta^{(t)}} \nabla f(y^{(t)}) \\
+  &amp; = v^{(t)} + \frac{1}{\theta^{(t)}} ( y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)}) - y^{(t)} ) \\
+  &amp; = v^{(t)} + \frac{1}{\theta^{(t)}} ( x^{(t+1)} - y^{(t)} ) \\
   \frac{t+2}{2} x^{(t+1)} - \frac{t}{2} x^{(t)}
-  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} + \frac{1}{\theta^{(t)}} ( x^{(t+1)} - y^{(t)} ) \
-  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} + \frac{t+2}{2} ( x^{(t+1)} - y^{(t)} ) \
+  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} + \frac{1}{\theta^{(t)}} ( x^{(t+1)} - y^{(t)} ) \\
+  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} + \frac{t+2}{2} ( x^{(t+1)} - y^{(t)} ) \\
   - \frac{t}{2} x^{(t)}
-  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} - \frac{t+2}{2} y^{(t)} \
+  &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)} - \frac{t+2}{2} y^{(t)} \\
   y^{(t)}
-  &amp; = \frac{2t+1}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} \
+  &amp; = \frac{2t+1}{t+2} x^{(t)} - \frac{t-1}{t+2} x^{(t-1)} \\
   &amp; = x^{(t)} + \frac{t-1}{t+2} ( x^{(t)} - x^{(t-1)} )
-\end{align</em>}
-$$</p>
-<p>With these 2 properties in hand, let's upper bound $f(x^{(t)})$.  Let $\alpha^{(t)} \le \frac{1}{L}$ and define
-$x^{+} \triangleq x^{(t)}$,
-$x \triangleq x^{(t-1)}$,
-$v^{+} \triangleq v^{(t)}$,
-$v \triangleq v^{(t-1)}$,
-$\alpha^{+} \triangleq \alpha^{(t)}$,
-$y \triangleq y^{(t-1)}$,
-$\theta \triangleq \theta^{(t-1)}$</p>
-<p>$$
-\begin{align<em>}
+\end{align*}
+$$</div>
+<p>With these 2 properties in hand, let's upper bound <span class="math">\(f(x^{(t)})\)</span>.  Let <span class="math">\(\alpha^{(t)} \le \frac{1}{L}\)</span> and define
+<span class="math">\(x^{+} \triangleq x^{(t)}\)</span>,
+<span class="math">\(x \triangleq x^{(t-1)}\)</span>,
+<span class="math">\(v^{+} \triangleq v^{(t)}\)</span>,
+<span class="math">\(v \triangleq v^{(t-1)}\)</span>,
+<span class="math">\(\alpha^{+} \triangleq \alpha^{(t)}\)</span>,
+<span class="math">\(y \triangleq y^{(t-1)}\)</span>,
+<span class="math">\(\theta \triangleq \theta^{(t-1)}\)</span></p>
+<div class="math">$$
+\begin{align*}
   f(x^{+})
-  &amp; = f(y - \alpha^{+} \nabla f(y)) \
-  &amp; \le {\color{red} f(y) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2} \
-  &amp; \le {\color{blue} (1-\theta) f(x) + \theta f(x^{</em>}) + \nabla f(y)^T (y - (1-\theta) x + \theta x^{<em>}) } - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \
-  &amp; = (1-\theta) f(x) + \theta f(x^{</em>}) + \nabla f(y)^T ({\color{fuchsia} \theta v} + \theta x^{<em>}) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \
-  &amp; = (1-\theta) f(x) + \theta f(x^{</em>}) + \frac{\theta^2}{2 \alpha^{+}} \left(
+  &amp; = f(y - \alpha^{+} \nabla f(y)) \\
+  &amp; \le {\color{red} f(y) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2} \\
+  &amp; \le {\color{blue} (1-\theta) f(x) + \theta f(x^{*}) + \nabla f(y)^T (y - (1-\theta) x + \theta x^{*}) } - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \\
+  &amp; = (1-\theta) f(x) + \theta f(x^{*}) + \nabla f(y)^T ({\color{fuchsia} \theta v} + \theta x^{*}) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \\
+  &amp; = (1-\theta) f(x) + \theta f(x^{*}) + \frac{\theta^2}{2 \alpha^{+}} \left(
         \frac{2 \alpha^{+}}{\theta} \nabla f(y)^T (v-x) - \left( \frac{\alpha^{+}}{\theta} \right)^2 || \nabla f(y) ||_2^2
-        \pm ||v - x^{<em>}||_2^2
-      \right) \
-  &amp; = (1-\theta) f(x) + \theta f(x^{</em>}) + \frac{\theta^2}{2 \alpha^{+}} \left(
-        ||v - x^{<em>}||_2^2 - ||v - x^{</em>} - \frac{\alpha^{+}}{\theta} \nabla f(y)||_2^2 
-      \right) \
-  &amp; = (1-\theta) f(x) + \theta f(x^{<em>}) + \frac{\theta^2}{2 \alpha^{+}} \left(
-        ||v - x^{</em>}||_2^2 - ||{\color{OrangeRed} v^{+} } - x^{<em>}||_2^2
-      \right) \
-\end{align</em>}
-$$</p>
-<p>Using the Lipschitz assumption on $||\nabla f(y)||_2$ and that $\alpha^{+} \le \frac{1}{L}$,</p>
-<p>$$
-\begin{align<em>}
+        \pm ||v - x^{*}||_2^2
+      \right) \\
+  &amp; = (1-\theta) f(x) + \theta f(x^{*}) + \frac{\theta^2}{2 \alpha^{+}} \left(
+        ||v - x^{*}||_2^2 - ||v - x^{*} - \frac{\alpha^{+}}{\theta} \nabla f(y)||_2^2 
+      \right) \\
+  &amp; = (1-\theta) f(x) + \theta f(x^{*}) + \frac{\theta^2}{2 \alpha^{+}} \left(
+        ||v - x^{*}||_2^2 - ||{\color{OrangeRed} v^{+} } - x^{*}||_2^2
+      \right) \\
+\end{align*}
+$$</div>
+<p>Using the Lipschitz assumption on <span class="math">\(||\nabla f(y)||_2\)</span> and that <span class="math">\(\alpha^{+} \le \frac{1}{L}\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   \color{red}
   f(y - \alpha^{+} \nabla f(y))
-  &amp; \le f(y) + \nabla f(y)^T (y - \alpha^{+} \nabla f(y) - y) + \frac{L}{2}{ ||y - \alpha^{+} \nabla f(y) - y ||_2^2 } \
-  &amp; = f(y) - \alpha^{+} || \nabla f(y) ||_2^2 + \frac{L (\alpha^{+})^2}{2} || \nabla f(y) ||_2^2 \
-  &amp; = f(y) - \frac{\alpha^{+}}{2} ( 2 - L \alpha^{+} ) || \nabla f(y) ||_2^2 \
-  &amp; \le \color{red} f(y) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \
-\end{align</em>}
-$$</p>
-<p>Using convexity's linear lower bound and its line-over-function properties,</p>
-<p>$$
-\begin{align<em>}
-  \color{blue}
-  f( (1-\theta)x + \theta x^{</em>} )
-  &amp; \ge f(y) + \nabla f(y)^T ( (1-\theta)x + \theta x^{<em>} - y) \
-  (1-\theta) f(x) + \theta f(x^{</em>}) 
-  &amp; \ge f(y) + \nabla f(y)^T ( (1-\theta)x + \theta x^{<em>} - y) \
-  f(y)
-  &amp; \le \color{blue} (1-\theta) f(x) + \theta f(x^{</em>}) + \nabla f(y)^T(y - (1-\theta) x + \theta x^{<em>} )
-\end{align</em>}
-$$</p>
-<p><strong>Step 2</strong> Upper bounding $f(x^{(t+1)}) - f(x^{*})$. We begin by manipulating the result from step 1 into something such that the left and right side look almost the same,</p>
-<p>$$
-\begin{align<em>}
-  f(x^{(t+1)})
-  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) + \theta^{(t)} f(x^{</em>}) \
-  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} \left(
-        ||v^{(t)} - x^{<em>}||_2^2 - \underbrace{ ||v^{(t+1)} - x^{</em>}||<em _text_move="\text{move" other side to>2^2 }</em>}
-     \right) \
-  f(x^{(t+1)}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{<em>}||_2^2
-  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) + \theta^{(t)} f(x^{</em>}) \
-  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{<em>}||_2^2 \underbrace{ \pm f(x^{</em>}) }<em _text_group="\text{group" together>{=0} \
-  f(x^{(t+1)}) - f(x^{<em>}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{</em>}||_2^2
-  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) \underbrace{ - f(x^{<em>}) + \theta^{(t)} f(x^{</em>}) }</em>} \
-  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{<em>}||_2^2 \
-  f(x^{(t+1)}) - f(x^{</em>}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{<em>}||_2^2
-  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) - (1-\theta^{(t)}) f(x^{</em>}) \
-  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{<em>}||_2^2 \
-  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{</em>}) \right) + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{<em>}||_2^2
-  &amp; \le \frac{ (1-\theta^{(t)}) }{ (\theta^{(t)})^2 } \left( f(x^{(t)}) - f(x^{</em>}) \right) \
-  &amp; \quad + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{<em>}||_2^2 \
-\end{align</em>}
-$$</p>
-<p>Remember how $\theta^{(t)} = \frac{2}{t+2}$? Well that means $\theta^{(t)} &gt; 0$ and thus $\frac{1 - \theta^{(t)}}{ (\theta^{(t)})^2 } \le \frac{1}{ (\theta^{(t)})^2 }$. Subbing that into the previous equation lets us apply it recursively to obtain,</p>
-<p>$$
-\begin{align<em>}
-  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{</em>}) \right) + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{<em>}||_2^2
-  &amp; \le \frac{ (1-\theta^{(0)}) }{ (\theta^{(0)})^2 } \left( f(x^{(0)}) - f(x^{</em>}) \right) + \frac{1}{2 \alpha^{(1)}} ||v^{(0)} - x^{<em>}||_2^2 \
-\end{align</em>}
-$$</p>
-<p><strong>Step 3</strong> Bound the error in terms of $\frac{1}{(t+2)^2}$.  Recall that $\theta^{(0)} = 1$ and $v^{(0)} = x^{(0)}$. Then,</p>
-<p>$$
-\begin{align<em>}
-  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{</em>}) \right) 
-    + \underbrace{ \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{<em>}||<em 0 _ge="\ge" _text_="\text{," drop so>2^2 }</em>}
-  &amp; \le \underbrace{ \frac{ (1-\theta^{(0)}) }{ (\theta^{(0)})^2 } }_{= 0} \left( f(x^{(0)}) - f(x^{</em>}) \right)
-    + \frac{1}{2 \alpha^{(1)}} ||\underbrace{ v^{(0)} }_{x^{(0)}} - x^{<em>}||_2^2 \
-  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{</em>}) \right)
-  &amp; \le \frac{1}{2 \alpha^{(1)}} || x^{(0)} - x^{<em>} ||_2^2 \
-  f(x^{(t+1)}) - f(x^{</em>})
-  &amp; \le \frac{( \theta^{(t)} )^2}{2 \alpha^{(1)}} || x^{(0)} - x^{<em>} ||_2^2 \
-  &amp; = \frac{2}{ (t+2)^2 \alpha^{(1)} } || x^{(0)} - x^{</em>} ||_2^2
+  &amp; \le f(y) + \nabla f(y)^T (y - \alpha^{+} \nabla f(y) - y) + \frac{L}{2}{ ||y - \alpha^{+} \nabla f(y) - y ||_2^2 } \\
+  &amp; = f(y) - \alpha^{+} || \nabla f(y) ||_2^2 + \frac{L (\alpha^{+})^2}{2} || \nabla f(y) ||_2^2 \\
+  &amp; = f(y) - \frac{\alpha^{+}}{2} ( 2 - L \alpha^{+} ) || \nabla f(y) ||_2^2 \\
+  &amp; \le \color{red} f(y) - \frac{\alpha^{+}}{2} || \nabla f(y) ||_2^2 \\
 \end{align*}
-$$</p>
+$$</div>
+<p>Using convexity's linear lower bound and its line-over-function properties,</p>
+<div class="math">$$
+\begin{align*}
+  \color{blue}
+  f( (1-\theta)x + \theta x^{*} )
+  &amp; \ge f(y) + \nabla f(y)^T ( (1-\theta)x + \theta x^{*} - y) \\
+  (1-\theta) f(x) + \theta f(x^{*}) 
+  &amp; \ge f(y) + \nabla f(y)^T ( (1-\theta)x + \theta x^{*} - y) \\
+  f(y)
+  &amp; \le \color{blue} (1-\theta) f(x) + \theta f(x^{*}) + \nabla f(y)^T(y - (1-\theta) x + \theta x^{*} )
+\end{align*}
+$$</div>
+<p><strong>Step 2</strong> Upper bounding <span class="math">\(f(x^{(t+1)}) - f(x^{*})\)</span>. We begin by manipulating the result from step 1 into something such that the left and right side look almost the same,</p>
+<div class="math">$$
+\begin{align*}
+  f(x^{(t+1)})
+  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) + \theta^{(t)} f(x^{*}) \\
+  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} \left(
+        ||v^{(t)} - x^{*}||_2^2 - \underbrace{ ||v^{(t+1)} - x^{*}||_2^2 }_{\text{move to other side}}
+     \right) \\
+  f(x^{(t+1)}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) + \theta^{(t)} f(x^{*}) \\
+  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{*}||_2^2 \underbrace{ \pm f(x^{*}) }_{=0} \\
+  f(x^{(t+1)}) - f(x^{*}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) \underbrace{ - f(x^{*}) + \theta^{(t)} f(x^{*}) }_{\text{group together}} \\
+  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{*}||_2^2 \\
+  f(x^{(t+1)}) - f(x^{*}) + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le (1-\theta^{(t)}) f(x^{(t)}) - (1-\theta^{(t)}) f(x^{*}) \\
+  &amp; \quad + \frac{ (\theta^{(t)})^2}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{*}||_2^2 \\
+  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{*}) \right) + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le \frac{ (1-\theta^{(t)}) }{ (\theta^{(t)})^2 } \left( f(x^{(t)}) - f(x^{*}) \right) \\
+  &amp; \quad + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t)} - x^{*}||_2^2 \\
+\end{align*}
+$$</div>
+<p>Remember how <span class="math">\(\theta^{(t)} = \frac{2}{t+2}\)</span>? Well that means <span class="math">\(\theta^{(t)} &gt; 0\)</span> and thus <span class="math">\(\frac{1 - \theta^{(t)}}{ (\theta^{(t)})^2 } \le \frac{1}{ (\theta^{(t)})^2 }\)</span>. Subbing that into the previous equation lets us apply it recursively to obtain,</p>
+<div class="math">$$
+\begin{align*}
+  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{*}) \right) + \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2
+  &amp; \le \frac{ (1-\theta^{(0)}) }{ (\theta^{(0)})^2 } \left( f(x^{(0)}) - f(x^{*}) \right) + \frac{1}{2 \alpha^{(1)}} ||v^{(0)} - x^{*}||_2^2 \\
+\end{align*}
+$$</div>
+<p><strong>Step 3</strong> Bound the error in terms of <span class="math">\(\frac{1}{(t+2)^2}\)</span>.  Recall that <span class="math">\(\theta^{(0)} = 1\)</span> and <span class="math">\(v^{(0)} = x^{(0)}\)</span>. Then,</p>
+<div class="math">$$
+\begin{align*}
+  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{*}) \right) 
+    + \underbrace{ \frac{1}{2 \alpha^{(t+1)}} ||v^{(t+1)} - x^{*}||_2^2 }_{\ge 0 \text{, so drop}}
+  &amp; \le \underbrace{ \frac{ (1-\theta^{(0)}) }{ (\theta^{(0)})^2 } }_{= 0} \left( f(x^{(0)}) - f(x^{*}) \right)
+    + \frac{1}{2 \alpha^{(1)}} ||\underbrace{ v^{(0)} }_{x^{(0)}} - x^{*}||_2^2 \\
+  \frac{1}{( \theta^{(t)} )^2} \left( f(x^{(t+1)}) - f(x^{*}) \right)
+  &amp; \le \frac{1}{2 \alpha^{(1)}} || x^{(0)} - x^{*} ||_2^2 \\
+  f(x^{(t+1)}) - f(x^{*})
+  &amp; \le \frac{( \theta^{(t)} )^2}{2 \alpha^{(1)}} || x^{(0)} - x^{*} ||_2^2 \\
+  &amp; = \frac{2}{ (t+2)^2 \alpha^{(1)} } || x^{(0)} - x^{*} ||_2^2
+\end{align*}
+$$</div>
 <p>Thus, the convergence rate of the Accelerated Gradient Method is
-$O(\frac{1}{\sqrt{\epsilon}})$. Woo!</p>
+<span class="math">\(O(\frac{1}{\sqrt{\epsilon}})\)</span>. Woo!</p>
 <p><a id="usage"></a></p>
 <h1><a name="usage" href="#usage">When should I use it?</a></h1>
-<p>The Accelerated Gradient Method trumps Gradient Descent in every way theoretically, but the latter is still more widely used and preferred.  Why? The fact is that Accelerated Gradient is much more of a pain to implement. Whereas with Gradient Descent you can simply check if your new iterate's score is less than the previous one, Accelerated Gradient's score may increase before decreasing again. Accelerated Gradient is also extremely sensitive to step size -- if $\alpha^{(t)}$ isn't in $(0, \frac{1}{L}]$, <em>it will diverge</em>. Accelerated Gradient is a powerful but fickle tool. Use it when you can, but keep Gradient Descent handy if everything is going awry.</p>
+<p>The Accelerated Gradient Method trumps Gradient Descent in every way theoretically, but the latter is still more widely used and preferred.  Why? The fact is that Accelerated Gradient is much more of a pain to implement. Whereas with Gradient Descent you can simply check if your new iterate's score is less than the previous one, Accelerated Gradient's score may increase before decreasing again. Accelerated Gradient is also extremely sensitive to step size -- if <span class="math">\(\alpha^{(t)}\)</span> isn't in <span class="math">\((0, \frac{1}{L}]\)</span>, <em>it will diverge</em>. Accelerated Gradient is a powerful but fickle tool. Use it when you can, but keep Gradient Descent handy if everything is going awry.</p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
 <p><strong>Step Size</strong> As mentioned previously, Accelerated Gradient is very fickle
 with step size.  While Backtracking Line Search can and should be used when
-possible, it is essential that the constants be set such that $\alpha^{(t+1)}
-\le \frac{1}{L}$. In other words, when,</p>
-<p>$$
-\begin{align<em>}
+possible, it is essential that the constants be set such that <span class="math">\(\alpha^{(t+1)}
+\le \frac{1}{L}\)</span>. In other words, when,</p>
+<div class="math">$$
+\begin{align*}
   f(y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)}))
-  &amp; \le f(y^{(t)}) + \nabla f(y^{(t)})^T ((y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)})) - y^{(t)}) \
-  &amp; \quad + \frac{1}{2 \alpha^{(t+1)} } ||(y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)})) - y^{(t)}||_2^2 \
-  &amp; = f(y^{(t)}) - \alpha^{(t+1)} || \nabla f(y^{(t)}) ||_2^2 + \frac{ \alpha^{(t+1)} }{2} ||\nabla f(y^{(t)}) ||_2^2 \
-  &amp; = f(y^{(t)}) - \frac{\alpha^{(t+1)}}{2} || \nabla f(y^{(t)}) ||_2^2 \
-\end{align</em>}
-$$</p>
-<p>Typically the $\frac{1}{2}$ in the last part of the last line is traded for another constant. <em>This will not work for Accelerated Gradient!</em></p>
+  &amp; \le f(y^{(t)}) + \nabla f(y^{(t)})^T ((y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)})) - y^{(t)}) \\
+  &amp; \quad + \frac{1}{2 \alpha^{(t+1)} } ||(y^{(t)} - \alpha^{(t+1)} \nabla f(y^{(t)})) - y^{(t)}||_2^2 \\
+  &amp; = f(y^{(t)}) - \alpha^{(t+1)} || \nabla f(y^{(t)}) ||_2^2 + \frac{ \alpha^{(t+1)} }{2} ||\nabla f(y^{(t)}) ||_2^2 \\
+  &amp; = f(y^{(t)}) - \frac{\alpha^{(t+1)}}{2} || \nabla f(y^{(t)}) ||_2^2 \\
+\end{align*}
+$$</div>
+<p>Typically the <span class="math">\(\frac{1}{2}\)</span> in the last part of the last line is traded for another constant. <em>This will not work for Accelerated Gradient!</em></p>
 <p><strong>Checking Convergence</strong> As with Gradient Descent and Subgradient Descent,
-there is no real way to be certain when $f(x^{(t)}) - f(x^{*}) &lt; \epsilon$
+there is no real way to be certain when <span class="math">\(f(x^{(t)}) - f(x^{*}) &lt; \epsilon\)</span>
 without some problem-specific knowledge. Instead, it is common to stop after a
-fixed number of iterations or when $||\nabla f(x^{(t)})||_2$ is small.</p>
+fixed number of iterations or when <span class="math">\(||\nabla f(x^{(t)})||_2\)</span> is small.</p>
 <h1><a name="references" href="#references">References</a></h1>
 <p><strong>Proof of Convergence</strong> The proof of convergence is thanks to Lieven
 Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gradient.pdf">EE236c slides</a> hosted by Zaiwen Wen.</p>
@@ -384,6 +384,63 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
                                       <span class="n">path</span><span class="o">=</span><span class="s1">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
+
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
 
     <div id="article_meta">
         Category:

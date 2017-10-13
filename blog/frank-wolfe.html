@@ -66,7 +66,7 @@ for solving problems with compact domains. Like the <a href="/blog/proximal-grad
 Gradient</a> and <a href="/blog/accelerated-proximal-gradient-descent.html">Accelerated Proximal
 Gradient</a> algorithms, Frank-Wolfe requires we
 exploit problem structure to quickly solve a mini-optimization problem. Our
-reward for doing so is a converge rate of $O(1/\epsilon)$ and the potential for
+reward for doing so is a converge rate of <span class="math">\(O(1/\epsilon)\)</span> and the potential for
 <em>extremely sparse solutions</em>.</p>
 <p>Returning to my <a href="/blog/gradient-descent.html">valley-finding metaphor</a>, Frank-Wolfe is a
 bit like this,</p>
@@ -80,64 +80,65 @@ bit like this,</p>
 </div>
 <h1><a name="implementation" href="#implementation">How does it work?</a></h1>
 <p>Frank-Wolfe is designed to solve problems of the form,</p>
-<p>$$
+<div class="math">$$
   \min_{x \in D} f(x)
-$$</p>
-<p>where $D$ is compact and $f$ is differentiable. For example, in $R^n$ any
+$$</div>
+<p>where <span class="math">\(D\)</span> is compact and <span class="math">\(f\)</span> is differentiable. For example, in <span class="math">\(R^n\)</span> any
 closed and bounded set is compact. The algorithm for Frank-Wolfe is then,</p>
 <div class="pseudocode">
-<p><strong>Input</strong>: Initial iterate $x^{(0)}$</p>
+<p><strong>Input</strong>: Initial iterate <span class="math">\(x^{(0)}\)</span></p>
 <ol>
-<li>For $t = 0, 1, 2, \ldots$<ol>
-<li>Let $s^{(t+1)} = \arg\min_{s \in D} \langle \nabla f(x^{(t)}), s \rangle$</li>
-<li>If $g(x) = \langle \nabla f(x^{(t)}), x - s^{(t+1)} \rangle \le \epsilon$, break</li>
-<li>Let $x^{(t+1)} = (1 - \alpha^{(t)}) x^{(t)} + \alpha^{(t)} s^{(t+1)}$</li>
+<li>For <span class="math">\(t = 0, 1, 2, \ldots\)</span><ol>
+<li>Let <span class="math">\(s^{(t+1)} = \arg\min_{s \in D} \langle \nabla f(x^{(t)}), s \rangle\)</span></li>
+<li>If <span class="math">\(g(x) = \langle \nabla f(x^{(t)}), x - s^{(t+1)} \rangle \le \epsilon\)</span>, break</li>
+<li>Let <span class="math">\(x^{(t+1)} = (1 - \alpha^{(t)}) x^{(t)} + \alpha^{(t)} s^{(t+1)}\)</span></li>
 </ol>
 </li>
 </ol>
 </div>
-<p>The proof relies on $\alpha^{(t)} = 2 / (t+2)$, but line search works as
+<p>The proof relies on <span class="math">\(\alpha^{(t)} = 2 / (t+2)\)</span>, but line search works as
 well.  The intuition for the algorithm is that at each iteration, we minimize
-a linear approximation to $f$,</p>
-<p>$$
+a linear approximation to <span class="math">\(f\)</span>,</p>
+<div class="math">$$
   s^{(t+1)} = \arg\min_{s \in D} f(x^{(t)}) + \nabla f(x^{(t)})^T (s - x^{(t)})
-$$</p>
-<p>then take a step in that direction. We can immediately see that if $D$
-weren't compact, $s^{(t)}$ would go off to infinity.</p>
+$$</div>
+<p>then take a step in that direction. We can immediately see that if <span class="math">\(D\)</span>
+weren't compact, <span class="math">\(s^{(t)}\)</span> would go off to infinity.</p>
 <p><a id="upper_bound"></a>
   <strong>Upper Bound</strong> One nice property of Frank-Wolfe is that it comes with its
-own upper bound on $f(x^{(t)}) - f(x^{*})$ calculated during the course of
-the algorithm. Recall the linear upper bound on $f$ due to convexity,</p>
-<p>$$
-\begin{align<em>}
-  f(x^{</em>})
-  &amp; \ge f(x) + \nabla f(x)^T (x^{<em>} - x) \
-  f(x) - f(x^{</em>})
-  &amp; \le \nabla f(x)^T (x - x^{<em>}) \
-\end{align</em>}
-$$</p>
+own upper bound on <span class="math">\(f(x^{(t)}) - f(x^{*})\)</span> calculated during the course of
+the algorithm. Recall the linear upper bound on <span class="math">\(f\)</span> due to convexity,</p>
+<div class="math">$$
+\begin{align*}
+  f(x^{*})
+  &amp; \ge f(x) + \nabla f(x)^T (x^{*} - x) \\
+  f(x) - f(x^{*})
+  &amp; \le \nabla f(x)^T (x - x^{*}) \\
+\end{align*}
+$$</div>
 <p>Since,</p>
-<p>$$
+<div class="math">$$
   s^{(t+1)}
   = \arg\min_{s} \nabla f(x^{(t)})^T s
   = \arg\max_{s} \nabla f(x^{(t)})^T (x^{(t)} - s)
-$$
-  we know that $\nabla f(x^{(t)})^T (x^{(t)} - x^{*}) \le \nabla f(x^{(t)})^T
-(x^{(t)} - s^{(t+1)})$ and thus,</p>
-<p>$$
+$$</div>
+<p>
+  we know that <span class="math">\(\nabla f(x^{(t)})^T (x^{(t)} - x^{*}) \le \nabla f(x^{(t)})^T
+(x^{(t)} - s^{(t+1)})\)</span> and thus,</p>
+<div class="math">$$
   f(x) - f(x^{*}) \le \nabla f(x^{(t)})^T (x^{(t)} - s^{(t+1)})
-$$</p>
+$$</div>
 <p><a id="example"></a></p>
 <h1><a name="example" href="#example">A Small Example</a></h1>
 <p>For this example, we'll minimize a simple univariate quadratic function
 constrained to lie in an interval,</p>
-<p>$$
+<div class="math">$$
   \min_{x \in [-1,2]} (x-0.5)^2 + 2x
-$$</p>
-<p>Its derivative is given by $2(x-0.5) + 2$, and since we are dealing with real
-numbers, the minimizers of the linear approximation must be either $-1$ or
-$2$ if the gradient is positive or negative, respectively. We'll use a stepsize
-of $\alpha^{(t)} = 2 / (t+2)$ as prescribed by the convergence proof in the
+$$</div>
+<p>Its derivative is given by <span class="math">\(2(x-0.5) + 2\)</span>, and since we are dealing with real
+numbers, the minimizers of the linear approximation must be either <span class="math">\(-1\)</span> or
+<span class="math">\(2\)</span> if the gradient is positive or negative, respectively. We'll use a stepsize
+of <span class="math">\(\alpha^{(t)} = 2 / (t+2)\)</span> as prescribed by the convergence proof in the
 next section.</p>
 <div class="img-center">
   <img src="/assets/img/frank_wolfe/animation.gif"></img>
@@ -173,88 +174,88 @@ next section.</p>
 <h1><a name="proof" href="#proof">Why does it work?</a></h1>
 <p>We begin by making the two assumptions given earlier,</p>
 <ol>
-<li>$f$ is convex, differentiable, and finite for all $x \in D$</li>
-<li>$D$ is compact</li>
+<li><span class="math">\(f\)</span> is convex, differentiable, and finite for all <span class="math">\(x \in D\)</span></li>
+<li><span class="math">\(D\)</span> is compact</li>
 </ol>
 <p><strong>Assumptions</strong> First, notice that we never needed to assume that a solution
-$x^{*}$ exists. This is because $D$ is compact and $f$ is finite, meaning $x$
-cannot get bigger and bigger to make $f(x)$ arbitrarily small.</p>
-<p>Secondly, we never made a Lipschitz assumption on $f$ or its gradient. Since
-$D$ is compact, we don't have to -- instead, we get the following for free.
-Define $C_f$ as,</p>
-<p>$$
+<span class="math">\(x^{*}\)</span> exists. This is because <span class="math">\(D\)</span> is compact and <span class="math">\(f\)</span> is finite, meaning <span class="math">\(x\)</span>
+cannot get bigger and bigger to make <span class="math">\(f(x)\)</span> arbitrarily small.</p>
+<p>Secondly, we never made a Lipschitz assumption on <span class="math">\(f\)</span> or its gradient. Since
+<span class="math">\(D\)</span> is compact, we don't have to -- instead, we get the following for free.
+Define <span class="math">\(C_f\)</span> as,</p>
+<div class="math">$$
   C_f = \max_{\substack{
-                x,s \in D \
-                \alpha \in [0,1] \
+                x,s \in D \\
+                \alpha \in [0,1] \\
                 y = x + \alpha (s-x)
               }}
           \frac{2}{\alpha^2} \left(
             f(y) - f(x) - \langle \nabla f(x), y - x \rangle
           \right)
-$$</p>
-<p>This immediate implies the following upper bound on $f$ for all $x, y \in
-D$ and $\alpha \in [0,1]$,</p>
-<p>$$
+$$</div>
+<p>This immediate implies the following upper bound on <span class="math">\(f\)</span> for all <span class="math">\(x, y \in
+D\)</span> and <span class="math">\(\alpha \in [0,1]\)</span>,</p>
+<div class="math">$$
   f(y) \le f(x) + \langle \nabla f(x), y-x \rangle + \frac{\alpha^2}{2} C_f
-$$</p>
+$$</div>
 <p><strong>Proof Outline</strong> The proof for Frank-Wolfe is surprisingly simple. The idea
-is to first upper bound $f(x^{(t+1)})$ in terms of $f(x^{(t)})$, $g(x^{(t)})$,
-and $C_f$. We then transform this per-iteration bound into a bound on
-$f(x^{(t)}) - f(x^{*})$ depending on $t$ using induction. That's it!</p>
-<p><strong>Step 1</strong> Upper bound $f(x^{(t+1)})$. As usual, we'll denote $x^{+} \triangleq
-x^{(t+1)}$, $x \triangleq x^{(t)}$, $s^{+} \triangleq s^{(t+1)}$, and $\alpha
-\triangleq \alpha^{(t)}$. We begin by using the upper bound we just obtained for
-$f$ in terms of $C_f$, substituting $x^{+} = (1 - \alpha) x + \alpha s^{+}$ and
-then $g(x) = \nabla f(x)^T (x - s^{+})$,</p>
-<p>$$
-\begin{align<em>}
+is to first upper bound <span class="math">\(f(x^{(t+1)})\)</span> in terms of <span class="math">\(f(x^{(t)})\)</span>, <span class="math">\(g(x^{(t)})\)</span>,
+and <span class="math">\(C_f\)</span>. We then transform this per-iteration bound into a bound on
+<span class="math">\(f(x^{(t)}) - f(x^{*})\)</span> depending on <span class="math">\(t\)</span> using induction. That's it!</p>
+<p><strong>Step 1</strong> Upper bound <span class="math">\(f(x^{(t+1)})\)</span>. As usual, we'll denote <span class="math">\(x^{+} \triangleq
+x^{(t+1)}\)</span>, <span class="math">\(x \triangleq x^{(t)}\)</span>, <span class="math">\(s^{+} \triangleq s^{(t+1)}\)</span>, and <span class="math">\(\alpha
+\triangleq \alpha^{(t)}\)</span>. We begin by using the upper bound we just obtained for
+<span class="math">\(f\)</span> in terms of <span class="math">\(C_f\)</span>, substituting <span class="math">\(x^{+} = (1 - \alpha) x + \alpha s^{+}\)</span> and
+then <span class="math">\(g(x) = \nabla f(x)^T (x - s^{+})\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   f(x^{+}) 
-  &amp; \le f(x) + \nabla f(x)^T (x^{+} - x) + \frac{\alpha^2}{2} C_f \
-  &amp; = f(x) + \nabla f(x)^T ( (1-\alpha) x + \alpha s^{+} - x ) + \frac{\alpha^2}{2} C_f \
-  &amp; = f(x) + \nabla f(x)^T ( \alpha s^{+} - \alpha x ) + \frac{\alpha^2}{2} C_f \
-  &amp; = f(x) - \alpha \nabla f(x)^T ( x - s^{+} ) + \frac{\alpha^2}{2} C_f \
-  &amp; = f(x) - \alpha g(x) + \frac{\alpha^2}{2} C_f \
-\end{align</em>}
-$$</p>
-<p><strong>Step 2</strong> Use induction on $t$. First, recall the upper bound on $f(x) -
-f(x^{<em>}) \le g(x)$ <a href="#upper_bound">we derived above</a>. Let's add $-f(x^{</em>})$ into
-what we got from Step 1, then use the upper bound on $f(x) - f(x^{*})$ to get,</p>
-<p>$$
-\begin{align<em>}
-  f(x^{+}) - f(x^{</em>})
-  &amp; \le f(x) - f(x^{<em>}) - \alpha g(x) + \frac{\alpha^2}{2} C_f \
-  &amp; \le f(x) - f(x^{</em>}) - \alpha ( f(x) - f(x^{<em>}) ) + \frac{\alpha^2}{2} C_f \
-  &amp; = (1 - \alpha) (f(x) - f(x^{</em>})) + \frac{\alpha^2}{2} C_f \
+  &amp; \le f(x) + \nabla f(x)^T (x^{+} - x) + \frac{\alpha^2}{2} C_f \\
+  &amp; = f(x) + \nabla f(x)^T ( (1-\alpha) x + \alpha s^{+} - x ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = f(x) + \nabla f(x)^T ( \alpha s^{+} - \alpha x ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = f(x) - \alpha \nabla f(x)^T ( x - s^{+} ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = f(x) - \alpha g(x) + \frac{\alpha^2}{2} C_f \\
 \end{align*}
-$$</p>
-<p>Now, we employ induction on $t$ to show that,</p>
-<p>$$
+$$</div>
+<p><strong>Step 2</strong> Use induction on <span class="math">\(t\)</span>. First, recall the upper bound on <span class="math">\(f(x) -
+f(x^{*}) \le g(x)\)</span> <a href="#upper_bound">we derived above</a>. Let's add <span class="math">\(-f(x^{*})\)</span> into
+what we got from Step 1, then use the upper bound on <span class="math">\(f(x) - f(x^{*})\)</span> to get,</p>
+<div class="math">$$
+\begin{align*}
+  f(x^{+}) - f(x^{*})
+  &amp; \le f(x) - f(x^{*}) - \alpha g(x) + \frac{\alpha^2}{2} C_f \\
+  &amp; \le f(x) - f(x^{*}) - \alpha ( f(x) - f(x^{*}) ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = (1 - \alpha) (f(x) - f(x^{*})) + \frac{\alpha^2}{2} C_f \\
+\end{align*}
+$$</div>
+<p>Now, we employ induction on <span class="math">\(t\)</span> to show that,</p>
+<div class="math">$$
   f(x^{(t)}) - f(x^{*}) \le \frac{4 C_f / 2}{t+2}
-$$</p>
-<p>We'll assume that the step size is $\alpha^{(t)} = \frac{2}{t+2}$, giving us
-$\alpha^{(0)} = 2 / (0+2) = 1$ and the base case,</p>
-<p>$$
-\begin{align<em>}
-  f(x^{(1)} - f(x^{</em>})
-  &amp; \le (1 - \alpha^{(0)}) ( f(x^{(0)}) - f(x^{<em>}) ) + \frac{\alpha^2}{2} C_f \
-  &amp; = (1 - 1) ( f(x^{(0)}) - f(x^{</em>}) ) + \frac{1}{2} C_f \
+$$</div>
+<p>We'll assume that the step size is <span class="math">\(\alpha^{(t)} = \frac{2}{t+2}\)</span>, giving us
+<span class="math">\(\alpha^{(0)} = 2 / (0+2) = 1\)</span> and the base case,</p>
+<div class="math">$$
+\begin{align*}
+  f(x^{(1)} - f(x^{*})
+  &amp; \le (1 - \alpha^{(0)}) ( f(x^{(0)}) - f(x^{*}) ) + \frac{\alpha^2}{2} C_f \\
+  &amp; = (1 - 1) ( f(x^{(0)}) - f(x^{*}) ) + \frac{1}{2} C_f \\
   &amp; \le \frac{4 C_f / 2}{(0 + 1) + 2}
 \end{align*}
-$$</p>
-<p>Next, for the recursive case, we use the inductive assumption on $f(x) - f(x^{*})$, the definition of $\alpha^{(t)}$, and some algebra,</p>
-<p>$$
-\begin{align<em>}
-  f(x^{+}) - f(x^{</em>})
-  &amp; \le (1 - \alpha) ( f(x) - f(x^{<em>}) ) + \frac{ \alpha^2}{2} C_f \
-  &amp; \le \left(1 - \frac{2}{t+2} \right) \frac{4 C_f / 2}{t + 2} + \left( \frac{2}{t+2} \right)^2 C_f / 2 \
-  &amp; \le \frac{4 C_f / 2}{t + 2} \left( 1 - \frac{2}{t+2} + \frac{1}{t+2} \right) \
-  &amp; = \frac{4 C_f / 2}{t + 2} \left( \frac{t+1}{t+2} \right) \
-  &amp; \le \frac{4 C_f / 2}{t + 2} \left( \frac{t+2}{t+3} \right) \
-  &amp; = \frac{4 C_f / 2}{(t + 1) + 2} \
-\end{align</em>}
-$$</p>
-<p>Thus, if we want an error tolerance of $\epsilon$, we need
-$O(\frac{1}{\epsilon})$ iterations to find it. This matches the convergence
+$$</div>
+<p>Next, for the recursive case, we use the inductive assumption on <span class="math">\(f(x) - f(x^{*})\)</span>, the definition of <span class="math">\(\alpha^{(t)}\)</span>, and some algebra,</p>
+<div class="math">$$
+\begin{align*}
+  f(x^{+}) - f(x^{*})
+  &amp; \le (1 - \alpha) ( f(x) - f(x^{*}) ) + \frac{ \alpha^2}{2} C_f \\
+  &amp; \le \left(1 - \frac{2}{t+2} \right) \frac{4 C_f / 2}{t + 2} + \left( \frac{2}{t+2} \right)^2 C_f / 2 \\
+  &amp; \le \frac{4 C_f / 2}{t + 2} \left( 1 - \frac{2}{t+2} + \frac{1}{t+2} \right) \\
+  &amp; = \frac{4 C_f / 2}{t + 2} \left( \frac{t+1}{t+2} \right) \\
+  &amp; \le \frac{4 C_f / 2}{t + 2} \left( \frac{t+2}{t+3} \right) \\
+  &amp; = \frac{4 C_f / 2}{(t + 1) + 2} \\
+\end{align*}
+$$</div>
+<p>Thus, if we want an error tolerance of <span class="math">\(\epsilon\)</span>, we need
+<span class="math">\(O(\frac{1}{\epsilon})\)</span> iterations to find it. This matches the convergence
 rate of Gradient Descent an Proximal Gradient Descent, but falls short of their
 accelerated brethren.</p>
 <h1><a name="usage" href="#usage">When should I use it?</a></h1>
@@ -262,51 +263,51 @@ accelerated brethren.</p>
 mini-optimization problem at each iteration. Unlike Proximal Gradient, however,
 this mini-problem will lead to unbounded iterates if the input space is not
 compact -- in other words, Frank-Wolfe cannot directly be applied when your
-domain is all of $R^{n}$. However, there is a very special case wherein
+domain is all of <span class="math">\(R^{n}\)</span>. However, there is a very special case wherein
 Frank-Wolfe shines.</p>
 <p><a id="sparsity"></a>
   <strong>Sparsity</strong> The primary reason machine learning researchers have recently
 taken an interest in Frank-Wolfe is because in certain problems the iterates
-$x^{(t)}$ will be extremely sparse.  Suppose that $D$ is a polyhedron defined
-by a set of linear constraints. Then $s^{(t)}$ is a solution to a Linear
-Program, meaning that each $s^{(t)}$ lies on one of the vertices of the
-polyhedron. If these vertices have only a few non-zero entries, then $x^{(t)}$
-will too, as $x^{(t)}$ is a linear combination of $s^{(1)} \ldots s^{(t)}$.
+<span class="math">\(x^{(t)}\)</span> will be extremely sparse.  Suppose that <span class="math">\(D\)</span> is a polyhedron defined
+by a set of linear constraints. Then <span class="math">\(s^{(t)}\)</span> is a solution to a Linear
+Program, meaning that each <span class="math">\(s^{(t)}\)</span> lies on one of the vertices of the
+polyhedron. If these vertices have only a few non-zero entries, then <span class="math">\(x^{(t)}\)</span>
+will too, as <span class="math">\(x^{(t)}\)</span> is a linear combination of <span class="math">\(s^{(1)} \ldots s^{(t)}\)</span>.
 This is in direct contrast to gradient and proximal based methods, wherein
-$x^{(t)}$ is the linear combination of a set of non-sparse <em>gradients</em>.</p>
+<span class="math">\(x^{(t)}\)</span> is the linear combination of a set of non-sparse <em>gradients</em>.</p>
 <p><strong>Atomic Norms</strong> One particular case where Frank-Wolfe shines is when
-minimizing $f(x)$ subject to $||x|| \le c$ where $|| \cdot ||$ is an "atomic
-norm". We say that $||\cdot||$ is an atomic norm if $||x||$ is the smallest $t$
-such that $x/t$ is in the convex hull of a finite set of points $\mathcal{A}$,
+minimizing <span class="math">\(f(x)\)</span> subject to <span class="math">\(||x|| \le c\)</span> where <span class="math">\(|| \cdot ||\)</span> is an "atomic
+norm". We say that <span class="math">\(||\cdot||\)</span> is an atomic norm if <span class="math">\(||x||\)</span> is the smallest <span class="math">\(t\)</span>
+such that <span class="math">\(x/t\)</span> is in the convex hull of a finite set of points <span class="math">\(\mathcal{A}\)</span>,
 that is,</p>
-<p>$$
-  ||x|| = \inf { t : x \in t \, \text{Conv}(\mathcal{A}) }
-$$</p>
-<p>For example, $||x||<em _le="\le" _s_="||s||" c>1$ is an atomic norm with $\mathcal{A}$ being the set of
-all vectors with only one $+1$ or one $-1$ entry. In these cases, finding
-$\arg\min</em> \langle \nabla f(x), s \rangle$ is tantamount to
-finding which element of $\mathcal{A}$ minimizes $\langle \nabla f(x), s
-\rangle$ (since $\text{Conv}(\mathcal{A})$ defines a polyhedron). For a whole
+<div class="math">$$
+  ||x|| = \inf \{ t : x \in t \, \text{Conv}(\mathcal{A}) \}
+$$</div>
+<p>For example, <span class="math">\(||x||_1\)</span> is an atomic norm with <span class="math">\(\mathcal{A}\)</span> being the set of
+all vectors with only one <span class="math">\(+1\)</span> or one <span class="math">\(-1\)</span> entry. In these cases, finding
+<span class="math">\(\arg\min_{||s|| \le c} \langle \nabla f(x), s \rangle\)</span> is tantamount to
+finding which element of <span class="math">\(\mathcal{A}\)</span> minimizes <span class="math">\(\langle \nabla f(x), s
+\rangle\)</span> (since <span class="math">\(\text{Conv}(\mathcal{A})\)</span> defines a polyhedron). For a whole
 lot more on Atomic Norms, see <a href="http://pages.cs.wisc.edu/~brecht/papers/2010-crpw_inverse_problems.pdf">this tome</a> by
 Chandrasekaranm et al.</p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
-<p><strong>Step Size</strong> The proof above relied on a step size of $\alpha^{(t)} =
-\frac{2}{t+2}$, but as usual <a href="/blog/gradient-descent.html#line_search">Line Search</a> can be applied to
+<p><strong>Step Size</strong> The proof above relied on a step size of <span class="math">\(\alpha^{(t)} =
+\frac{2}{t+2}\)</span>, but as usual <a href="/blog/gradient-descent.html#line_search">Line Search</a> can be applied to
 accelerate convergence.</p>
 <p><strong>Approximate Linear Solutions</strong> Though not stated in the proof above,
 another cool point about Frank-Wolfe is that you don't actually need to solve
 the linear mini-problem exactly, but you will still converge to the optimal
 solution (albet at a slightly slower rate). In particular, assume that each
-mini-problem can be solved approximately with additive error $\frac{\delta
-C_f}{t+2}$ at iteration $t$,</p>
-<p>$$
+mini-problem can be solved approximately with additive error <span class="math">\(\frac{\delta
+C_f}{t+2}\)</span> at iteration <span class="math">\(t\)</span>,</p>
+<div class="math">$$
   \langle s^{(t+1)}, \nabla f(x^{(t)}) \rangle
   \le \min_{s} \langle s, \nabla f(x^{(t)}) \rangle + \frac{\delta C_f}{t+2}
-$$</p>
+$$</div>
 <p>then Frank-Wolfe's rate of convergence is</p>
-<p>$$
+<div class="math">$$
   f(x^{(t)}) - f(x^{*}) \le \frac{2 C_f}{t+2} (1 + \delta)
-$$</p>
+$$</div>
 <p>The proof for this can be found in the supplement to <a href="http://jmlr.csail.mit.edu/proceedings/papers/v28/jaggi13-supp.pdf">Jaggi's</a>
 excellent survey on Frank-Wolfe for machine learning.</p>
 <h1><a name="invariance" href="#invariance">Linear Invariance</a></h1>
@@ -315,24 +316,24 @@ is, if you rotate and scale the space, nothing changes about the convergence
 rate. This is in direct contrast to many other methods which depend on the
 <a href="http://en.wikipedia.org/wiki/Condition_number">condition number</a> of a function (for functions with
 Hessians, this is the ratio between the largest and smallest eigenvalues,
-$\sigma_{\max} / \sigma_{\min})$.</p>
+<span class="math">\(\sigma_{\max} / \sigma_{\min})\)</span>.</p>
 <p>Suppose we transform our input space with a surjective (that is, onto) linear
-transformation $M: \hat{D} \rightarrow D$. Let's now try to solve the problem,</p>
-<p>$$
+transformation <span class="math">\(M: \hat{D} \rightarrow D\)</span>. Let's now try to solve the problem,</p>
+<div class="math">$$
   \min_{\hat{x} \in \hat{D}} \hat{f}(\hat{x}) = f(M \hat{x}) = f(x)
-$$</p>
+$$</div>
 <p>Let's look at the solution to the per-iteration mini-problem we need to solve
 for Frank-Wolfe,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   \min_{\hat{s} \in \hat{D}} \langle \nabla \hat{f}(\hat{x}), \hat{s} \rangle
   = \min_{\hat{s} \in \hat{D}} \langle M^T \nabla f( M \hat{x}), \hat{s} \rangle
   = \min_{\hat{s} \in \hat{D}} \langle \nabla f( x ), M \hat{s} \rangle
   = \min_{s \in D} \langle \nabla f( x ), s \rangle
-\end{align</em>}
-$$</p>
-<p>In other words, we will find the same $s$ if we solve in the original space,
-or if we find $\hat{s}$ and then map it back to $s$. No matter how $M$ warps
+\end{align*}
+$$</div>
+<p>In other words, we will find the same <span class="math">\(s\)</span> if we solve in the original space,
+or if we find <span class="math">\(\hat{s}\)</span> and then map it back to <span class="math">\(s\)</span>. No matter how <span class="math">\(M\)</span> warps
 the space, Frank-Wolfe will do the same thing. This also means that if there's
 a linear transformation you can do to make the points of your polyhedron
 sparse, you can do it with no penalty!</p>
@@ -436,6 +437,63 @@ machine learning.</p>
     <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;figures/animation/</span><span class="si">%02d</span><span class="s1">.png&#39;</span> <span class="o">%</span> <span class="n">t</span><span class="p">)</span>
     <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
+
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
 
     <div id="article_meta">
         Category:

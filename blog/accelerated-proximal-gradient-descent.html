@@ -60,16 +60,16 @@
 		  <abbr class="published">Thu 25 April 2013</abbr>
 	</header>
   <article>
-    <p>$\def\prox{\text{prox}}$
+    <p><span class="math">\(\def\prox{\text{prox}}\)</span>
   In a <a href="/blog/proximal-gradient-descent.html">previous post</a>, I presented Proximal Gradient, a
-method for bypassing the $O(1 / \epsilon^2)$ convergence rate of Subgradient
+method for bypassing the <span class="math">\(O(1 / \epsilon^2)\)</span> convergence rate of Subgradient
 Descent.  This method relied on assuming that the objective function could be
-expressed as the sum of 2 functions, $g(x)$ and $h(x)$, with $g$ being
-differentiable and $h$ having an easy to compute <a href="/blog/proximal-gradient-descent.html#intuition">$\prox$
+expressed as the sum of 2 functions, <span class="math">\(g(x)\)</span> and <span class="math">\(h(x)\)</span>, with <span class="math">\(g\)</span> being
+differentiable and <span class="math">\(h\)</span> having an easy to compute <a href="/blog/proximal-gradient-descent.html#intuition"><span class="math">\(\prox\)</span>
 function</a>,</p>
-<p>$$
+<div class="math">$$
   \prox_{\alpha h}(x) = \arg\min_{y} \alpha h(y) + \frac{1}{2}||y - x||_2^2
-$$</p>
+$$</div>
 <p>In the <a href="/blog/accelerated-gradient-descent.html">post before that</a>, I presented Accelerated
 Gradient Descent, a method that outperforms Gradient Descent while making the
 exact same assumptions. It is then natural to ask, "Can we combine Accelerated
@@ -79,38 +79,38 @@ Proximal Gradient."  C'mon people, work with me.  Now let's get on with it!</p>
 <h1><a name="implementation" href="#implementation">How does it work?</a></h1>
 <p>As you might guess, the setup is precisely the same as Proximal Gradient. Let
 our objective be expressed as the sum of 2 functions,</p>
-<p>$$
+<div class="math">$$
   \min_{x} g(x) + h(x)
-$$</p>
-<p>where $g$ is differentiable and $h$ is "simple" in the sense that its $\prox$
+$$</div>
+<p>where <span class="math">\(g\)</span> is differentiable and <span class="math">\(h\)</span> is "simple" in the sense that its <span class="math">\(\prox\)</span>
 function can cheaply be computed. Given that, the algorithm is pretty much what
 you would expect from the lovechild of Proximal Gradient and Accelerated
 Gradient Descent,</p>
 <div class="pseudocode">
-<p><strong>Input</strong>: initial iterate $x^{(0)}$</p>
+<p><strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
 <ol>
-<li>Let $y^{(0)} = x^{(0)}$</li>
-<li>For $t = 1, 2, \ldots$<ol>
-<li>Let $x^{(t)} = \prox_{\alpha^{(t)} h} (y^{(t-1)} - \alpha^{(t)} \nabla f(y^{(t-1)}) )$</li>
-<li>if converged, return $x^{(t)}$</li>
-<li>Let $y^{(t)} = x^{(t)} + \frac{t-1}{t+2} (x^{(t)} - x^{(t-1)})$</li>
+<li>Let <span class="math">\(y^{(0)} = x^{(0)}\)</span></li>
+<li>For <span class="math">\(t = 1, 2, \ldots\)</span><ol>
+<li>Let <span class="math">\(x^{(t)} = \prox_{\alpha^{(t)} h} (y^{(t-1)} - \alpha^{(t)} \nabla f(y^{(t-1)}) )\)</span></li>
+<li>if converged, return <span class="math">\(x^{(t)}\)</span></li>
+<li>Let <span class="math">\(y^{(t)} = x^{(t)} + \frac{t-1}{t+2} (x^{(t)} - x^{(t-1)})\)</span></li>
 </ol>
 </li>
 </ol>
 </div>
 <h1><a name="example" href="#example">A Small Example</a></h1>
 <p>To illustrate Accelerated Proximal Gradient, I'll use the same objective function as I did in illustrating Proximal Gradient Descent. Namely,</p>
-<p>$$
+<div class="math">$$
   \min_{x} \, \log(1 + \exp(-2x)) + ||x||_1
-$$</p>
-<p>which has the following gradient for $g(x) = \log(1+\exp(-2x))$ and $\prox$
-operator for $h(x) = ||x||_1$,</p>
-<p>$$
-\begin{align<em>}
-  \nabla g(x) &amp;= \frac{1}{1 + \exp(-2x)} \left( \exp(-2x) \right) (-2) \
-  \prox_{\alpha h}(x) &amp; = \text{sign}(x) \max(0, \text{abs}(x) - \alpha) \
-\end{align</em>}
-$$</p>
+$$</div>
+<p>which has the following gradient for <span class="math">\(g(x) = \log(1+\exp(-2x))\)</span> and <span class="math">\(\prox\)</span>
+operator for <span class="math">\(h(x) = ||x||_1\)</span>,</p>
+<div class="math">$$
+\begin{align*}
+  \nabla g(x) &amp;= \frac{1}{1 + \exp(-2x)} \left( \exp(-2x) \right) (-2) \\
+  \prox_{\alpha h}(x) &amp; = \text{sign}(x) \max(0, \text{abs}(x) - \alpha) \\
+\end{align*}
+$$</div>
 <p>As before, we employ Backtracking Line Search to select the step size. In
 this example, regular Proximal Gradient seems to beat out Accelerated
 Proximal Gradient, but rest assured this is an artifact of the tiny problem
@@ -136,165 +136,165 @@ size.</p>
 <p>For the proof of Accelerated Proximal Gradient, we'll make the same
 assumptions we did in Proximal Gradient. Namely,</p>
 <ol>
-<li>$g(x)$ is convex, differentiable, and finite for all $x$</li>
-<li>a finite solution $x^{*}$ exists</li>
-<li>$\nabla g(x)$ is Lipschitz continuous with constant $L$. That is, there must
-   be an $L$ such that,</li>
+<li><span class="math">\(g(x)\)</span> is convex, differentiable, and finite for all <span class="math">\(x\)</span></li>
+<li>a finite solution <span class="math">\(x^{*}\)</span> exists</li>
+<li><span class="math">\(\nabla g(x)\)</span> is Lipschitz continuous with constant <span class="math">\(L\)</span>. That is, there must
+   be an <span class="math">\(L\)</span> such that,</li>
 </ol>
-<p>$$
+<div class="math">$$
   || \nabla g(x) - \nabla g(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
-$$</p>
+$$</div>
 <ol>
-<li>$h(x)$ is convex</li>
+<li><span class="math">\(h(x)\)</span> is convex</li>
 </ol>
 <p><strong>Proof Outline</strong> In the same way that the proof for Proximal Gradient
 largely follows the proof for regular Gradient Descent, the proof for
 Accelerated Proximal Gradient follows the proof for Accelerated Gradient
 Descent. Our goal is to prove a statement of the form,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
     (g+h)(x^{+})
-    \le (1-\theta) (g+h)(x) + \theta (g+h)(x^{</em>}) + \frac{\theta^2}{2 \alpha^{+}} \left(
-        ||v - x^{<em>}||_2^2 - ||v^{+} - x^{</em>}||_2^2
-      \right) \
+    \le (1-\theta) (g+h)(x) + \theta (g+h)(x^{*}) + \frac{\theta^2}{2 \alpha^{+}} \left(
+        ||v - x^{*}||_2^2 - ||v^{+} - x^{*}||_2^2
+      \right) \\
 \end{align*}
-$$</p>
-<p>Once we achieve this, the proof follows that of Accelerated Gradient with $f
-\rightarrow g+h$ from Step 2 onwards.</p>
+$$</div>
+<p>Once we achieve this, the proof follows that of Accelerated Gradient with <span class="math">\(f
+\rightarrow g+h\)</span> from Step 2 onwards.</p>
 <p>How will we do this? As with Accelerated Gradient, we define a new set of
-iterates $v^{(t)}$ in terms of $x^{(t)}$ and $x^{(t-1)}$ and then define
-$y^{(t)}$ in terms of $v^{(t)}$ and $x^{(t)}$. We then exploit the Lipschitz bound
-on $g$ and a particular subgradient bound on $h$ to establish an upper bound
-on $(g+h)(x^{(t)})$. Finally, through algebraic manipulations we show the
+iterates <span class="math">\(v^{(t)}\)</span> in terms of <span class="math">\(x^{(t)}\)</span> and <span class="math">\(x^{(t-1)}\)</span> and then define
+<span class="math">\(y^{(t)}\)</span> in terms of <span class="math">\(v^{(t)}\)</span> and <span class="math">\(x^{(t)}\)</span>. We then exploit the Lipschitz bound
+on <span class="math">\(g\)</span> and a particular subgradient bound on <span class="math">\(h\)</span> to establish an upper bound
+on <span class="math">\((g+h)(x^{(t)})\)</span>. Finally, through algebraic manipulations we show the
 equation presented above, and we can simply copy-paste the Accelerated Gradient
 Descent proof to completion.</p>
-<p><strong>Step 1</strong> Define a new set of iterates $v^{(t)}$. As with Accelerated
-Gradient, we define a new set of iterates $v^{(t)}$ and a particular
-$\theta^{(t)}$ as follows,</p>
-<p>$$
-\begin{align<em>}
+<p><strong>Step 1</strong> Define a new set of iterates <span class="math">\(v^{(t)}\)</span>. As with Accelerated
+Gradient, we define a new set of iterates <span class="math">\(v^{(t)}\)</span> and a particular
+<span class="math">\(\theta^{(t)}\)</span> as follows,</p>
+<div class="math">$$
+\begin{align*}
   v^{(t)}
   &amp; = \frac{t+1}{2} x^{(t)} - \frac{t-1}{2} x^{(t-1)}
-    = x^{(t-1)} + \frac{1}{\theta^{(t)}} (x^{(t)} - x^{(t-1)}) \
+    = x^{(t-1)} + \frac{1}{\theta^{(t)}} (x^{(t)} - x^{(t-1)}) \\
   \theta^{(t)}
-  &amp; = \frac{2}{t+1} \
-\end{align</em>}
-$$</p>
-<p>This definition also allows us to redefine $y^{(t)}$,</p>
-<p>$$
+  &amp; = \frac{2}{t+1} \\
+\end{align*}
+$$</div>
+<p>This definition also allows us to redefine <span class="math">\(y^{(t)}\)</span>,</p>
+<div class="math">$$
   y^{(t)}
-  = (1 - \theta^{(t)}) x^{(t)} + \theta^{(t)} v^{(t)} \
-$$</p>
-<p><strong>Step 2</strong> Use the Lipschitz property of $g$ and subgradient property of $h$
-to upper bound $(g+h)(x^{(t+1)})$.  Let's begin by defining $x^{+} \triangleq
-x^{(t)}$, $x \triangleq x^{(t-1)}$, $y \triangleq y^{(t-1)}$, $\theta
-\triangleq \theta^{(t-1)}$, $v^{+} \triangleq v^{(t)}$, and $v \triangleq
-v^{(t-1)}$.  From the Lipschitz property of $g$, we immediately get,</p>
-<p>$$
+  = (1 - \theta^{(t)}) x^{(t)} + \theta^{(t)} v^{(t)} \\
+$$</div>
+<p><strong>Step 2</strong> Use the Lipschitz property of <span class="math">\(g\)</span> and subgradient property of <span class="math">\(h\)</span>
+to upper bound <span class="math">\((g+h)(x^{(t+1)})\)</span>.  Let's begin by defining <span class="math">\(x^{+} \triangleq
+x^{(t)}\)</span>, <span class="math">\(x \triangleq x^{(t-1)}\)</span>, <span class="math">\(y \triangleq y^{(t-1)}\)</span>, <span class="math">\(\theta
+\triangleq \theta^{(t-1)}\)</span>, <span class="math">\(v^{+} \triangleq v^{(t)}\)</span>, and <span class="math">\(v \triangleq
+v^{(t-1)}\)</span>.  From the Lipschitz property of <span class="math">\(g\)</span>, we immediately get,</p>
+<div class="math">$$
   g(x^{+}) \le g(y) + \nabla g(y)^T (x^{+} - y) + \frac{L}{2} ||x^{+} - y||_2^2
-$$</p>
-<p>Let's immediately assume $\alpha \le \frac{1}{L}$, so we can replace $\frac{L}{2}$ with $\frac{1}{2 \alpha}$. Now let's derive the subgradient property of $h$ we need.  Recall the subgradient definition,</p>
-<p>$$
+$$</div>
+<p>Let's immediately assume <span class="math">\(\alpha \le \frac{1}{L}\)</span>, so we can replace <span class="math">\(\frac{L}{2}\)</span> with <span class="math">\(\frac{1}{2 \alpha}\)</span>. Now let's derive the subgradient property of <span class="math">\(h\)</span> we need.  Recall the subgradient definition,</p>
+<div class="math">$$
   h(z) \ge h(\tilde{x}) + G^T (z-\tilde{x}) \qquad G \in \partial h(\tilde{x})
-$$</p>
-<p>Now let $x^{+} = \prox_{\alpha h}(\tilde{x}) = \arg\min_{w} \alpha h(w) + \frac{1}{2}||w - \tilde{x}||_2^2$.  According to the KKT conditions, 0 must be in the subdifferential of $\alpha h(x^{+}) + \frac{1}{2} || x^{+} - \tilde{x} ||_2^2$.  Plugging this in, we see that,</p>
-<p>$$
-\begin{align<em>}
-  0 &amp; \in \alpha \partial h(x^{+}) + (x^{+} - \tilde{x}) \
+$$</div>
+<p>Now let <span class="math">\(x^{+} = \prox_{\alpha h}(\tilde{x}) = \arg\min_{w} \alpha h(w) + \frac{1}{2}||w - \tilde{x}||_2^2\)</span>.  According to the KKT conditions, 0 must be in the subdifferential of <span class="math">\(\alpha h(x^{+}) + \frac{1}{2} || x^{+} - \tilde{x} ||_2^2\)</span>.  Plugging this in, we see that,</p>
+<div class="math">$$
+\begin{align*}
+  0 &amp; \in \alpha \partial h(x^{+}) + (x^{+} - \tilde{x}) \\
   \frac{1}{\alpha} \left( \tilde{x} - x^{+} \right) &amp; \in \partial h(x^{+})
-\end{align</em>}
-$$</p>
-<p>We now have a subgradient for $h(x^{+})$.  Plugging this back into the
-subgradient condition with $\tilde{x} \rightarrow x^{+}$,</p>
-<p>$$
-\begin{align<em>}
+\end{align*}
+$$</div>
+<p>We now have a subgradient for <span class="math">\(h(x^{+})\)</span>.  Plugging this back into the
+subgradient condition with <span class="math">\(\tilde{x} \rightarrow x^{+}\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   h(z)
-  &amp;\ge h(x^{+}) + \frac{1}{\alpha} \left( \tilde{x} - x^{+} \right)^T(z - x^{+}) \
+  &amp;\ge h(x^{+}) + \frac{1}{\alpha} \left( \tilde{x} - x^{+} \right)^T(z - x^{+}) \\
   h(z) + \frac{1}{\alpha} \left( x^{+} - \tilde{x} \right)^T (z - x^{+})
-  &amp;\ge h(x^{+}) \
-\end{align</em>}
-$$</p>
-<p>Finally, substitute $\tilde{x} = y - \alpha \nabla g(y)$ to obtain our
-desired upper bound on $h(x^{+})$,</p>
-<p>$$
-\begin{align<em>}
+  &amp;\ge h(x^{+}) \\
+\end{align*}
+$$</div>
+<p>Finally, substitute <span class="math">\(\tilde{x} = y - \alpha \nabla g(y)\)</span> to obtain our
+desired upper bound on <span class="math">\(h(x^{+})\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   h(x^{+})
-  &amp; \le h(z) + \frac{1}{\alpha} \left( x^{+} - \left(y - \alpha \nabla g(y) \right) \right)^T (z - x^{+}) \
+  &amp; \le h(z) + \frac{1}{\alpha} \left( x^{+} - \left(y - \alpha \nabla g(y) \right) \right)^T (z - x^{+}) \\
   &amp; = h(z) + \nabla g(y)^T (z - x^{+}) + \frac{1}{\alpha} ( x^{+} - y )^T (z - x^{+})
-\end{align</em>}
-$$</p>
-<p>Nice. Now add the Lipschitz bound on $g$ and the subgradient bound on
-$h$ to obtain an upper bound on $(g+h)(x^{+})$, then invoke convexity on $g(z)
-\ge g(y) + \nabla g(y)^T (z-y)$ to get rid of the linear term involving $\nabla
-g(y)$,</p>
-<p>$$
-\begin{align<em>}
+\end{align*}
+$$</div>
+<p>Nice. Now add the Lipschitz bound on <span class="math">\(g\)</span> and the subgradient bound on
+<span class="math">\(h\)</span> to obtain an upper bound on <span class="math">\((g+h)(x^{+})\)</span>, then invoke convexity on <span class="math">\(g(z)
+\ge g(y) + \nabla g(y)^T (z-y)\)</span> to get rid of the linear term involving <span class="math">\(\nabla
+g(y)\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   (g+h)(x^{+})
-  &amp; \le g(y) + h(z) + \nabla g(y)^T (z-y) + \frac{1}{\alpha} (x^{+} - y)^T (z - x^{+}) + \frac{1}{2\alpha} ||x^{+} - y||_2^2 \
+  &amp; \le g(y) + h(z) + \nabla g(y)^T (z-y) + \frac{1}{\alpha} (x^{+} - y)^T (z - x^{+}) + \frac{1}{2\alpha} ||x^{+} - y||_2^2 \\
   &amp; \le g(z) + h(z) + \frac{1}{\alpha} (x^{+} - y)^T (z - x^{+}) + \frac{1}{2\alpha} ||x^{+} - y||_2^2
-\end{align</em>}
-$$</p>
+\end{align*}
+$$</div>
 <p><strong>Step 3</strong> Use the previous upper bound to obtain the equation necessary for
 invoking Accelerated Gradient Descent's proof. The core of this is to
 manipulate and bound the following statement,</p>
-<p>$$
+<div class="math">$$
   (g+h)(x^{+}) - \theta (g+h)(x^{*}) - (1-\theta) (g+h)(x)
-$$</p>
-<p>First, upper bound $-(g+h)(x^{<em>})$ and $-(g+h)(x)$ with $z = x^{</em>}$ and $z =
-x^{+}$ using the result of Step 2, then add zero and factor the quadratic,</p>
-<p>$$
-\begin{align<em>}
-  &amp; (g+h)(x^{+}) - \theta (g+h)(x^{</em>}) - (1-\theta) (g+h)(x) \
+$$</div>
+<p>First, upper bound <span class="math">\(-(g+h)(x^{*})\)</span> and <span class="math">\(-(g+h)(x)\)</span> with <span class="math">\(z = x^{*}\)</span> and <span class="math">\(z =
+x^{+}\)</span> using the result of Step 2, then add zero and factor the quadratic,</p>
+<div class="math">$$
+\begin{align*}
+  &amp; (g+h)(x^{+}) - \theta (g+h)(x^{*}) - (1-\theta) (g+h)(x) \\
   &amp; \le (g+h)(x^{+}) + \theta \left(
-      - (g+h)(x^{+}) + \frac{1}{\alpha} (x^{+} - y)^T (x^{<em>} - x^{+}) + \frac{1}{2 \alpha} ||x^{+} - y||_2^2
-    \right) \
+      - (g+h)(x^{+}) + \frac{1}{\alpha} (x^{+} - y)^T (x^{*} - x^{+}) + \frac{1}{2 \alpha} ||x^{+} - y||_2^2
+    \right) \\
   &amp; \qquad + (1-\theta) \left(
       - (g+h)(x    ) + \frac{1}{\alpha} (x^{+} - y)^T (x     - x^{+}) + \frac{1}{2 \alpha} ||x     - y||_2^2
-    \right) \
-  &amp; = \frac{1}{\alpha} (x^{+} - y)^T ( \theta x^{</em>} + (1-\theta) x - x^{+} ) + \frac{1}{2 \alpha} ||x^{+} - y||_2^2 \pm \frac{1}{2 \alpha} ||\theta x^{<em>} + (1-\theta) x - x^{+} ||_2^2 \
+    \right) \\
+  &amp; = \frac{1}{\alpha} (x^{+} - y)^T ( \theta x^{*} + (1-\theta) x - x^{+} ) + \frac{1}{2 \alpha} ||x^{+} - y||_2^2 \pm \frac{1}{2 \alpha} ||\theta x^{*} + (1-\theta) x - x^{+} ||_2^2 \\
   &amp; = \frac{1}{2 \alpha} \left(
-    ||x^{+} - y + \theta x^{</em>} + (1 - \theta) x - x^{+}||_2^2
-    - ||\theta x^{<em>} + (1 - \theta) x - x^{+}||_2^2
-  \right) \
+    ||x^{+} - y + \theta x^{*} + (1 - \theta) x - x^{+}||_2^2
+    - ||\theta x^{*} + (1 - \theta) x - x^{+}||_2^2
+  \right) \\
   &amp; = \frac{1}{2 \alpha} \left(
-    ||y - \theta x^{</em>} - (1 - \theta) x||_2^2
-    - || x^{+} - \theta x^{<em>} - (1 - \theta) x||_2^2
-  \right) \
-\end{align</em>}
-$$</p>
-<p>Finally, use $y = (1 - \theta) x + \theta v$ to get $y - (1-\theta) x =
-\theta v$ and then $v^{+} = x + \frac{1}{\theta} ( x^{+} - x )$ to obtain
-$\theta v^{+} = x^{+} - (1-\theta) x$. Substituting these in,</p>
-<p>$$
-\begin{align<em>}
-  &amp; (g+h)(x^{+}) - \theta (g+h)(x^{</em>}) - (1-\theta) (g+h)(x) \
-  &amp; \le \frac{1}{2 \alpha} \left(
-    ||\theta v - \theta x^{<em>}||_2^2 - || \theta v^{+} - \theta x^{</em>} ||_2^2
-  \right) \
-  &amp; = \frac{\theta^2}{2 \alpha} \left(
-    || v - x^{<em>}||_2^2 - || v^{+} - x^{</em>} ||_2^2
-  \right) \
+    ||y - \theta x^{*} - (1 - \theta) x||_2^2
+    - || x^{+} - \theta x^{*} - (1 - \theta) x||_2^2
+  \right) \\
 \end{align*}
-$$</p>
+$$</div>
+<p>Finally, use <span class="math">\(y = (1 - \theta) x + \theta v\)</span> to get <span class="math">\(y - (1-\theta) x =
+\theta v\)</span> and then <span class="math">\(v^{+} = x + \frac{1}{\theta} ( x^{+} - x )\)</span> to obtain
+<span class="math">\(\theta v^{+} = x^{+} - (1-\theta) x\)</span>. Substituting these in,</p>
+<div class="math">$$
+\begin{align*}
+  &amp; (g+h)(x^{+}) - \theta (g+h)(x^{*}) - (1-\theta) (g+h)(x) \\
+  &amp; \le \frac{1}{2 \alpha} \left(
+    ||\theta v - \theta x^{*}||_2^2 - || \theta v^{+} - \theta x^{*} ||_2^2
+  \right) \\
+  &amp; = \frac{\theta^2}{2 \alpha} \left(
+    || v - x^{*}||_2^2 - || v^{+} - x^{*} ||_2^2
+  \right) \\
+\end{align*}
+$$</div>
 <p>Which was our original goal.  We then follow the proof for Accelerated
-Gradient Descent with $f \rightarrow g + h$ starting from Step 2 to obtain
-the desired rate of convergence, $O(1 / \sqrt{\epsilon})$.</p>
-<p>As a final note, you'll notice that in this proof $\theta^{(t)} =
-\frac{2}{t+1}$, but in the original Accelerated Gradient proof $\theta^{(t)}
-= \frac{2}{t+2}$. This ends up no mattering, as the only property we need being
-$\frac{1 - \theta^{(t)}}{ (\theta^{(t)})^2 } \le \frac{1}{ (\theta^{(t)})^2 }$,
+Gradient Descent with <span class="math">\(f \rightarrow g + h\)</span> starting from Step 2 to obtain
+the desired rate of convergence, <span class="math">\(O(1 / \sqrt{\epsilon})\)</span>.</p>
+<p>As a final note, you'll notice that in this proof <span class="math">\(\theta^{(t)} =
+\frac{2}{t+1}\)</span>, but in the original Accelerated Gradient proof <span class="math">\(\theta^{(t)}
+= \frac{2}{t+2}\)</span>. This ends up no mattering, as the only property we need being
+<span class="math">\(\frac{1 - \theta^{(t)}}{ (\theta^{(t)})^2 } \le \frac{1}{ (\theta^{(t)})^2 }\)</span>,
 which holds for either definition.</p>
 <h1><a name="usage" href="#usage">When should I use it?</a></h1>
 <p>As with <a href="/blog/accelerated-gradient-descent.html#usage">Accelerated Gradient</a>, the algorithm
 works well <em>as long as you get the step size right</em>. That means Backtracking
-Line Search is an absolute must if you don't know $g$'s Lipschitz constant
+Line Search is an absolute must if you don't know <span class="math">\(g\)</span>'s Lipschitz constant
 analytically.  If Line Search is possible, you can only gain over Proximal
 Gradient by employing Accelerated Proximal Gradient; with that said, test a
 Proximal Gradient algorithm first, and advance to Accelerated Proximal Gradient
 only if you're sure you need the faster convergence rate.</p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
 <p><strong>Step Size</strong> As with Accelerated Gradient, getting the correct step size is
-of utmost importance. If $\alpha^{(t)} &gt; \frac{1}{L}$, <em>the algorithm will
+of utmost importance. If <span class="math">\(\alpha^{(t)} &gt; \frac{1}{L}\)</span>, <em>the algorithm will
 diverge</em>. With that said, Backtracking Line Search will guarantee convergence.
 You can find an implementation in <a href="/blog/proximal-gradient-descent.html#line_search">my previous post on Proximal
 Gradient</a>.</p>
@@ -384,6 +384,63 @@ Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures
                                       <span class="n">path</span><span class="o">=</span><span class="s1">&#39;figures/convergence.png&#39;</span><span class="p">,</span>
                                       <span class="n">y_star</span><span class="o">=</span><span class="mf">0.69314718055994529</span><span class="p">)</span>
 </pre></div>
+
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
 
     <div id="article_meta">
         Category:

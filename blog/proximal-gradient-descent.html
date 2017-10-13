@@ -60,82 +60,82 @@
 		  <abbr class="published">Fri 19 April 2013</abbr>
 	</header>
   <article>
-    <p>$ \def\prox{\text{prox}} $
-  In a <a href="/blog/subgradient-descent.html#usage">previous post</a>, I mentioned that one cannot
-hope to asymptotically outperform the $O(\frac{1}{\epsilon^2})$ convergence
+    <p><span class="math">\( \def\prox{\text{prox}} $
+  In a [previous post][subgradient_descent_usage], I mentioned that one cannot
+hope to asymptotically outperform the $O(\frac{1}{\epsilon^2})\)</span> convergence
 rate of Subgradient Descent when dealing with a non-differentiable objective
 function. This is in fact only half-true; Subgradient Descent cannot be beat
 <em>using only first-order information</em> (that is, gradients and subgradients).
 In this article, I'll describe Proximal Gradient Descent, an algorithm that
-exploits problem structure to obtain a rate of $O(\frac{1}{\epsilon})$. In
+exploits problem structure to obtain a rate of <span class="math">\(O(\frac{1}{\epsilon})\)</span>. In
 particular, Proximal Gradient is useful if the following 2 assumptions hold.
 First, the objective function must be of the form,</p>
-<p>$$
+<div class="math">$$
   \min_{x} \, g(x) + h(x)
-$$</p>
-<p>with $g$ is differentiable. Second $h$ must be "simple" enough such that we
-can calculate its $\prox$ operator very quickly,</p>
-<p>$$
+$$</div>
+<p>with <span class="math">\(g\)</span> is differentiable. Second <span class="math">\(h\)</span> must be "simple" enough such that we
+can calculate its <span class="math">\(\prox\)</span> operator very quickly,</p>
+<div class="math">$$
   \prox_{h}(x) = \min_{u} h(u) + \frac{1}{2} ||u-x||_2^2
-$$</p>
+$$</div>
 <p>Using these two assumptions, we can obtain a convergence rate identical to
 Gradient Descent even when optimizing non-differentiable objective functions.</p>
 <h1><a name="implementation" href="#implementation">How does it work?</a></h1>
 <div class="pseudocode">
-<p><strong>Input</strong>: initial iterate $x^{(0)}$</p>
+<p><strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
 <ol>
-<li>For $t = 0, 1, 2, \ldots$<ol>
-<li>Let $x^{(t+1)} = \prox_{ \alpha^{(t)} h } \left( x^{(t)} - \alpha^{(t)} \nabla g(x^{(t)}) \right)$</li>
-<li>if converged, return $x^{(t+1)}$</li>
+<li>For <span class="math">\(t = 0, 1, 2, \ldots\)</span><ol>
+<li>Let <span class="math">\(x^{(t+1)} = \prox_{ \alpha^{(t)} h } \left( x^{(t)} - \alpha^{(t)} \nabla g(x^{(t)}) \right)\)</span></li>
+<li>if converged, return <span class="math">\(x^{(t+1)}\)</span></li>
 </ol>
 </li>
 </ol>
 </div>
 <p><a id="intuition"></a></p>
-<h1><a name="intuition" href="#intuition">Intuition for the $\prox$ Operator</a></h1>
-<p>At first sight, the $\prox$ operator looks suspicious.  Where did it come
+<h1><a name="intuition" href="#intuition">Intuition for the <span class="math">\(\prox\)</span> Operator</a></h1>
+<p>At first sight, the <span class="math">\(\prox\)</span> operator looks suspicious.  Where did it come
 from? Why did someone really think it would work?  It ends up that we can
 derive the update for Gradient Descent and the update for Gradient Descent
 almost identically. First, notice that the Gradient Descent Update is the
-solution to the following quadratic approximation to $f(x)$.</p>
-<p>$$
-\begin{align<em>}
-  x^{(t+1)} &amp; = \arg\min_{y} f(x^{(t)}) + \nabla f(x^{(t)})^T (y-x^{(t)}) + \frac{L}{2} ||y-x^{(t)}||_2^2 \
-  0     &amp; = \nabla f(x^{(t)}) + L (x^{(t+1)}-x^{(t)}) \
+solution to the following quadratic approximation to <span class="math">\(f(x)\)</span>.</p>
+<div class="math">$$
+\begin{align*}
+  x^{(t+1)} &amp; = \arg\min_{y} f(x^{(t)}) + \nabla f(x^{(t)})^T (y-x^{(t)}) + \frac{L}{2} ||y-x^{(t)}||_2^2 \\
+  0     &amp; = \nabla f(x^{(t)}) + L (x^{(t+1)}-x^{(t)}) \\
   x^{(t+1)} &amp; = x^{(t)} - \frac{1}{L} \nabla f(x^{(t)})
-\end{align</em>}
-$$</p>
-<p>We take the gradient of the right hand side with respect to $y$ and set it to
-zero in the second line.  Now replace $f$ with $g$, and add $h(y)$ to the
+\end{align*}
+$$</div>
+<p>We take the gradient of the right hand side with respect to <span class="math">\(y\)</span> and set it to
+zero in the second line.  Now replace <span class="math">\(f\)</span> with <span class="math">\(g\)</span>, and add <span class="math">\(h(y)\)</span> to the
 very end of the first line,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   x^{(t+1)}
-  &amp; = \arg\min_{y} g(x^{(t)}) + \nabla g(x^{(t)})^T (y-x^{(t)}) + \frac{L}{2} ||y-x^{(t)}||<em y>2^2 + h(y) \
-  &amp; = \arg\min</em> g(x^{(t)}) + \frac{L}{2} \left( \frac{2}{L} \nabla g(x^{(t)})^T (y-x^{(t)}) \right) + \frac{L}{2} ||y-x^{(t)}||<em y>2^2 + h(y) + \frac{L}{2} ||\nabla g(x^{(t)})||_2^2 \
-  &amp; = \arg\min</em> \frac{L}{2} || y - (x^{(t)} - \frac{1}{L} \nabla g(x^{(t)})) ||<em _frac_1="\frac{1">2^2 + h(y) \
-  &amp; = \prox</em>{L} h }(x^{(t)} - \frac{1}{L} \nabla g(x^{(t)})) \
-\end{align</em>}
-$$</p>
-<p>This time, we add constants (with respect to $y$) such that we can pull the
-$\nabla g(x^{(t)})^T (y-x^{(t)})$ into the quadratic term, leading us to the
+  &amp; = \arg\min_{y} g(x^{(t)}) + \nabla g(x^{(t)})^T (y-x^{(t)}) + \frac{L}{2} ||y-x^{(t)}||_2^2 + h(y) \\
+  &amp; = \arg\min_{y} g(x^{(t)}) + \frac{L}{2} \left( \frac{2}{L} \nabla g(x^{(t)})^T (y-x^{(t)}) \right) + \frac{L}{2} ||y-x^{(t)}||_2^2 + h(y) + \frac{L}{2} ||\nabla g(x^{(t)})||_2^2 \\
+  &amp; = \arg\min_{y} \frac{L}{2} || y - (x^{(t)} - \frac{1}{L} \nabla g(x^{(t)})) ||_2^2 + h(y) \\
+  &amp; = \prox_{ \frac{1}{L} h }(x^{(t)} - \frac{1}{L} \nabla g(x^{(t)})) \\
+\end{align*}
+$$</div>
+<p>This time, we add constants (with respect to <span class="math">\(y\)</span>) such that we can pull the
+<span class="math">\(\nabla g(x^{(t)})^T (y-x^{(t)})\)</span> into the quadratic term, leading us to the
 Proximal Gradient Descent update.</p>
 <h1><a name="example" href="#example">A Small Example</a></h1>
 <p>Let's now see how well Proximal Gradient Descent works.  For this example,
 we'll solve the following problem,</p>
-<p>$$
+<div class="math">$$
   \min_{x} \, \log(1 + \exp(-2x)) + ||x||_1
-$$</p>
-<p>Letting $g(x) = \log(1+\exp(-2x))$ and $h(x) = ||x||_1$, it can be shown
+$$</div>
+<p>Letting <span class="math">\(g(x) = \log(1+\exp(-2x))\)</span> and <span class="math">\(h(x) = ||x||_1\)</span>, it can be shown
 that,</p>
-<p>$$
-\begin{align<em>}
-  \nabla g(x) &amp;= \frac{1}{1 + \exp(-2x)} \left( \exp(-2x) \right) (-2) \
-  \prox_{\alpha h}(x) &amp; = \text{sign}(x) \max(0, \text{abs}(x) - \alpha) \
-\end{align</em>}
-$$</p>
+<div class="math">$$
+\begin{align*}
+  \nabla g(x) &amp;= \frac{1}{1 + \exp(-2x)} \left( \exp(-2x) \right) (-2) \\
+  \prox_{\alpha h}(x) &amp; = \text{sign}(x) \max(0, \text{abs}(x) - \alpha) \\
+\end{align*}
+$$</div>
 <p>We'll use a variant of <a href="#line_search">Backtracking Line Search</a> modified for
-Proximal Gradient Descent and an initial choice of $x^{(0)} = 5$.</p>
+Proximal Gradient Descent and an initial choice of <span class="math">\(x^{(0)} = 5\)</span>.</p>
 <div class="img-center">
   <img src="/assets/img/proximal_gradient_descent/convergence.png"></img>
   <span class="caption">
@@ -155,213 +155,213 @@ Proximal Gradient Descent and an initial choice of $x^{(0)} = 5$.</p>
 <h1><a name="proof" href="#proof">Why does it work?</a></h1>
 <p>Proximal Gradient Descent, like regular Gradient Descent, is a "descent"
 method where the objective value is guaranteed to decrease. In fact, the
-assumptions for Proximal Gradient Descent's $g(x)$ are the identical to the
-Gradient Descent assumptions for $f(x)$. The only additional condition is
-that $h(x)$ be convex,</p>
+assumptions for Proximal Gradient Descent's <span class="math">\(g(x)\)</span> are the identical to the
+Gradient Descent assumptions for <span class="math">\(f(x)\)</span>. The only additional condition is
+that <span class="math">\(h(x)\)</span> be convex,</p>
 <ol>
-<li>$g(x)$ is convex, differentiable, and finite for all $x$</li>
-<li>a finite solution $x^{*}$ exists</li>
-<li>$\nabla g(x)$ is Lipschitz continuous with constant $L$. That is, there must
-   be an $L$ such that,</li>
+<li><span class="math">\(g(x)\)</span> is convex, differentiable, and finite for all <span class="math">\(x\)</span></li>
+<li>a finite solution <span class="math">\(x^{*}\)</span> exists</li>
+<li><span class="math">\(\nabla g(x)\)</span> is Lipschitz continuous with constant <span class="math">\(L\)</span>. That is, there must
+   be an <span class="math">\(L\)</span> such that,</li>
 </ol>
-<p>$$
+<div class="math">$$
   || \nabla g(x) - \nabla g(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
-$$</p>
+$$</div>
 <ol>
-<li>$h(x)$ is convex</li>
+<li><span class="math">\(h(x)\)</span> is convex</li>
 </ol>
 <p><strong>Proof Outline</strong> The majority of the convergence proof for Proximal Gradient
 Descent is identical to the proof for regular Gradient Descent. The key is to
-carefully choose a function $G_{\alpha}(x)$ that can take the place of $\nabla
-f(x)$.  Once it is defined, we can rephrase Proximal Gradient Descent as
-$x^{(t+1)} = x^{(t)} - \alpha^{(t)} G_{\alpha^{(t)}}(x^{(t)})$. Next, we'll
+carefully choose a function <span class="math">\(G_{\alpha}(x)\)</span> that can take the place of <span class="math">\(\nabla
+f(x)\)</span>.  Once it is defined, we can rephrase Proximal Gradient Descent as
+<span class="math">\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} G_{\alpha^{(t)}}(x^{(t)})\)</span>. Next, we'll
 show that,</p>
-<p>$$
-  (g+h)(x^{(t+1)}) \le (g+h)(x^{<em>}) + G_{\alpha^{(t)}}(x^{(t)})^T (x-x^{</em>}) - \frac{\alpha^{(t)}}{2} ||G_{\alpha^{(t)}}(x^{(t)})||_2^2
-$$</p>
-<p>Once we have this, we can repeat the Gradient Descent proof verbatim with $g
-+ h \rightarrow f$ and $G_{\alpha^{(t)}}(x^{(t)}) \rightarrow \nabla
-  f(x^{(t)})$.</p>
-<p><strong>Step 1</strong> Phrase Proximal Gradient Descent as $x^{(t+1)} = x^{(t)} - \alpha^{(t)} G_{\alpha^{(t)}}(x^{(t)})$. Define $G$
+<div class="math">$$
+  (g+h)(x^{(t+1)}) \le (g+h)(x^{*}) + G_{\alpha^{(t)}}(x^{(t)})^T (x-x^{*}) - \frac{\alpha^{(t)}}{2} ||G_{\alpha^{(t)}}(x^{(t)})||_2^2
+$$</div>
+<p>Once we have this, we can repeat the Gradient Descent proof verbatim with <span class="math">\(g
++ h \rightarrow f\)</span> and <span class="math">\(G_{\alpha^{(t)}}(x^{(t)}) \rightarrow \nabla
+  f(x^{(t)})\)</span>.</p>
+<p><strong>Step 1</strong> Phrase Proximal Gradient Descent as <span class="math">\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} G_{\alpha^{(t)}}(x^{(t)})\)</span>. Define <span class="math">\(G\)</span>
 as follows,</p>
-<p>$$
+<div class="math">$$
   G_{\alpha}(x) \triangleq \frac{1}{\alpha} (x - \prox_{\alpha h}( x - \alpha \nabla g(x)))
-$$</p>
-<p>Now let $x^{+} \triangleq x^{(t+1)}$, $x \triangleq x^{(t)}$, and $\alpha
-\triangleq \alpha^{(t)}$. Using $G$, we can reframe Proximal Gradient Descent
+$$</div>
+<p>Now let <span class="math">\(x^{+} \triangleq x^{(t+1)}\)</span>, <span class="math">\(x \triangleq x^{(t)}\)</span>, and <span class="math">\(\alpha
+\triangleq \alpha^{(t)}\)</span>. Using <span class="math">\(G\)</span>, we can reframe Proximal Gradient Descent
 as a typical descent method,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   x^{+}
-  &amp;= x - \alpha G_{\alpha}(x) \
+  &amp;= x - \alpha G_{\alpha}(x) \\
   &amp;= x - \alpha \left(
       \frac{1}{\alpha} (x - \prox_{\alpha h}( x - \alpha \nabla g(x))
-    \right) \
-  &amp;= x - (x - \prox_{\alpha h}( x - \alpha \nabla g(x)) \
-  &amp;= \prox_{\alpha h}( x - \alpha \nabla g(x)) \
-\end{align</em>}
-$$</p>
-<p><strong>Step 2</strong> Show that $G_{\alpha}(x)$ can be used like Gradient
-Descent's $\nabla f(x)$. Our goals is to obtain a statement identical to
-$f(x^{+}) \le f(x^{<em>}) + \nabla f(x)^T (x-x^{</em>}) - \frac{\alpha}{2} ||\nabla
-f(x)||<em _alpha="\alpha">2^2$ except with $G</em>(x)$ instead of $\nabla f(x)$.  Once we
+    \right) \\
+  &amp;= x - (x - \prox_{\alpha h}( x - \alpha \nabla g(x)) \\
+  &amp;= \prox_{\alpha h}( x - \alpha \nabla g(x)) \\
+\end{align*}
+$$</div>
+<p><strong>Step 2</strong> Show that <span class="math">\(G_{\alpha}(x)\)</span> can be used like Gradient
+Descent's <span class="math">\(\nabla f(x)\)</span>. Our goals is to obtain a statement identical to
+<span class="math">\(f(x^{+}) \le f(x^{*}) + \nabla f(x)^T (x-x^{*}) - \frac{\alpha}{2} ||\nabla
+f(x)||_2^2\)</span> except with <span class="math">\(G_{\alpha}(x)\)</span> instead of <span class="math">\(\nabla f(x)\)</span>.  Once we
 have this, the rest of the proof is exactly the same as Gradient Descent's.
-Begin by recalling the Lipschitz condition on $g$,</p>
-<p>$$
+Begin by recalling the Lipschitz condition on <span class="math">\(g\)</span>,</p>
+<div class="math">$$
   g(y) \le g(x) + \nabla g(x)^T (y-x) + \frac{L}{2} ||y-x||_2^2
-$$</p>
-<p>Substitute $y = x^{+} = x - \alpha G_{\alpha}(x)$ to obtain,</p>
-<p>$$
-\begin{align<em>}
+$$</div>
+<p>Substitute <span class="math">\(y = x^{+} = x - \alpha G_{\alpha}(x)\)</span> to obtain,</p>
+<div class="math">$$
+\begin{align*}
   g(x - \alpha G_{\alpha}(x))
-  &amp; \le g(x) + \nabla g(x)^T(x - \alpha G_{\alpha}(x) - x) + \frac{L}{2}||x - \alpha G_{\alpha}(x) - x||<em _alpha="\alpha">2^2 \
-  &amp; = g(x) - \alpha \nabla g(x)^T G</em>(x) + \frac{L ( \alpha )^2}{2}||G_{\alpha}(x)||_2^2 \
-\end{align</em>}
-$$</p>
-<p>Assume then that $\alpha \le \frac{1}{L}$ (this is what Backtracking Line
-Search does), We can upper bound $\frac{L ( \alpha )^2}{2} \le
-\frac{\alpha}{2}$,</p>
-<p>$$
-\begin{align<em>}
+  &amp; \le g(x) + \nabla g(x)^T(x - \alpha G_{\alpha}(x) - x) + \frac{L}{2}||x - \alpha G_{\alpha}(x) - x||_2^2 \\
+  &amp; = g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{L ( \alpha )^2}{2}||G_{\alpha}(x)||_2^2 \\
+\end{align*}
+$$</div>
+<p>Assume then that <span class="math">\(\alpha \le \frac{1}{L}\)</span> (this is what Backtracking Line
+Search does), We can upper bound <span class="math">\(\frac{L ( \alpha )^2}{2} \le
+\frac{\alpha}{2}\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   g(x - \alpha G_{\alpha}(x))
-  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \
-\end{align</em>}
-$$</p>
-<p>Then add $h(x - \alpha G_{\alpha}(x))$ to both sides,</p>
-<p>$$
-\begin{align<em>}
+  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+\end{align*}
+$$</div>
+<p>Then add <span class="math">\(h(x - \alpha G_{\alpha}(x))\)</span> to both sides,</p>
+<div class="math">$$
+\begin{align*}
   (g+h)(x - \alpha G_{\alpha}(x))
-  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||<em _alpha="\alpha">2^2 \
-  &amp; \quad + h(x - \alpha G</em>(x)) \
-\end{align</em>}
-$$</p>
-<p>Next, we'll upper bound $g(x)$ and $h(x - \alpha G_{\alpha}(x))$ using the definition of convexity. The following 2 equations hold for all $z$, For $g$, we'll use,</p>
-<p>$$
-\begin{align<em>}
-  g(z) &amp; \ge g(x) + \nabla g(x)^T (z-x) \
-  g(z) + \nabla g(x)^T (x-z) &amp; \ge g(x) \
-\end{align</em>}
-$$</p>
-<p>For $h$ we have something a bit more mysterious,</p>
-<p>$$
-\begin{align<em>}
+  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+  &amp; \quad + h(x - \alpha G_{\alpha}(x)) \\
+\end{align*}
+$$</div>
+<p>Next, we'll upper bound <span class="math">\(g(x)\)</span> and <span class="math">\(h(x - \alpha G_{\alpha}(x))\)</span> using the definition of convexity. The following 2 equations hold for all <span class="math">\(z\)</span>, For <span class="math">\(g\)</span>, we'll use,</p>
+<div class="math">$$
+\begin{align*}
+  g(z) &amp; \ge g(x) + \nabla g(x)^T (z-x) \\
+  g(z) + \nabla g(x)^T (x-z) &amp; \ge g(x) \\
+\end{align*}
+$$</div>
+<p>For <span class="math">\(h\)</span> we have something a bit more mysterious,</p>
+<div class="math">$$
+\begin{align*}
   h(z)
-  &amp; \ge h(x - \alpha G_{\alpha}(x)) + [G_{\alpha}(x) - \nabla g(x)]^T (z-(x - \alpha G_{\alpha}(x))) \
+  &amp; \ge h(x - \alpha G_{\alpha}(x)) + [G_{\alpha}(x) - \nabla g(x)]^T (z-(x - \alpha G_{\alpha}(x))) \\
   h(z) + [G_{\alpha}(x) - \nabla g(x)]^T(x - \alpha G_{\alpha}(x) - z)
   &amp; \ge h(x - \alpha G_{\alpha}(x))
-\end{align</em>}
-$$</p>
-<p>Where did that come from? It so happens that $G_{\alpha}(x) - \nabla
-g(x)$ is a valid subgradient for $h$ at $x - \alpha G_{\alpha}(x)$.
-Recall the 2 definitions we have for $x^{+}$,</p>
-<p>$$
-\begin{align<em>}
+\end{align*}
+$$</div>
+<p>Where did that come from? It so happens that <span class="math">\(G_{\alpha}(x) - \nabla
+g(x)\)</span> is a valid subgradient for <span class="math">\(h\)</span> at <span class="math">\(x - \alpha G_{\alpha}(x)\)</span>.
+Recall the 2 definitions we have for <span class="math">\(x^{+}\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   x^{+}
-  &amp;= \prox_{\alpha h} (x - \alpha \nabla g(x)) \
-  &amp;= \arg\min_{u} \alpha h(u) + \frac{1}{2} ||u - (x - \alpha \nabla g(x))||<em _alpha="\alpha">2^2 \
+  &amp;= \prox_{\alpha h} (x - \alpha \nabla g(x)) \\
+  &amp;= \arg\min_{u} \alpha h(u) + \frac{1}{2} ||u - (x - \alpha \nabla g(x))||_2^2 \\
   0
-  &amp; \in \alpha \partial h(x^{+}) + x^{+} - (x - \alpha \nabla g(x)) \
+  &amp; \in \alpha \partial h(x^{+}) + x^{+} - (x - \alpha \nabla g(x)) \\
   (x - \alpha \nabla g(x)) - x^{+}
-  &amp; \in \alpha \partial h(x^{+}) \
-  (x - \alpha \nabla g(x)) - (x - \alpha G</em>(x))
-  &amp; \in \alpha \partial h(x^{+}) \
+  &amp; \in \alpha \partial h(x^{+}) \\
+  (x - \alpha \nabla g(x)) - (x - \alpha G_{\alpha}(x))
+  &amp; \in \alpha \partial h(x^{+}) \\
   \alpha [G_{\alpha}(x)) - \nabla g(x)]
-  &amp; \in \alpha \partial h(x^{+}) \
+  &amp; \in \alpha \partial h(x^{+}) \\
   [G_{\alpha}(x)) - \nabla g(x)]
-  &amp; \in \partial h(x^{+}) \
-\end{align</em>}
-$$</p>
-<p>Thus, $G_{\alpha}(x)) - \nabla g(x)$ is a valid subgradient for $h$ at
-$x^{+} \triangleq x - \alpha G_{\alpha}(x)$, and the previous lower
-bound on $h(z)$ holds.  Putting the previous two inequalities back into the
-preceding equation and canceling out, we can see that for all $z$,</p>
-<p>$$
-\begin{align<em>}
+  &amp; \in \partial h(x^{+}) \\
+\end{align*}
+$$</div>
+<p>Thus, <span class="math">\(G_{\alpha}(x)) - \nabla g(x)\)</span> is a valid subgradient for <span class="math">\(h\)</span> at
+<span class="math">\(x^{+} \triangleq x - \alpha G_{\alpha}(x)\)</span>, and the previous lower
+bound on <span class="math">\(h(z)\)</span> holds.  Putting the previous two inequalities back into the
+preceding equation and canceling out, we can see that for all <span class="math">\(z\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   (g+h)(x - \alpha G_{\alpha}(x))
-  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||<em _alpha="\alpha">2^2 \
-  &amp; \quad + h(x - \alpha G</em>(x)) \
+  &amp; \le g(x) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+  &amp; \quad + h(x - \alpha G_{\alpha}(x)) \\
   (g+h)(x - \alpha G_{\alpha}(x))
-  &amp; \le \left( g(z) + \nabla g(z)^T (x-z) \right) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||<em _alpha="\alpha">2^2 \
-  &amp; \quad + \left( h(z) + [G</em>(x) - \nabla g(x)]^T (x - \alpha G_{\alpha}(x) - z) \right) \
-  &amp; = (g+h)(z) + G_{\alpha}(x)^T (x-z) - \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \
-\end{align</em>}
-$$</p>
-<p>Now let $z = x^{*}$ to get,</p>
-<p>$$
-\begin{align<em>}
+  &amp; \le \left( g(z) + \nabla g(z)^T (x-z) \right) - \alpha \nabla g(x)^T G_{\alpha}(x) + \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+  &amp; \quad + \left( h(z) + [G_{\alpha}(x) - \nabla g(x)]^T (x - \alpha G_{\alpha}(x) - z) \right) \\
+  &amp; = (g+h)(z) + G_{\alpha}(x)^T (x-z) - \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+\end{align*}
+$$</div>
+<p>Now let <span class="math">\(z = x^{*}\)</span> to get,</p>
+<div class="math">$$
+\begin{align*}
   (g+h)(x^{+})
-  &amp; \le (g+h)(x^{</em>}) + G_{\alpha}(x)^T (x-x^{<em>}) - \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \
-\end{align</em>}
-$$</p>
+  &amp; \le (g+h)(x^{*}) + G_{\alpha}(x)^T (x-x^{*}) - \frac{ \alpha }{2}||G_{\alpha}(x)||_2^2 \\
+\end{align*}
+$$</div>
 <p>Looking back at Step 1 of the <a href="/blog/gradient-descent.html#proof">Gradient Descent
 Proof</a>, you can see that this equation is exactly the
-same as the one used before except that $G_{\alpha}(x)$ replaces $\nabla
-f(x)$. Following the rest of the Gradient Descent proof, we find that of we
-want $(g+h)(x^{(t)}) - (g+h)(x^{*}) \le \epsilon$, we need
-$O(\frac{1}{\epsilon})$ iterations, just like Gradient Descent.</p>
+same as the one used before except that <span class="math">\(G_{\alpha}(x)\)</span> replaces <span class="math">\(\nabla
+f(x)\)</span>. Following the rest of the Gradient Descent proof, we find that of we
+want <span class="math">\((g+h)(x^{(t)}) - (g+h)(x^{*}) \le \epsilon\)</span>, we need
+<span class="math">\(O(\frac{1}{\epsilon})\)</span> iterations, just like Gradient Descent.</p>
 <h1><a name="usage" href="#usage">When should I use it?</a></h1>
 <p>Proximal Gradient Descent requires being able to easily calculate
-$\prox_{\alpha h}(x)$.  The benefits of doing so are clear -- we can reach an
-$\epsilon$-approximate solution in far fewer iterations than Subgradient
+<span class="math">\(\prox_{\alpha h}(x)\)</span>.  The benefits of doing so are clear -- we can reach an
+<span class="math">\(\epsilon\)</span>-approximate solution in far fewer iterations than Subgradient
 Descent. But this is only valuable if the cost of an iteration of Proximal Gradient
-Descent is similar to that of Subgradient Descent. For some choices of $h(x)$,
+Descent is similar to that of Subgradient Descent. For some choices of <span class="math">\(h(x)\)</span>,
 this actually holds (see <a href="#common_prox_functions">Common Prox Functions</a>
 below); it is then that Proximal Gradient Descent should be used. For other
 cases where no closed-form solution exists, it is often better to stick with
 Subgradient Descent.</p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
 <p><a id="line_search"></a>
-  <strong>Step Size</strong> The proof above assumes the step size $\alpha^{(t)} \le
-\frac{1}{L}$ ($L$ is the Lipschitz constant of $g(x)$). Rather than guessing
+  <strong>Step Size</strong> The proof above assumes the step size <span class="math">\(\alpha^{(t)} \le
+\frac{1}{L}\)</span> (<span class="math">\(L\)</span> is the Lipschitz constant of <span class="math">\(g(x)\)</span>). Rather than guessing
 for such values, Backtracking Line Search can be employed with a slight
-modification. Recall that Backtracking Line Search chooses $\alpha^{(t)}$ such
+modification. Recall that Backtracking Line Search chooses <span class="math">\(\alpha^{(t)}\)</span> such
 that,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   f(x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}))
-  &amp; \le f(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \
-\end{align</em>}
-$$</p>
-<p>If $\alpha^{(t)} \le \frac{1}{L}$, this statement must hold. To see why, let's write out where the condition came from,</p>
-<p>$$
-\begin{align<em>}
+  &amp; \le f(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \\
+\end{align*}
+$$</div>
+<p>If <span class="math">\(\alpha^{(t)} \le \frac{1}{L}\)</span>, this statement must hold. To see why, let's write out where the condition came from,</p>
+<div class="math">$$
+\begin{align*}
   f(x^{(t+1)})
-  &amp; \le f(x^{(t)}) + \nabla f(^{(t)})^T (x^{(t+1)} - x^{(t)}) + \frac{1}{2 \alpha^{(t)}}||x^{(t+1)} - x^{(t)}||_2^2 \
+  &amp; \le f(x^{(t)}) + \nabla f(^{(t)})^T (x^{(t+1)} - x^{(t)}) + \frac{1}{2 \alpha^{(t)}}||x^{(t+1)} - x^{(t)}||_2^2 \\
   f(x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}))
-  &amp; \le f(x^{(t)}) + \nabla f(^{(t)})^T (x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}) - x^{(t)}) \
-  &amp; \quad + \frac{1}{2 \alpha^{(t)}}||x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}) - x^{(t)}||_2^2 \
+  &amp; \le f(x^{(t)}) + \nabla f(^{(t)})^T (x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}) - x^{(t)}) \\
+  &amp; \quad + \frac{1}{2 \alpha^{(t)}}||x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}) - x^{(t)}||_2^2 \\
   f(x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}))
-  &amp; \le f(x^{(t)}) - \alpha^{(t)} ||\nabla f(^{(t)}) ||_2^2 + \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \
+  &amp; \le f(x^{(t)}) - \alpha^{(t)} ||\nabla f(^{(t)}) ||_2^2 + \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \\
   f(x^{(t)} - \alpha^{(t)} \nabla f(x^{(t)}))
-  &amp; \le f(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \
-\end{align</em>}
-$$</p>
-<p>If we assume that $f$ is $L$-Lipschitz, then $\alpha^{(t)} = \frac{1}{L}$ is
+  &amp; \le f(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| \nabla f(x^{(t)})||_2^2 \\
+\end{align*}
+$$</div>
+<p>If we assume that <span class="math">\(f\)</span> is <span class="math">\(L\)</span>-Lipschitz, then <span class="math">\(\alpha^{(t)} = \frac{1}{L}\)</span> is
 precisely the Lipschitz assumption. Recall now that for this problem, we have
-$G_{\alpha^{(t)}}(x^{(t)})$ in place of $\nabla f(x^{(t)})$. Replacing $f$ with
-$g+h$ and $\nabla f(x)$ with $G_{\alpha}(x)$, we come to a similar condition,</p>
-<p>$$
-\begin{align<em>}
+<span class="math">\(G_{\alpha^{(t)}}(x^{(t)})\)</span> in place of <span class="math">\(\nabla f(x^{(t)})\)</span>. Replacing <span class="math">\(f\)</span> with
+<span class="math">\(g+h\)</span> and <span class="math">\(\nabla f(x)\)</span> with <span class="math">\(G_{\alpha}(x)\)</span>, we come to a similar condition,</p>
+<div class="math">$$
+\begin{align*}
   (g+h)(x^{(t+1)})
-  &amp; \le (g+h)(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| G_{\alpha^{(t)}}(x^{(t)}) ||_2^2 \
-\end{align</em>}
-$$</p>
+  &amp; \le (g+h)(x^{(t)}) - \frac{\alpha^{(t)}}{2}|| G_{\alpha^{(t)}}(x^{(t)}) ||_2^2 \\
+\end{align*}
+$$</div>
 <p>In other words, we can perform Backtracking Line Search for Proximal Gradient Descent as follows,</p>
 <div class="pseudocode">
-<p><strong>Input</strong>: iterate $x^{(t)}$, initial step size $\alpha_0$, step factor $\beta$</p>
+<p><strong>Input</strong>: iterate <span class="math">\(x^{(t)}\)</span>, initial step size <span class="math">\(\alpha_0\)</span>, step factor <span class="math">\(\beta\)</span></p>
 <ol>
-<li>$\alpha = \alpha_0$</li>
+<li><span class="math">\(\alpha = \alpha_0\)</span></li>
 <li>While True<ol>
-<li>Calculate $G_{\alpha}(x^{(t)}) = \frac{1}{\alpha}( x - \prox_{\alpha h}(x^{(t)} - \alpha \nabla g(x)) )$</li>
-<li>if $(g+h)(x^{(t+1)}) \le (g+h)(x^{(t)}) - \frac{\alpha}{2}|| G_{\alpha}(x^{(t)}) ||_2^2$, set $\alpha^{(t)} = \alpha$ and return</li>
-<li>otherwise set $\alpha \leftarrow \alpha \beta$ and continue</li>
+<li>Calculate <span class="math">\(G_{\alpha}(x^{(t)}) = \frac{1}{\alpha}( x - \prox_{\alpha h}(x^{(t)} - \alpha \nabla g(x)) )\)</span></li>
+<li>if <span class="math">\((g+h)(x^{(t+1)}) \le (g+h)(x^{(t)}) - \frac{\alpha}{2}|| G_{\alpha}(x^{(t)}) ||_2^2\)</span>, set <span class="math">\(\alpha^{(t)} = \alpha\)</span> and return</li>
+<li>otherwise set <span class="math">\(\alpha \leftarrow \alpha \beta\)</span> and continue</li>
 </ol>
 </li>
 </ol>
 </div>
-<h1><a name="common-prox" href="#common-prox">Common $\prox$ Functions</a></h1>
-<p>There are several common choices for $h(x)$ that admit particularly efficient
-$\prox$ functions. If your objective function contains one of these, consider
+<h1><a name="common-prox" href="#common-prox">Common <span class="math">\(\prox\)</span> Functions</a></h1>
+<p>There are several common choices for <span class="math">\(h(x)\)</span> that admit particularly efficient
+<span class="math">\(\prox\)</span> functions. If your objective function contains one of these, consider
 applying Proximal Gradient immediately -- you'll converge far faster than
 Subgradient Descent.</p>
 <table class="table table-bordered table-centered">
@@ -490,6 +490,63 @@ John Duchi's article on <a href="http://www.cs.berkeley.edu/~jduchi/projects/Duc
                                       <span class="n">path</span><span class="o">=</span><span class="s1">&#39;figures/convergence.png&#39;</span><span class="p">,</span>
                                       <span class="n">y_star</span><span class="o">=</span><span class="mf">0.69314718055994529</span><span class="p">)</span>
 </pre></div>
+
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
 
     <div id="article_meta">
         Category:

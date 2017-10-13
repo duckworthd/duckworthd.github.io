@@ -67,159 +67,214 @@ error -- it's low test-time error. Thus, parameters should be minimize training
 error while remaining "simple," where the definition of "simple" is left up to
 the regularization function. Typically, supervised learning can be phrased as
 minimizing the following objective function,</p>
-<p>$$
+<div class="math">$$
   w^{*} = \arg\min_{w} \sum_{i} L(y_i, f(x_i; w)) + \lambda \Omega(w)
-$$</p>
-<p>where $L(y_i, f(x_i; w))$ is the loss for predicting $f(x_i; w)$ when the
-true label is for sample $i$ is $y_i$ and $\Omega(w)$ is a regularization
+$$</div>
+<p>where <span class="math">\(L(y_i, f(x_i; w))\)</span> is the loss for predicting <span class="math">\(f(x_i; w)\)</span> when the
+true label is for sample <span class="math">\(i\)</span> is <span class="math">\(y_i\)</span> and <span class="math">\(\Omega(w)\)</span> is a regularization
 function.</p>
 <h1><a name="sparsifying-regularizers" href="#sparsifying-regularizers">Sparsifying Regularizers</a></h1>
-<p>There are many choices for $\Omega(w)$, but the ones I'm going to talk about
-today are so called "sparsifying regularizers" such as $||w||_1$. These norms
-are most often employed because they produce "sparse" $w^{<em>}$ -- that is,
-$w^{</em>}$ with many zeros. This is in stark contrast to other regularizers such
-as $\frac{1}{2}||w||_2^2$ which leads to lots of small but nonzero entries in
-$w^{*}$.</p>
+<p>There are many choices for <span class="math">\(\Omega(w)\)</span>, but the ones I'm going to talk about
+today are so called "sparsifying regularizers" such as <span class="math">\(||w||_1\)</span>. These norms
+are most often employed because they produce "sparse" <span class="math">\(w^{*}\)</span> -- that is,
+<span class="math">\(w^{*}\)</span> with many zeros. This is in stark contrast to other regularizers such
+as <span class="math">\(\frac{1}{2}||w||_2^2\)</span> which leads to lots of small but nonzero entries in
+<span class="math">\(w^{*}\)</span>.</p>
 <h1><a name="why-sparse-solutions" href="#why-sparse-solutions">Why Sparse Solutions?</a></h1>
 <p><strong>Feature Selection</strong> One of the key reasons people turn to sparsifying
 regularizers is that they lead to automatic feature selection. Quite often,
-many of the entries of $x_i$ are irrelevant or uninformative to predicting
-the output $y_i$. Minimizing the objective function using these extra
-features will lead to lower training error, but when the learned $w^{*}$ is
+many of the entries of <span class="math">\(x_i\)</span> are irrelevant or uninformative to predicting
+the output <span class="math">\(y_i\)</span>. Minimizing the objective function using these extra
+features will lead to lower training error, but when the learned <span class="math">\(w^{*}\)</span> is
 employed at test-time it will depend on these features to be more informative
 than they are. By employing a sparsifying regularizer, the hope is that these
 features will automatically be eliminated.</p>
 <p><strong>Interpretability</strong> A second reason for favoring sparse solutions is that
 the model is easier to interpret. For example, a simple sentiment classifier
 might use a binary vector where an entry is 1 if a word is present and 0
-otherwise. If the resulting learned weights $w^{*}$ has only a few non-zero
+otherwise. If the resulting learned weights <span class="math">\(w^{*}\)</span> has only a few non-zero
 entries, we might believe that those are the most indicative words in deciding
 sentiment.</p>
 <h1><a name="nonsmooth-regularizers" href="#nonsmooth-regularizers">Non-smooth Regularizers and their Solutions</a></h1>
-<p>We now come to the \$ 100 million question: why do regularizers like the 1-norm
+<p>We now come to the \<span class="math">\( 100 million question: why do regularizers like the 1-norm
 lead to sparse solutions? At some point someone probably told you "they're our
-best convex approximation to $\ell_0$ norm," but there's a better reason than
-that.  In fact, I claim that any regularizer that is non-differentiable at $w_i
-= 0$ and can be decomposed into a sum can lead to sparse solutions.</p>
+best convex approximation to $\ell_0\)</span> norm," but there's a better reason than
+that.  In fact, I claim that any regularizer that is non-differentiable at <span class="math">\(w_i
+= 0\)</span> and can be decomposed into a sum can lead to sparse solutions.</p>
 <p><strong>Intuition</strong> The intuition lies in the idea of subgradients. Recall that the
-subgradient of a (convex) function $\Omega$ at $x$ is any vector $v$ such that,</p>
-<p>$$
+subgradient of a (convex) function <span class="math">\(\Omega\)</span> at <span class="math">\(x\)</span> is any vector <span class="math">\(v\)</span> such that,</p>
+<div class="math">$$
   \Omega(y) \ge \Omega(x) + v^T (y-x)
-$$</p>
-<p>The set of all subgradients for $\Omega$ at $x$ is called the subdifferential
-and is denoted $\partial \Omega(x)$. If $\Omega$ is differentiable at $x$,
-then $\partial \Omega(x) = { \nabla \Omega(x) }$ -- in other words,
-$\partial \Omega(x)$ contains 1 vector, the gradient. Where the
-subdifferential begins to matter is when $\Omega$ <em>isn't</em> differentiable at
-$x$. Then, it becomes something more interesting.</p>
+$$</div>
+<p>The set of all subgradients for <span class="math">\(\Omega\)</span> at <span class="math">\(x\)</span> is called the subdifferential
+and is denoted <span class="math">\(\partial \Omega(x)\)</span>. If <span class="math">\(\Omega\)</span> is differentiable at <span class="math">\(x\)</span>,
+then <span class="math">\(\partial \Omega(x) = \{ \nabla \Omega(x) \}\)</span> -- in other words,
+<span class="math">\(\partial \Omega(x)\)</span> contains 1 vector, the gradient. Where the
+subdifferential begins to matter is when <span class="math">\(\Omega\)</span> <em>isn't</em> differentiable at
+<span class="math">\(x\)</span>. Then, it becomes something more interesting.</p>
 <p>Suppose we want to minimize an unconstrained objective like the following,</p>
-<p>$$
+<div class="math">$$
   \min_{x} f(x) + \lambda \Omega(x)
-$$</p>
+$$</div>
 <p>By the <a href="http://en.wikipedia.org/wiki/Karush%E2%80%93Kuhn%E2%80%93Tucker_conditions">KKT conditions</a>, 0 must be in the subdifferential at
-the minimizer $x^{*}$,</p>
-<p>$$
-\begin{align<em>}
-  0 &amp; \in \nabla f(x^{</em>}) + \partial \lambda \Omega(x^{<em>}) \
-  - \frac{1}{\lambda} \nabla f(x^{</em>}) &amp; \in \partial \Omega(x^{<em>}) \
-\end{align</em>}
-$$</p>
+the minimizer <span class="math">\(x^{*}\)</span>,</p>
+<div class="math">$$
+\begin{align*}
+  0 &amp; \in \nabla f(x^{*}) + \partial \lambda \Omega(x^{*}) \\
+  - \frac{1}{\lambda} \nabla f(x^{*}) &amp; \in \partial \Omega(x^{*}) \\
+\end{align*}
+$$</div>
 <p>Looking forward, we're particularly interested in when the previous
-inequality holds when $x^{*} = 0$. What conditions are necessary for this to be
+inequality holds when <span class="math">\(x^{*} = 0\)</span>. What conditions are necessary for this to be
 true?</p>
-<p><strong>Dual Norms</strong> Since we're primarily concerned with $\Omega(x) = ||x||_1$,
+<p><strong>Dual Norms</strong> Since we're primarily concerned with <span class="math">\(\Omega(x) = ||x||_1\)</span>,
 let's plug that in. In the following, it'll actually be easier to prove things
 about any norm, so we'll drop the 1 for the rest of this section.</p>
 <p>Recal the definition of a dual norm. In particular, the dual norm of a norm
-$||\cdot||$ is defined as,</p>
-<p>$$
-  ||y||<em 1 _le="\le" _x_="||x||">{*} = \sup</em> x^{T} y
-$$</p>
+<span class="math">\(||\cdot||\)</span> is defined as,</p>
+<div class="math">$$
+  ||y||_{*} = \sup_{||x|| \le 1} x^{T} y
+$$</div>
 <p>A cool fact is that the dual of a dual norm is the original norm. In other words,</p>
-<p>$$
+<div class="math">$$
   ||x|| = \sup_{||y||_{*} \le 1} y^{T} x
-$$</p>
+$$</div>
 <p>Let's take the gradient of the previous expression on both sides. A nice fact
 to keep in mind is that if we take the gradient of an expression of the form
-$\sup_{y} g(y, x)$, then its gradient with respect to x is $\nabla_x g(y^{<em>},
-x)$ where $y^{</em>}$ is any $y$ that achieves the $\sup$. Since $g(y, x) = y^{T}
-x$, that means,</p>
-<p>$$
-  \nabla_x \sup_{y} g(y, x) = \nabla_x \left( (y^{<em>})^T x \right) = y^{</em>} = \arg\max_{||y||_{*} \le 1} y^{T} x
-$$</p>
-<p>$$
-  \partial ||x|| = { y^{<em>} :  y^{</em>} = \arg\max_{||y||_{*} \le 1} y^{T} x }
-$$</p>
-<p>Now let $x = 0$. Then $y^{T} x = 0$ for all $y$, so any $y$ with $||y||_{*}
-\le 1$ is in $\partial ||x||$ for $x = 0$.</p>
+<span class="math">\(\sup_{y} g(y, x)\)</span>, then its gradient with respect to x is <span class="math">\(\nabla_x g(y^{*},
+x)\)</span> where <span class="math">\(y^{*}\)</span> is any <span class="math">\(y\)</span> that achieves the <span class="math">\(\sup\)</span>. Since <span class="math">\(g(y, x) = y^{T}
+x\)</span>, that means,</p>
+<div class="math">$$
+  \nabla_x \sup_{y} g(y, x) = \nabla_x \left( (y^{*})^T x \right) = y^{*} = \arg\max_{||y||_{*} \le 1} y^{T} x
+$$</div>
+<div class="math">$$
+  \partial ||x|| = \{ y^{*} :  y^{*} = \arg\max_{||y||_{*} \le 1} y^{T} x \}
+$$</div>
+<p>Now let <span class="math">\(x = 0\)</span>. Then <span class="math">\(y^{T} x = 0\)</span> for all <span class="math">\(y\)</span>, so any <span class="math">\(y\)</span> with <span class="math">\(||y||_{*}
+\le 1\)</span> is in <span class="math">\(\partial ||x||\)</span> for <span class="math">\(x = 0\)</span>.</p>
 <p>Back to our original goal, recall that</p>
-<p>$$
+<div class="math">$$
   -\frac{1}{\lambda} \nabla f(x) \in \partial ||x||
-$$</p>
-<p>If $||-\frac{1}{\lambda} \nabla f(x)||_{<em>} \le 1$ when $x=0$, then we've
-already established that $-\frac{1}{\lambda} \nabla f(0)$ is in $\partial
-||0||$. In other words, $x^{</em>} = 0$ solves the original problem!</p>
+$$</div>
+<p>If <span class="math">\(||-\frac{1}{\lambda} \nabla f(x)||_{*} \le 1\)</span> when <span class="math">\(x=0\)</span>, then we've
+already established that <span class="math">\(-\frac{1}{\lambda} \nabla f(0)\)</span> is in <span class="math">\(\partial
+||0||\)</span>. In other words, <span class="math">\(x^{*} = 0\)</span> solves the original problem!</p>
 <h1><a name="coordinate-sparsity" href="#coordinate-sparsity">Onto Coordinate-wise Sparsity</a></h1>
-<p>We've just established that $||\frac{1}{\lambda} \nabla f(0)||_{<em>} \le 1$
-implies $x^{</em>} = 0$, but we don't want all of $x^{<em>}$ to be 0, we want </em>some
-coordinates<em> of $x^{</em>}$ to be 0. How can we take what we just concluded and
-apply it only a subvector of $x^{*}$?</p>
-<p>Rather than a general norm, let's return once again to the $L_1$ norm. The
-$L_1$ norm has a very special property that will be of use here:
-separability. In words, this means that the $L_1$ norm can be expressed as a
-sum of functions over $x$'s individual coordinates, each independent of every
-other. In particular, $||x||<em i>1 = \sum</em> |x_{i}|$.  It's easy to see that the
-function $\Omega_i(x) = |x_i|$ is independent of the rest of $x$'s elements.</p>
+<p>We've just established that <span class="math">\(||\frac{1}{\lambda} \nabla f(0)||_{*} \le 1\)</span>
+implies <span class="math">\(x^{*} = 0\)</span>, but we don't want all of <span class="math">\(x^{*}\)</span> to be 0, we want <em>some
+coordinates</em> of <span class="math">\(x^{*}\)</span> to be 0. How can we take what we just concluded and
+apply it only a subvector of <span class="math">\(x^{*}\)</span>?</p>
+<p>Rather than a general norm, let's return once again to the <span class="math">\(L_1\)</span> norm. The
+<span class="math">\(L_1\)</span> norm has a very special property that will be of use here:
+separability. In words, this means that the <span class="math">\(L_1\)</span> norm can be expressed as a
+sum of functions over <span class="math">\(x\)</span>'s individual coordinates, each independent of every
+other. In particular, <span class="math">\(||x||_1 = \sum_{i} |x_{i}|\)</span>.  It's easy to see that the
+function <span class="math">\(\Omega_i(x) = |x_i|\)</span> is independent of the rest of <span class="math">\(x\)</span>'s elements.</p>
 <p>Let's take another look at our objective function,</p>
-<p>$$
-\begin{align<em>}
-  \min_{x} f(x) + \lambda ||x||<em x_i>1
-  &amp; = \min</em> \left( \min_{x_{-i}} f(x_i, x_{-i}) + \lambda \sum_{j} |x_j| \right) \
+<div class="math">$$
+\begin{align*}
+  \min_{x} f(x) + \lambda ||x||_1
+  &amp; = \min_{x_i} \left( \min_{x_{-i}} f(x_i, x_{-i}) + \lambda \sum_{j} |x_j| \right) \\
   &amp; = \min_{x_i} g(x_i) + \lambda |x_i|
-\end{align</em>}
-$$</p>
-<p>where $x_{-i}$ is all coordinates of $x$ except $x_i$ and $g(x_i) =
-\min_{x_{-i}} f(x_i, x_{-i}) + \lambda \sum_{j \ne i} |x_j|$. Taking the
-derivative of $g(x_i)$ with respect to $x_i$, we again require that,</p>
-<p>$$
-\begin{align<em>}
-  0 &amp;\in \nabla_{x_i} g(x_i) + \lambda \partial |x_i| \
-  -\frac{1}{\lambda} \nabla_{x_i} g(x_i) &amp; \in \partial |x_i| \
-  -\frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{</em>}) &amp; \in \partial |x_i|
 \end{align*}
-$$</p>
-<p>Hmm, that looks familiar. And isn't $|x_i| = ||x_i||_1$? That means that if</p>
-<p>$$
-  \left| \left| \frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{<em>}) \right| \right|<em x_i>{\infty}
-  = \left| \frac{1}{\lambda} \nabla</em> f(x_i, x_{-i}^{</em>}) \right| \le 1
-$$</p>
-<p>when $x_i = 0$, then $x_i^{*} = 0$. In other words, given the optimal values
-for all coordinates other than $i$, we can evaluate the derivative of
-$\frac{1}{\lambda} f$ with respect to $x_i$ and check if the absolute value
-of that is less than 1. If it is, then $x_i = 0$ is optimal!</p>
+$$</div>
+<p>where <span class="math">\(x_{-i}\)</span> is all coordinates of <span class="math">\(x\)</span> except <span class="math">\(x_i\)</span> and <span class="math">\(g(x_i) =
+\min_{x_{-i}} f(x_i, x_{-i}) + \lambda \sum_{j \ne i} |x_j|\)</span>. Taking the
+derivative of <span class="math">\(g(x_i)\)</span> with respect to <span class="math">\(x_i\)</span>, we again require that,</p>
+<div class="math">$$
+\begin{align*}
+  0 &amp;\in \nabla_{x_i} g(x_i) + \lambda \partial |x_i| \\
+  -\frac{1}{\lambda} \nabla_{x_i} g(x_i) &amp; \in \partial |x_i| \\
+  -\frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{*}) &amp; \in \partial |x_i|
+\end{align*}
+$$</div>
+<p>Hmm, that looks familiar. And isn't <span class="math">\(|x_i| = ||x_i||_1\)</span>? That means that if</p>
+<div class="math">$$
+  \left| \left| \frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{*}) \right| \right|_{\infty}
+  = \left| \frac{1}{\lambda} \nabla_{x_i} f(x_i, x_{-i}^{*}) \right| \le 1
+$$</div>
+<p>when <span class="math">\(x_i = 0\)</span>, then <span class="math">\(x_i^{*} = 0\)</span>. In other words, given the optimal values
+for all coordinates other than <span class="math">\(i\)</span>, we can evaluate the derivative of
+<span class="math">\(\frac{1}{\lambda} f\)</span> with respect to <span class="math">\(x_i\)</span> and check if the absolute value
+of that is less than 1. If it is, then <span class="math">\(x_i = 0\)</span> is optimal!</p>
 <h1><a name="conclusion" href="#conclusion">Conclusion</a></h1>
 <p>In the first section, we showed that in order to solve the problem
-$\min_{x} f(x) + \lambda \Omega(x)$, it is necessary that $-\frac{1}{\lambda}
-\nabla f(x^{<em>}) \in \partial \Omega(x^{</em>})$. If $\Omega(x^{<em>})$ is
-differentiable at $x^{</em>}$, then there can be only 1 possible choice for
-$x^{<em>}$, but in all other cases there are a multitude of potential solutions.
-When $\Omega(x)$ isn't differentiable at $x = 0$, there is a non-singleton set
-of values which $-\frac{1}{\lambda} \nabla f(x^{</em>})$ can be in such that $x^{<em>}
-= 0$ is an optimal solution. If $\Omega(x) = ||x||$, then a sufficient
-condition for $x^{</em>} = 0$ to be optimal is $||\frac{1}{\lambda} \nabla
-f(x)||_{*} \le 1$ at $x = 0$.</p>
-<p>In the next section, we showed that in the special case of the $L_1$ norm, we
-can express the norm as the sum of $L_1$ norms applied to $x$'s individual
+<span class="math">\(\min_{x} f(x) + \lambda \Omega(x)\)</span>, it is necessary that <span class="math">\(-\frac{1}{\lambda}
+\nabla f(x^{*}) \in \partial \Omega(x^{*})\)</span>. If <span class="math">\(\Omega(x^{*})\)</span> is
+differentiable at <span class="math">\(x^{*}\)</span>, then there can be only 1 possible choice for
+<span class="math">\(x^{*}\)</span>, but in all other cases there are a multitude of potential solutions.
+When <span class="math">\(\Omega(x)\)</span> isn't differentiable at <span class="math">\(x = 0\)</span>, there is a non-singleton set
+of values which <span class="math">\(-\frac{1}{\lambda} \nabla f(x^{*})\)</span> can be in such that <span class="math">\(x^{*}
+= 0\)</span> is an optimal solution. If <span class="math">\(\Omega(x) = ||x||\)</span>, then a sufficient
+condition for <span class="math">\(x^{*} = 0\)</span> to be optimal is <span class="math">\(||\frac{1}{\lambda} \nabla
+f(x)||_{*} \le 1\)</span> at <span class="math">\(x = 0\)</span>.</p>
+<p>In the next section, we showed that in the special case of the <span class="math">\(L_1\)</span> norm, we
+can express the norm as the sum of <span class="math">\(L_1\)</span> norms applied to <span class="math">\(x\)</span>'s individual
 coordinates. Because of this, we can rewrite the original optimization problem
-as $\min_{x_i} g(x_i) + \lambda ||x_i||<em x__-i="x_{-i">1$ where $g(x_i) = \min</em>} f(x_i,
-x_{-i}) + \lambda ||x_{-i}||<em x_i>1$. Using the same results from the previous
-section, we showed that as long as $|\frac{1}{\lambda} \nabla</em> f(x_i,
-x_{-i}^{<em>})| \le 1$ when $x_i = 0$, then $x_i^{</em>} = 0$ is an optimal choice. In
+as <span class="math">\(\min_{x_i} g(x_i) + \lambda ||x_i||_1\)</span> where <span class="math">\(g(x_i) = \min_{x_{-i}} f(x_i,
+x_{-i}) + \lambda ||x_{-i}||_1\)</span>. Using the same results from the previous
+section, we showed that as long as <span class="math">\(|\frac{1}{\lambda} \nabla_{x_i} f(x_i,
+x_{-i}^{*})| \le 1\)</span> when <span class="math">\(x_i = 0\)</span>, then <span class="math">\(x_i^{*} = 0\)</span> is an optimal choice. In
 other words, we established conditions upon which a coordinate will be 0. This
-is why the $L_1$ norm causes sparsity.</p>
+is why the <span class="math">\(L_1\)</span> norm causes sparsity.</p>
 <h1><a name="references" href="#references">References</a></h1>
 <p>Everything written here was explained to me by the ever-knowledgable
 MetaOptimize king, <a href="https://twitter.com/atpassos">Alexandre Passos</a>.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
 
     <div id="article_meta">
         Category:

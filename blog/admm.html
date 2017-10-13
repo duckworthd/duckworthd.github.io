@@ -61,97 +61,109 @@
 	</header>
   <article>
     <p>In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing "separable" functions (that is, functions that are purely sums of other functions) in a large, distributed environment. However, Stochastic Gradient Descent is not the only algorithm out there.</p>
-<p>So why consider anything else? First of all, we have to choose step sizes $\alpha_{t,i}$. While there are theoretical constraints on how it must behave (e.g. $\alpha_t = \frac{1}{t^k}$ is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful. It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.</p>
-<p>Secondly, Stochastic Gradient Descent is naturally <em>sequential</em>. You have to update $w_{t,i}$ before you can update $w_{t,i+1}$ (well, not quite. See <a href="http://arxiv.org/abs/1106.5730">HOGWILD!</a>). This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn't of much help in MapReduce-style frameworks.</p>
+<p>So why consider anything else? First of all, we have to choose step sizes <span class="math">\(\alpha_{t,i}\)</span>. While there are theoretical constraints on how it must behave (e.g. <span class="math">\(\alpha_t = \frac{1}{t^k}\)</span> is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful. It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.</p>
+<p>Secondly, Stochastic Gradient Descent is naturally <em>sequential</em>. You have to update <span class="math">\(w_{t,i}\)</span> before you can update <span class="math">\(w_{t,i+1}\)</span> (well, not quite. See <a href="http://arxiv.org/abs/1106.5730">HOGWILD!</a>). This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn't of much help in MapReduce-style frameworks.</p>
 <p>Alternating Direction Method of Multipliers (ADMM) is an entirely different method of distributed optimization that is far better oriented for MapReduce and which only requires a single parameter to specify the learning rate. However, using it requires quite a bit more mathematical preparation.</p>
 <p>The basic idea is that if we have an optimization problem specified as follows,</p>
-<p>$$
+<div class="math">$$
 \begin{align}
-  &amp; \min_{x,z} f(x) + g(z)  \
+  &amp; \min_{x,z} f(x) + g(z)  \\
   &amp; \text{s.t. } A x + B z = c
 \end{align}
-$$</p>
+$$</div>
 <p>Then we can derive the Lagrangian and add a quadratic penalty for violating the constraint,</p>
-<p>$$
+<div class="math">$$
 L_{\rho}(x,z,y) = f(x) + g(z) + y^T (Ax + Bz -c) + \frac{\rho}{2} || Ax + Bz - c ||_2^2
-$$</p>
+$$</div>
 <p>Finally we apply the following algorithm</p>
 <div class="pseudocode">
-<p><strong>Input</strong> Initial primal and dual iterates $x_{0}$, $z_{0}$, and $y_{0}$</p>
+<p><strong>Input</strong> Initial primal and dual iterates <span class="math">\(x_{0}\)</span>, <span class="math">\(z_{0}\)</span>, and <span class="math">\(y_{0}\)</span></p>
 <ol>
 <li>
 <p>Optimize over the first primal variable,</p>
-<p>$$
-  x_{t+1} = \text{argmin}<em _rho="\rho">x L</em>(x,z_t, y_t)
-$$</p>
+<p>
+<div class="math">$$
+  x_{t+1} = \text{argmin}_x L_{\rho}(x,z_t, y_t)
+$$</div>
+</p>
 </li>
 <li>
 <p>Optimize over the second primal variable,</p>
-<p>$$
-  z_{t+1} = \text{argmin}<em _rho="\rho">x L</em>(x_{t+1},z, y_t)
-$$</p>
+<p>
+<div class="math">$$
+  z_{t+1} = \text{argmin}_x L_{\rho}(x_{t+1},z, y_t)
+$$</div>
+</p>
 </li>
 <li>
 <p>Take a gradient step for the dual variable</p>
-<p>$$
+<p>
+<div class="math">$$
   y_{t+1} = y_t + \rho (A x_{t+1} + B z_{t+1} - c)
-$$</p>
+$$</div>
+</p>
 </li>
 </ol>
 </div>
-<p>Notice the choice of step size for updating $y_t$ and the addition of a quadratic term to the Lagrangian; these are the critical addition of ADMM.</p>
+<p>Notice the choice of step size for updating <span class="math">\(y_t\)</span> and the addition of a quadratic term to the Lagrangian; these are the critical addition of ADMM.</p>
 <p>The question now becomes, how can we apply this seemingly restricted method to make a distributed algorithm? Suppose we want to minimize our usual separable function</p>
-<p>$$
+<div class="math">$$
 \min_x \sum_i f_i(x)
-$$</p>
-<p>We can reformulate this problem by giving each $f_i$ its own $x_i$, and requiring that $x_i = z$ at the very end.</p>
-<p>$$
+$$</div>
+<p>We can reformulate this problem by giving each <span class="math">\(f_i\)</span> its own <span class="math">\(x_i\)</span>, and requiring that <span class="math">\(x_i = z\)</span> at the very end.</p>
+<div class="math">$$
 \begin{align}
-  &amp; \min_{x_i, z} \sum_i f_i(x_i)   \
+  &amp; \min_{x_i, z} \sum_i f_i(x_i)   \\
   &amp; \text{s.t.} \quad \forall i \quad x_i = z
 \end{align}
-$$</p>
-<p>This means that we can optimize each $x_i$ independently, then aggregate their solutions to update $z$ (the one true $x$), and finally use both of those to update $y$. Let's see how this works out exactly. The augmented Lagrangian would be,</p>
-<p>$$
+$$</div>
+<p>This means that we can optimize each <span class="math">\(x_i\)</span> independently, then aggregate their solutions to update <span class="math">\(z\)</span> (the one true <span class="math">\(x\)</span>), and finally use both of those to update <span class="math">\(y\)</span>. Let's see how this works out exactly. The augmented Lagrangian would be,</p>
+<div class="math">$$
 L_{\rho}(x,z,y) = \sum_{i} \left( 
     f_i(x_i) + y^T (x_i - z) + \frac{\rho}{2} || x_i - z ||_2^2
   \right)
-$$</p>
+$$</div>
 <div class="pseudocode">
-<p><strong>Input</strong> Initial primal and dual iterates $x_{0}$, and $y_{0}$</p>
+<p><strong>Input</strong> Initial primal and dual iterates <span class="math">\(x_{0}\)</span>, and <span class="math">\(y_{0}\)</span></p>
 <ol>
 <li>
-<p>For each machine $i$ in parallel, optimize the local variable $x_i$</p>
-<p>$$
+<p>For each machine <span class="math">\(i\)</span> in parallel, optimize the local variable <span class="math">\(x_i\)</span></p>
+<p>
+<div class="math">$$
 \begin{align}
-  x_{t+1, i} &amp; = \text{argmin}<em t_i="t,i">x f_i(x) 
-    + y</em>^T (x - z_t) 
-    + \frac{\rho}{2} (x-z)^T (x-z) \
+  x_{t+1, i} &amp; = \text{argmin}_x f_i(x) 
+    + y_{t,i}^T (x - z_t) 
+    + \frac{\rho}{2} (x-z)^T (x-z) \\
 \end{align}
-$$</p>
+$$</div>
+</p>
 </li>
 <li>
-<p>Aggregate the resulting $x_{t,i+1}$ and optimize the global variable $z$,</p>
-<p>$$
+<p>Aggregate the resulting <span class="math">\(x_{t,i+1}\)</span> and optimize the global variable <span class="math">\(z\)</span>,</p>
+<p>
+<div class="math">$$
 \begin{align}
-  z_{t+1} &amp;= \text{argmin}<em t_i="t,i">z y</em>^T (x_{t+1, i} - z) 
-    + \frac{\rho}{2} (x_{t+1, i} - z)^T (x_{t+1, i} - z)  \
+  z_{t+1} &amp;= \text{argmin}_z y_{t,i}^T (x_{t+1, i} - z) 
+    + \frac{\rho}{2} (x_{t+1, i} - z)^T (x_{t+1, i} - z)  \\
   &amp;= \frac{1}{N} \sum_{i=1}^{N} \left( 
     x_{t+1, i} + \frac{1}{\rho} y_{t, i}
   \right)
 \end{align}
-$$</p>
+$$</div>
+</p>
 </li>
 <li>
-<p>Update the dual variables $y_{t,i}$,</p>
-<p>$$
+<p>Update the dual variables <span class="math">\(y_{t,i}\)</span>,</p>
+<p>
+<div class="math">$$
   y_{t+1, i} = y_{t, i} + \rho ( x_{t+1,i} - z_{t+1} )
-$$</p>
+$$</div>
+</p>
 </li>
 </ol>
 </div>
-<p>This is already pretty cool, but there's even more. It ends up that ADMM works splendidly even when we add a regularization penalty to the primal problem, such as the $L_2$ or $L_1$ norm. You can find out all of these cool things and more in the Stephen Boyd's <a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">paper</a> and <a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">lecture</a>.</p>
-<p>On a final note, the proofs on convergence for ADMM are currently not as complete as those for other methods like Stochastic Gradient Descent. While it is known that the dual variable $y_t$ will converge as long as $f$ and $g$ are convex and a solution exists, we can only prove convergence of the primal variables $x_t$ and $z_t$ if they are constrained to lie in a polyhedron at this point in time.</p>
+<p>This is already pretty cool, but there's even more. It ends up that ADMM works splendidly even when we add a regularization penalty to the primal problem, such as the <span class="math">\(L_2\)</span> or <span class="math">\(L_1\)</span> norm. You can find out all of these cool things and more in the Stephen Boyd's <a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">paper</a> and <a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">lecture</a>.</p>
+<p>On a final note, the proofs on convergence for ADMM are currently not as complete as those for other methods like Stochastic Gradient Descent. While it is known that the dual variable <span class="math">\(y_t\)</span> will converge as long as <span class="math">\(f\)</span> and <span class="math">\(g\)</span> are convex and a solution exists, we can only prove convergence of the primal variables <span class="math">\(x_t\)</span> and <span class="math">\(z_t\)</span> if they are constrained to lie in a polyhedron at this point in time.</p>
 <h1><a name="references" href="#references">References</a></h1>
 <ul>
 <li><a href="http://www.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers</a></li>
@@ -159,6 +171,61 @@ $$</p>
 <li><a href="http://arxiv.org/abs/1106.5730">HOGWILD!: A Lock-Free Approach to Parallelizing Stochastic Gradient Descent</a></li>
 <li><a href="http://videolectures.net/nipsworkshops2011_boyd_multipliers/">Alternating Direction Method of Multipliers</a></li>
 </ul>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
 
     <div id="article_meta">
         Category:

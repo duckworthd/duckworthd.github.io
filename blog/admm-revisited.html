@@ -66,7 +66,7 @@ convergence properties was light to say the least. While it has long been
 known (See <a href="http://web.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">Boyd's excellent article</a>, Appendix A) that ADMM <em>will</em>
 converge, it is only recently that the community has begun to establish <em>how
 fast</em> it converges (e.g. <a href="http://arxiv.org/abs/1208.3922">Hong</a>, <a href="ftp://ftp.math.ucla.edu/pub/camreport/cam12-52.pdf">Deng</a>, <a href="http://iqua.ece.toronto.edu/~cfeng/notes/cfeng-admm12.pdf">Feng</a>, <a href="http://www.math.hkbu.edu.hk/~xmyuan/Paper/HeYuan-SecondRevision.pdf">He</a>).</p>
-<p>In this article, we'll explore one way to establish an $O(1 / \epsilon)$ rate
+<p>In this article, we'll explore one way to establish an <span class="math">\(O(1 / \epsilon)\)</span> rate
 of convergence. Unlike previous convergence proofs presented in this blog, we
 won't directly show that the primal objective value alone converges to its
 optimal value; instead, we'll show that a particular function involving the
@@ -74,45 +74,45 @@ primal objective and a <a href="http://supernet.isenberg.umass.edu/austria_lectu
 converges at the desired rate.</p>
 <h1><a name="implementation" href="#implementation">How does it work?</a></h1>
 <p>Let's begin by introducing the optimization problem ADMM solves,</p>
-<p>$$
+<div class="math">$$
 \begin{align}
 \begin{split}
   \underset{x,z}{\text{minimize}} \qquad
-    &amp; f(x) + g(z) \
+    &amp; f(x) + g(z) \\
   \text{s.t.}                     \qquad
-    &amp; Ax + Bz = c \
+    &amp; Ax + Bz = c \\
 \end{split} \label{eqn:objective}
 \end{align}
-$$</p>
-<p>This problem is characterized by 2 primal variables, $x$ and $z$, which are
+$$</div>
+<p>This problem is characterized by 2 primal variables, <span class="math">\(x\)</span> and <span class="math">\(z\)</span>, which are
 related by a linear equation. In machine learning, a common scenario is to
-choose $A$, $B$, and $c$ such that $x = z$, making the setup particularly
-simple. For the rest of this article, we'll assume that $Ax + Bz = c$ is the
+choose <span class="math">\(A\)</span>, <span class="math">\(B\)</span>, and <span class="math">\(c\)</span> such that <span class="math">\(x = z\)</span>, making the setup particularly
+simple. For the rest of this article, we'll assume that <span class="math">\(Ax + Bz = c\)</span> is the
 only constraint we consider -- other constraints can be incorporated into
-$f$ and $g$ by letting them be infinite when constraints are broken.</p>
+<span class="math">\(f\)</span> and <span class="math">\(g\)</span> by letting them be infinite when constraints are broken.</p>
 <p>The ADMM algorithm then finds the "saddle point" of the Augmented
 Lagrangian for the corresponding problem,</p>
-<p>$$
+<div class="math">$$
 \begin{align} \label{eqn:lagrangian}
   L_{\rho}(x, z, y) = f(x) + g(z) + \langle y, Ax + Bz - c \rangle
                       + \frac{\rho}{2} || Ax + Bz - c ||_2^2
 \end{align}
-$$</p>
+$$</div>
 <p>Note that we say <em>Augmented</em> Lagrangian, as the typical Lagrangian does not
 include the final quadratic term. It's easy to see, however, that the quadratic
-does not affect the problem's optimal solution, as the constraint $Ax + Bz = c$
+does not affect the problem's optimal solution, as the constraint <span class="math">\(Ax + Bz = c\)</span>
 holds for all valid solutions.</p>
-<p>The ADMM algorithm iteratively minimizes $L_{\rho}$ with respect to $x$ for
-fixed $z$ and $y$, then minimizes $z$ for fixed $x$ and $y$, and finally
-takes a gradient step with respect to $y$ for fixed $x$ and $z$.</p>
+<p>The ADMM algorithm iteratively minimizes <span class="math">\(L_{\rho}\)</span> with respect to <span class="math">\(x\)</span> for
+fixed <span class="math">\(z\)</span> and <span class="math">\(y\)</span>, then minimizes <span class="math">\(z\)</span> for fixed <span class="math">\(x\)</span> and <span class="math">\(y\)</span>, and finally
+takes a gradient step with respect to <span class="math">\(y\)</span> for fixed <span class="math">\(x\)</span> and <span class="math">\(z\)</span>.</p>
 <div class="pseudocode">
-<p><strong>Input</strong> Step size $\rho$, initial primal iterates $x^{(0)}$ and $z^{(0)}$,
-            initial dual iterate $y^{(0)}$</p>
+<p><strong>Input</strong> Step size <span class="math">\(\rho\)</span>, initial primal iterates <span class="math">\(x^{(0)}\)</span> and <span class="math">\(z^{(0)}\)</span>,
+            initial dual iterate <span class="math">\(y^{(0)}\)</span></p>
 <ol>
-<li>For $t = 0, 1, \ldots$<ol>
-<li>Let $x^{(t+1)} = \underset{x}{\text{argmin}} \quad L_{\rho}( x        , z^{(t)}, y^{(t)} )$</li>
-<li>Let $z^{(t+1)} = \underset{z}{\text{argmin}} \quad L_{\rho}( x^{(t+1)}, z      , y^{(t)} )$</li>
-<li>Let $y^{(t+1)} = y^{(t)} + \rho ( Ax^{(t+1)} + Bz^{(t+1)} - c )$</li>
+<li>For <span class="math">\(t = 0, 1, \ldots\)</span><ol>
+<li>Let <span class="math">\(x^{(t+1)} = \underset{x}{\text{argmin}} \quad L_{\rho}( x        , z^{(t)}, y^{(t)} )\)</span></li>
+<li>Let <span class="math">\(z^{(t+1)} = \underset{z}{\text{argmin}} \quad L_{\rho}( x^{(t+1)}, z      , y^{(t)} )\)</span></li>
+<li>Let <span class="math">\(y^{(t+1)} = y^{(t)} + \rho ( Ax^{(t+1)} + Bz^{(t+1)} - c )\)</span></li>
 </ol>
 </li>
 </ol>
@@ -123,60 +123,60 @@ at the core of <a href="/blog/proximal-gradient-descent.html">Proximal Gradient 
 <div class="img-center">
 <p><img src="/assets/img/admm/convergence.gif"></img>
   <span class="caption">
-    Animation of $x_t$ and $z_t$ converging to the minimum of the sum of
+    Animation of <span class="math">\(x_t\)</span> and <span class="math">\(z_t\)</span> converging to the minimum of the sum of
     2 quadratics.
   </span></p>
 </div>
 <p>In the remainder of the article, we'll often use the following notation for
 conciseness,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   w    &amp;= \begin{bmatrix}
-            x \
-            z \
+            x \\
+            z \\
             y
-          \end{bmatrix} \
-  h(w) &amp;= f(x) + g(z) \
+          \end{bmatrix} \\
+  h(w) &amp;= f(x) + g(z) \\
   F(w) &amp;= \begin{bmatrix}
-            A^T y \
-            B^T y \
+            A^T y \\
+            B^T y \\
             - (Ax + Bz - c)
           \end{bmatrix}
-\end{align</em>}
-$$</p>
+\end{align*}
+$$</div>
 <h1><a name="proof" href="#proof">Why does it work?</a></h1>
 <p>Unlike other convergence proofs presented on this website, we won't directly
-show that the objective converges to its minimum as $t \rightarrow \infty$.
+show that the objective converges to its minimum as <span class="math">\(t \rightarrow \infty\)</span>.
 Indeed, limiting ourselves to analysis of the objective completely ignores the
-constraint $Ax + Bz = c$. Instead, we'll use the following variational
+constraint <span class="math">\(Ax + Bz = c\)</span>. Instead, we'll use the following variational
 inequality condition to describe an optimal solution. In particular, a solution
-$w^{*}$ is optimal if,</p>
-<p>$$
+<span class="math">\(w^{*}\)</span> is optimal if,</p>
+<div class="math">$$
 \begin{align} \label{vi}
   \forall w \in \mathbb{R}^{n} \qquad
-    h(w) - h(w^{<em>}) + \langle w - w^{</em>}, F(w^{*}) \rangle &amp;\ge 0
+    h(w) - h(w^{*}) + \langle w - w^{*}, F(w^{*}) \rangle &amp;\ge 0
 \end{align}
-$$</p>
+$$</div>
 <div class="img-center">
 <p><img src="/assets/img/admm/vi.jpg"></img>
   <span class="caption">
     Geometric interpretation of a the optimality condition for a variational
-    inequality when ignoring $h(w)$ from <a href="http://supernet.isenberg.umass.edu/austria_lectures/fvisli.pdf">Anna Nagurney</a>.
+    inequality when ignoring <span class="math">\(h(w)\)</span> from <a href="http://supernet.isenberg.umass.edu/austria_lectures/fvisli.pdf">Anna Nagurney</a>.
   </span></p>
 </div>
-<p>For the following proof, we'll replace $w^{*}$ with
-$\bar{w}<em _tau="1">t = (1/t) \sum</em>^{t} w_{\tau}$ and $0$ on the right hand side
-with $-\epsilon_t$ where $\epsilon_t = O(1/t)$. By showing that we can
-approximately satisfy this inequality at a rate $O(1/t)$, we establish the
+<p>For the following proof, we'll replace <span class="math">\(w^{*}\)</span> with
+<span class="math">\(\bar{w}_t = (1/t) \sum_{\tau=1}^{t} w_{\tau}\)</span> and <span class="math">\(0\)</span> on the right hand side
+with <span class="math">\(-\epsilon_t\)</span> where <span class="math">\(\epsilon_t = O(1/t)\)</span>. By showing that we can
+approximately satisfy this inequality at a rate <span class="math">\(O(1/t)\)</span>, we establish the
 desired convergence rate.</p>
 <p><strong>Assumptions</strong></p>
 <p>The assumptions on ADMM are almost as light as we can imagine. This is
 largely due to the fact that we needn't use gradients or subgradients for
-$h(z)$.</p>
+<span class="math">\(h(z)\)</span>.</p>
 <ol>
-<li>$f(x) + g(z)$ is convex.</li>
-<li>There exists a solution $[ x^{<em>}; z^{</em>} ]$ that minimizes $f(x) + g(z)$
-  while respecting the constraint $Ax + Bz = c$.</li>
+<li><span class="math">\(f(x) + g(z)\)</span> is convex.</li>
+<li>There exists a solution <span class="math">\([ x^{*}; z^{*} ]\)</span> that minimizes <span class="math">\(f(x) + g(z)\)</span>
+  while respecting the constraint <span class="math">\(Ax + Bz = c\)</span>.</li>
 </ol>
 <p><strong>Proof Outline</strong></p>
 <p>The proof presented hereafter is a particularly simple if unintuitive one.
@@ -187,7 +187,7 @@ unconstrained optimization problem, and Jensen's Inequality. Steps 1 and
 a preceding equation into a simpler form via completing squares. Step 4 closes
 by exploiting a telescoping sum and Jensen's Inequality to obtain the desired
 result,</p>
-<p>$$
+<div class="math">$$
 \forall w \qquad
 h(\bar{w}_t) - h(w) + \langle
   F(\bar{w}^{(t)}),
@@ -196,67 +196,67 @@ h(\bar{w}_t) - h(w) + \langle
 \le \frac{1}{t} \left(
   \frac{\rho}{2} \norm{Ax-c}_2^2 + \frac{1}{2\rho} \norm{y}_2^2
 \right)
-$$</p>
-<p>As $t \rightarrow \infty$, the right hand side of this equation goes to 0,
+$$</div>
+<p>As <span class="math">\(t \rightarrow \infty\)</span>, the right hand side of this equation goes to 0,
 rendering the same statement as the variational inequality optimality condition
-in Equation $\ref{vi}$.</p>
+in Equation <span class="math">\(\ref{vi}\)</span>.</p>
 <p><strong>Step 1</strong> Optimality conditions for Step A. In this portion of the proof,
-we'll use the fact that $x^{(t+1)}$ is defined as the solution of an
-optimization problem to derive a subgradient for $f$ at $x^{(t+1)}$. We'll then
-substitute this into $f$'s definition of convexity. Finally, terms are
+we'll use the fact that <span class="math">\(x^{(t+1)}\)</span> is defined as the solution of an
+optimization problem to derive a subgradient for <span class="math">\(f\)</span> at <span class="math">\(x^{(t+1)}\)</span>. We'll then
+substitute this into <span class="math">\(f\)</span>'s definition of convexity. Finally, terms are
 rearranged and the contents of Step C of the algorithm are used to derive
 a final expression.</p>
-<p>We begin by recognizing that $x^{(t+1)}$ minimizes
-$L_{\rho}(x, z^{(t)}, y^{(t)})$ as a function of $x$. As $x$ is unconstrained,
-zero must be a valid subgradient for $L_{\rho}$ evaluated at $x^{(t+1)},
-z^{(t)}, y^{(t)}$,</p>
-<p>$$
-\begin{align<em>}
+<p>We begin by recognizing that <span class="math">\(x^{(t+1)}\)</span> minimizes
+<span class="math">\(L_{\rho}(x, z^{(t)}, y^{(t)})\)</span> as a function of <span class="math">\(x\)</span>. As <span class="math">\(x\)</span> is unconstrained,
+zero must be a valid subgradient for <span class="math">\(L_{\rho}\)</span> evaluated at <span class="math">\(x^{(t+1)},
+z^{(t)}, y^{(t)}\)</span>,</p>
+<div class="math">$$
+\begin{align*}
   0
-  &amp;\in \partial_x L_{\rho}(x^{(t+1)}, z^{(t)}, y^{(t)})                               \
-  &amp;= \partial_{x} f(x^{(t+1)}) + A^T y^{(t)} + \rho A^T (Ax^{(t+1)} + Bz^{(t)} - c)   \
+  &amp;\in \partial_x L_{\rho}(x^{(t+1)}, z^{(t)}, y^{(t)})                               \\
+  &amp;= \partial_{x} f(x^{(t+1)}) + A^T y^{(t)} + \rho A^T (Ax^{(t+1)} + Bz^{(t)} - c)   \\
   - A^T \left( y^{(t)} + \rho (Ax^{(t+1)} + Bz^{(t)} - c) \right)
   &amp;\in \partial_x f(x^{(t+1)})
-\end{align</em>}
-$$</p>
-<p>As $f$ is convex, we further know that it is lower bounded by its linear
+\end{align*}
+$$</div>
+<p>As <span class="math">\(f\)</span> is convex, we further know that it is lower bounded by its linear
 approximation everywhere,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   \forall x \qquad
     f(x) &amp;\ge f(x^{(t+1)}) + \langle
       \partial_x f(x^{(t+1)}),
       x - x^{(t+1)}
     \rangle
-\end{align</em>}
-$$</p>
-<p>Substituting in our subgradient for $\partial_x f(x^{(t+1)})$ and subtracting
+\end{align*}
+$$</div>
+<p>Substituting in our subgradient for <span class="math">\(\partial_x f(x^{(t+1)})\)</span> and subtracting
 the contents of the right hand side from both sides, we obtain,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   \forall x \qquad
     0 &amp;\le f(x) - f(x^{(t+1)}) + \langle
       A^T (y^{(t)} + \rho (A x^{(t+1)} + B z^{(t)} - c ),
       x - x^{(t+1)}
     \rangle
-\end{align</em>}
-$$</p>
+\end{align*}
+$$</div>
 <p>Now recall Step C of the algorithm:
-$y^{(t+1)} = y^{(t)} + \rho (A x^{(t+1)} + Bz^{(t+1)} - c)$. The left side of
+<span class="math">\(y^{(t+1)} = y^{(t)} + \rho (A x^{(t+1)} + Bz^{(t+1)} - c)\)</span>. The left side of
 the inner product looks very similar to this, so we'll substitute it in as best
 we can,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   \forall x \qquad
     0 &amp;\le f(x) - f(x^{(t+1)}) + \langle
       A^T (y^{(t+1)} + \rho Bz^{(t)} - \rho Bz^{(t+1)}),
       x - x^{(t+1)}
     \rangle
-\end{align</em>}
-$$</p>
-<p>We finish by moving everything <em>not</em> multiplied by $\rho$ to the opposite
+\end{align*}
+$$</div>
+<p>We finish by moving everything <em>not</em> multiplied by <span class="math">\(\rho\)</span> to the opposite
 side of the inequality,</p>
-<p>$$
+<div class="math">$$
 \begin{align} \label{eqn:36}
   \forall x \qquad
     f(x^{(t+1)}) - f(x) + \langle
@@ -268,43 +268,43 @@ side of the inequality,</p>
       A x - A x^{(t+1)}
     \rangle
 \end{align}
-$$</p>
+$$</div>
 <p><strong>Step 2</strong> Optimality conditions for Step B. Similar to Step 1, we'll use the
-fact that $z^{(t+1)}$ is the solution to an unconstrained optimization problem
-and will substitute in Step C's definition for $y^{(t+1)}$.</p>
-<p>$$
-\begin{align<em>}
+fact that <span class="math">\(z^{(t+1)}\)</span> is the solution to an unconstrained optimization problem
+and will substitute in Step C's definition for <span class="math">\(y^{(t+1)}\)</span>.</p>
+<div class="math">$$
+\begin{align*}
   0
-  &amp;\in \partial_z L(x^{(t+1)}, z, y^{(t)})                                          \
-  &amp;= \partial_z g(z^{(t+1)}) + B^T y^{(t)} + \rho B^T (Ax^{(t+1)} + Bz^{(t+1)} - c) \
+  &amp;\in \partial_z L(x^{(t+1)}, z, y^{(t)})                                          \\
+  &amp;= \partial_z g(z^{(t+1)}) + B^T y^{(t)} + \rho B^T (Ax^{(t+1)} + Bz^{(t+1)} - c) \\
   - B^T \left( y^{(t)} + \rho (Ax^{(t+1)} + Bz^{(t+1)} - c) \right)
   &amp;\in \partial_z g(z^{(t+1)})
-\end{align</em>}
-$$</p>
-<p>As $g$ is convex, it is lower bounded by its linear approximation,</p>
-<p>$$
-\begin{align<em>}
+\end{align*}
+$$</div>
+<p>As <span class="math">\(g\)</span> is convex, it is lower bounded by its linear approximation,</p>
+<div class="math">$$
+\begin{align*}
   \forall z \qquad
     g(z) &amp;\ge g(z^{(t+1)}) + \langle
       \partial_z g(z^{(t+1)}),
       z - z^{(t+1)}
     \rangle
-\end{align</em>}
-$$</p>
+\end{align*}
+$$</div>
 <p>Substituting in the previously derived subgradient and moving all terms to
 the left side, we obtain,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   \forall z \qquad
     0 &amp;\le g(z) - g(z^{(t+1)}) + \langle
       B^T (y^{(t)} + \rho (A x^{(t+1)} + B z^{(t+1)} - c )),
       z - z^{(t+1)}
     \rangle
-\end{align</em>}
-$$</p>
-<p>Substituting in Step C's definition for $y^{(t+1)}$ again and moving
+\end{align*}
+$$</div>
+<p>Substituting in Step C's definition for <span class="math">\(y^{(t+1)}\)</span> again and moving
 everything to the opposite side of the inequality, we conclude that,</p>
-<p>$$
+<div class="math">$$
 \begin{align} \label{eqn:37}
   \forall z \qquad
     g(z^{(t+1)}) - g(z) + \langle
@@ -313,54 +313,54 @@ everything to the opposite side of the inequality, we conclude that,</p>
     \rangle
     &amp;\le 0
 \end{align}
-$$</p>
-<p><strong>Step 3</strong> We now sum Equation $\ref{eqn:36}$ with Equation $\ref{eqn:37}$.
+$$</div>
+<p><strong>Step 3</strong> We now sum Equation <span class="math">\(\ref{eqn:36}\)</span> with Equation <span class="math">\(\ref{eqn:37}\)</span>.
 We'll end up with an expression that is not easy to understand initially, but
 by factoring several of its terms into quadratic forms and substituting them
 back in, we obtain a simpler expression that can be described as a sum of
 squared 2-norms.</p>
-<p>We begin by summing equations $\ref{eqn:36}$ and $\ref{eqn:37}$.</p>
-<p>$$
-\begin{align<em>}
+<p>We begin by summing equations <span class="math">\(\ref{eqn:36}\)</span> and <span class="math">\(\ref{eqn:37}\)</span>.</p>
+<div class="math">$$
+\begin{align*}
   &amp; f(x^{(t+1)}) + g(z^{(t+1)}) - f(x) - g(z) + \langle
     B^T y^{(t+1)},
     z^{(t+1)} - z
   \rangle + \langle
     A^T y^{(t+1)},
     x^{(t+1)} - x
-  \rangle \
+  \rangle \\
   &amp; \qquad \le \rho \langle
     Ax - Ax^{(t+1)},
     Bz^{(t)} - Bz^{(t+1)}
   \rangle
-\end{align</em>}
-$$</p>
-<p>Next, we use the definitions of $h(w)$ and $F(w)$ on the left hand side,</p>
-<p>$$
-\begin{align<em>}
+\end{align*}
+$$</div>
+<p>Next, we use the definitions of <span class="math">\(h(w)\)</span> and <span class="math">\(F(w)\)</span> on the left hand side,</p>
+<div class="math">$$
+\begin{align*}
   &amp; h(w^{(t+1)}) - h(w) + \langle
     F(w^{(t+1)}),
     w^{(t+1)} - w
   \rangle + \langle
     Ax^{(t+1)} + Bz^{(t+1)} - c,
     y^{(t+1)} - y
-  \rangle \
+  \rangle \\
   &amp; \qquad \le \rho \langle
     Ax - Ax^{(t+1)},
     Bz^{(t)} - Bz^{(t+1)}
   \rangle
-\end{align</em>}
-$$</p>
+\end{align*}
+$$</div>
 <p>Then, moving the last term on the left side of the inequality over and
 observing that Step C implies
-$(1/\rho) (y^{(t+1)} - y^{(t)}) = Ax^{(t+1)} + Bz^{(t+1)} - c$,</p>
-<p>$$
+<span class="math">\((1/\rho) (y^{(t+1)} - y^{(t)}) = Ax^{(t+1)} + Bz^{(t+1)} - c\)</span>,</p>
+<div class="math">$$
 \begin{align}
 \begin{split}
   &amp; h(w^{(t+1)}) - h(w) + \langle
     F(w^{(t+1)}),
     w^{(t+1)} - w
-  \rangle  \
+  \rangle  \\
   &amp; \qquad \le \rho \langle
     Ax - Ax^{(t+1)},
     Bz^{(t)} - Bz^{(t+1)}
@@ -370,46 +370,46 @@ $(1/\rho) (y^{(t+1)} - y^{(t)}) = Ax^{(t+1)} + Bz^{(t+1)} - c$,</p>
   \rangle
 \end{split} \label{eqn:38}
 \end{align}
-$$</p>
+$$</div>
 <p>We will now tackle the two components on the right hand side of the
 inequality in isolation. Our goal is to rewrite these inner products in terms
-of sums of $\norm{\cdot}_2^2$ terms.</p>
-<p>We'll start with $\langle Ax - Ax^{(t+1)}, Bz^{(t)} - Bz^{(t+1)} \rangle$. In
+of sums of <span class="math">\(\norm{\cdot}_2^2\)</span> terms.</p>
+<p>We'll start with <span class="math">\(\langle Ax - Ax^{(t+1)}, Bz^{(t)} - Bz^{(t+1)} \rangle\)</span>. In
 the next equations, we'll add many terms that will cancel themselves out, then
 we'll group them together into a sum of 4 terms,</p>
-<p>$$
+<div class="math">$$
 \begin{align}
   &amp;
   \begin{split}
     2 \langle Ax - Ax^{(t+1)}, Bz^{(t)} - Bz^{(t+1)} \rangle
-  \end{split} \notag \
+  \end{split} \notag \\
   &amp;
   \begin{split}
-  = &amp; + \norm{Ax        -c}_2^2 &amp; + 2 \langle Ax         - c, B z^{(t  )} \rangle &amp; + \norm{Bz^{(t  )}}_2^2 \
-    &amp; - \norm{Ax        -c}_2^2 &amp; - 2 \langle Ax         - c, B z^{(t+1)} \rangle &amp; - \norm{Bz^{(t+1)}}_2^2 \
-    &amp; + \norm{Ax^{(t+1)}-c}_2^2 &amp; + 2 \langle Ax^{(t+1)} - c, B z^{(t+1)} \rangle &amp; + \norm{Bz^{(t+1)}}_2^2 \
+  = &amp; + \norm{Ax        -c}_2^2 &amp; + 2 \langle Ax         - c, B z^{(t  )} \rangle &amp; + \norm{Bz^{(t  )}}_2^2 \\
+    &amp; - \norm{Ax        -c}_2^2 &amp; - 2 \langle Ax         - c, B z^{(t+1)} \rangle &amp; - \norm{Bz^{(t+1)}}_2^2 \\
+    &amp; + \norm{Ax^{(t+1)}-c}_2^2 &amp; + 2 \langle Ax^{(t+1)} - c, B z^{(t+1)} \rangle &amp; + \norm{Bz^{(t+1)}}_2^2 \\
     &amp; - \norm{Ax^{(t+1)}-c}_2^2 &amp; - 2 \langle Ax^{(t+1)} - c, B z^{(t  )} \rangle &amp; - \norm{Bz^{(t  )}}_2^2
-  \end{split} \notag \
+  \end{split} \notag \\
   &amp;
   \begin{split}
-  = &amp; + \norm{Ax         + Bz^{(t)}   - c}_2^2 &amp; - \norm{Ax         + Bz^{(t+1)} - c}_2^2 \
+  = &amp; + \norm{Ax         + Bz^{(t)}   - c}_2^2 &amp; - \norm{Ax         + Bz^{(t+1)} - c}_2^2 \\
     &amp; + \norm{Ax^{(t+1)} + Bz^{(t+1)} - c}_2^2 &amp; - \norm{Ax^{(t+1)} + Bz^{(t  )} - c}_2^2
   \end{split} \label{eqn:39}
 \end{align}
-$$</p>
-<p>We'll do the same for $\langle y^{(t+1)} - y^{(t)}, y - y^{(t+1)} \rangle$,</p>
-<p>$$
+$$</div>
+<p>We'll do the same for <span class="math">\(\langle y^{(t+1)} - y^{(t)}, y - y^{(t+1)} \rangle\)</span>,</p>
+<div class="math">$$
 \begin{align}
   &amp;
   \begin{split}
     2 \langle y^{(t+1)} - y^{(t)}, y - y^{(t+1)} \rangle
-  \end{split} \notag \
+  \end{split} \notag \\
   &amp;
   \begin{split}
-  = &amp; + \norm{y      }_2^2 &amp; + 2 \langle y      , - y^{(t  )} \rangle &amp; + \norm{y^{(t  )}}_2^2 \
-    &amp; - \norm{y      }_2^2 &amp; - 2 \langle y      , - y^{(t+1)} \rangle &amp; - \norm{y^{(t+1)}}_2^2 \
-    &amp; - \norm{y^{(t)}}_2^2 &amp; - 2 \langle y^{(t)}, - y^{(t+1)} \rangle &amp; - \norm{y^{(t+1)}}_2^2 \
-  \end{split} \notag \
+  = &amp; + \norm{y      }_2^2 &amp; + 2 \langle y      , - y^{(t  )} \rangle &amp; + \norm{y^{(t  )}}_2^2 \\
+    &amp; - \norm{y      }_2^2 &amp; - 2 \langle y      , - y^{(t+1)} \rangle &amp; - \norm{y^{(t+1)}}_2^2 \\
+    &amp; - \norm{y^{(t)}}_2^2 &amp; - 2 \langle y^{(t)}, - y^{(t+1)} \rangle &amp; - \norm{y^{(t+1)}}_2^2 \\
+  \end{split} \notag \\
   &amp;
   \begin{split}
   = &amp; + \norm{y       - y^{(t  )}}_2^2
@@ -417,115 +417,115 @@ $$</p>
       - \norm{y^{(t)} - y^{(t+1)}}_2^2
   \end{split} \label{eqn:40}
 \end{align}
-$$</p>
-<p>Finally, let's plug equations $\ref{eqn:39}$ and $\ref{eqn:40}$ into
-$\ref{eqn:38}$.</p>
-<p>$$
+$$</div>
+<p>Finally, let's plug equations <span class="math">\(\ref{eqn:39}\)</span> and <span class="math">\(\ref{eqn:40}\)</span> into
+<span class="math">\(\ref{eqn:38}\)</span>.</p>
+<div class="math">$$
 \begin{align}
 \begin{split}
   &amp; h(w^{(t+1)}) - h(w) + \langle
     F(w^{(t+1)}),
     w^{(t+1)} - w
-  \rangle  \
+  \rangle  \\
   &amp; \qquad \le \frac{\rho}{2} \left( \begin{split}
-    &amp; + \norm{Ax         + Bz^{(t  )} - c}_2^2 &amp; - \norm{Ax         + Bz^{(t+1)} - c}_2^2 \
+    &amp; + \norm{Ax         + Bz^{(t  )} - c}_2^2 &amp; - \norm{Ax         + Bz^{(t+1)} - c}_2^2 \\
     &amp; + \norm{Ax^{(t+1)} + Bz^{(t+1)} - c}_2^2 &amp; - \norm{Ax^{(t+1)} + Bz^{(t  )} - c}_2^2
-  \end{split} \right) \
+  \end{split} \right) \\
   &amp; \qquad + \frac{1}{2\rho} \left( \begin{split}
-    &amp; + \norm{y       - y^{(t  )}}_2^2 \
-    &amp; - \norm{y       - y^{(t+1)}}_2^2 \
+    &amp; + \norm{y       - y^{(t  )}}_2^2 \\
+    &amp; - \norm{y       - y^{(t+1)}}_2^2 \\
     &amp; - \norm{y^{(t)} - y^{(t+1)}}_2^2
   \end{split} \right)
 \end{split}
 \end{align}
-$$</p>
-<p>Recall that $(1/\rho)(y^{(t+1)} - y^{(t)}) = Ax^{(t+1)} + Bz^{(t+1)} - c$. Then,</p>
-<p>$$
-\begin{align<em>}
+$$</div>
+<p>Recall that <span class="math">\((1/\rho)(y^{(t+1)} - y^{(t)}) = Ax^{(t+1)} + Bz^{(t+1)} - c\)</span>. Then,</p>
+<div class="math">$$
+\begin{align*}
   \frac{\rho}{2} \norm{ Ax^{(t+1)} + Bz^{(t+1)} - c }
-  &amp;= \frac{\rho}{2}  \norm{ \frac{1}{\rho} (y^{(t+1)} - y^{(t  )}) } \
+  &amp;= \frac{\rho}{2}  \norm{ \frac{1}{\rho} (y^{(t+1)} - y^{(t  )}) } \\
   &amp;= \frac{1}{2\rho} \norm{                 y^{(t  )} - y^{(t+1)}  }
-\end{align</em>}
-$$</p>
+\end{align*}
+$$</div>
 <p>We can substitute that into the right hand side of the preceding equation to
 cancel out a couple terms,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   = &amp;
   \frac{\rho}{2} \left( \begin{split}
-    &amp; + \norm{Ax + Bz^{(t)} - c}<em 0_="0$" _le="$\le" _text_="\text{" always>2^2 &amp;             - \norm{Ax         + Bz^{(t+1)} - c}_2^2 \
-    &amp;                                &amp; \underbrace{- \norm{Ax^{(t+1)} + Bz^{(t  )} - c}_2^2}</em> }
-  \end{split} \right) \
+    &amp; + \norm{Ax + Bz^{(t)} - c}_2^2 &amp;             - \norm{Ax         + Bz^{(t+1)} - c}_2^2 \\
+    &amp;                                &amp; \underbrace{- \norm{Ax^{(t+1)} + Bz^{(t  )} - c}_2^2}_{ \text{ always $\le 0$ } }
+  \end{split} \right) \\
   &amp; + \frac{1}{2\rho} \left( \begin{split}
-    &amp; + \norm{y - y^{(t  )}}_2^2 \
+    &amp; + \norm{y - y^{(t  )}}_2^2 \\
     &amp; - \norm{y - y^{(t+1)}}_2^2
   \end{split} \right)
-\end{align</em>}
-$$</p>
+\end{align*}
+$$</div>
 <p>Finally dropping the portion of the equation that's always non-positive
 (doing so doesn't affect the validity of the inequality), we obtain a concise
-inequality in terms of sums of $\norm{\cdot}_2^2$.</p>
-<p>$$
-\begin{align<em>}
+inequality in terms of sums of <span class="math">\(\norm{\cdot}_2^2\)</span>.</p>
+<div class="math">$$
+\begin{align*}
   &amp; h(w^{(t+1)}) - h(w) + \langle
     F(w^{(t+1)}),
     w^{(t+1)} - w
-  \rangle  \
+  \rangle  \\
   &amp; \qquad \le \frac{\rho}{2} \left(
       \norm{Ax + Bz^{(t  )} - c}_2^2
     - \norm{Ax + Bz^{(t+1)} - c}_2^2
-  \right) \
+  \right) \\
   &amp; \qquad + \frac{1}{2\rho} \left(
       \norm{y - y^{(t  )}}_2^2
     - \norm{y - y^{(t+1)}}_2^2
   \right)
-\end{align</em>}
-$$</p>
+\end{align*}
+$$</div>
 <p><strong>Step 4</strong> Averaging across iterations. We're now in the home stretch. In this
-step, we'll sum the previous equation across $t$. The sum will "telescope",
+step, we'll sum the previous equation across <span class="math">\(t\)</span>. The sum will "telescope",
 crossing out terms until we're left only with the initial and final conditions.
 A quick application of Jensen's inequality will get us the desired result.</p>
 <p>We begin by summing the previous equation across iterations,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   &amp; \sum_{\tau=0}^{t-1} h(w^{(\tau+1)}) - h(w) + \langle
     F(w^{(\tau+1)}),
     w^{(\tau+1)} - w
-  \rangle  \
+  \rangle  \\
   &amp; \qquad \le \frac{\rho}{2} \left(
-                  \norm{Ax + Bz^{(0)} - c}<em 0 _le="\le">2^2
-    \underbrace{- \norm{Ax + Bz^{(t)} - c}_2^2}</em>
+                  \norm{Ax + Bz^{(0)} - c}_2^2
+    \underbrace{- \norm{Ax + Bz^{(t)} - c}_2^2}_{\le 0}
   \right) + \frac{1}{2\rho} \left(
-                  \norm{y - y^{(0)}}<em 0 _le="\le">2^2
-    \underbrace{- \norm{y - y^{(t)}}_2^2}</em>
+                  \norm{y - y^{(0)}}_2^2
+    \underbrace{- \norm{y - y^{(t)}}_2^2}_{\le 0}
   \right)
-\end{align</em>}
-$$</p>
-<p>For convenience, we'll choose $z^{(0)}$ and $y^{(0)}$ equal to zero. We'll
-also drop the terms $-\norm{Ax + Bz^{(t)} - c}_2^2$ and
-$-\norm{y - y^{(t)}}_2^2$ from the expression, as both terms are always
+\end{align*}
+$$</div>
+<p>For convenience, we'll choose <span class="math">\(z^{(0)}\)</span> and <span class="math">\(y^{(0)}\)</span> equal to zero. We'll
+also drop the terms <span class="math">\(-\norm{Ax + Bz^{(t)} - c}_2^2\)</span> and
+<span class="math">\(-\norm{y - y^{(t)}}_2^2\)</span> from the expression, as both terms are always
 non-positive. This gives us,</p>
-<p>$$
-\begin{align<em>}
+<div class="math">$$
+\begin{align*}
   \sum_{\tau=0}^{t-1} h(w^{(\tau+1)}) - h(w) + \langle
     F(w^{(\tau+1)}),
     w^{(\tau+1)} - w
   \rangle
   \le \frac{\rho}{2}  \norm{Ax - c}_2^2
              + \frac{1}{2\rho} \norm{ y    }_2^2
-\end{align</em>}
-$$</p>
-<p>Finally, recall that for a convex function $h(w)$, Jensen's Inequality states that</p>
-<p>$$
-  h(\bar{w}<em _tau="1">t)
-  = h \left( \frac{1}{t} \sum</em>^{t} w_{\tau} \right)
+\end{align*}
+$$</div>
+<p>Finally, recall that for a convex function <span class="math">\(h(w)\)</span>, Jensen's Inequality states that</p>
+<div class="math">$$
+  h(\bar{w}_t)
+  = h \left( \frac{1}{t} \sum_{\tau=1}^{t} w_{\tau} \right)
   \le \frac{1}{t} \sum_{\tau=1}^{t} h(w_{\tau})
-$$</p>
-<p>The same is true for each of $F(w)$'s components (they're linear in $w$).
+$$</div>
+<p>The same is true for each of <span class="math">\(F(w)\)</span>'s components (they're linear in <span class="math">\(w\)</span>).
 Thus, we can apply this statement to the left hand side of the preceding
-equation after multiplying by $1/t$ to obtain,</p>
-<p>$$
-\begin{align<em>}
+equation after multiplying by <span class="math">\(1/t\)</span> to obtain,</p>
+<div class="math">$$
+\begin{align*}
   h(\bar{w}^{(t)}) - h(w) + \langle
     F(\bar{w}^{(t)}),
     \bar{w}^{(t)} - w
@@ -534,19 +534,19 @@ equation after multiplying by $1/t$ to obtain,</p>
       \frac{\rho}{2}  \norm{Ax - c}_2^2
     + \frac{1}{2\rho} \norm{ y    }_2^2
   \right)
-\end{align</em>}
-$$</p>
-<p>The right hand side decreases as $O(1/t)$, thus ADMM converges at a rate of
-at least $O(1/\epsilon)$ as desired.</p>
+\end{align*}
+$$</div>
+<p>The right hand side decreases as <span class="math">\(O(1/t)\)</span>, thus ADMM converges at a rate of
+at least <span class="math">\(O(1/\epsilon)\)</span> as desired.</p>
 <h1><a name="usage" href="#usage">When should I use it?</a></h1>
 <p>Similar to the proximal methods presented on this website, ADMM is only
 efficient if we can perform each of its steps efficiently. Solving
 2 optimization problems at each iteration may be very fast or very slow,
-depending on if a closed form solution exists for $x^{(t+1)}$ and $z^{(t+1)}$.</p>
-<p>ADMM has been particularly useful in supervised machine learning, where $A$,
-$B$, and $c$ are chosen such that $x = z$. In this scenario, $f$ is taken to be
-the prediction loss on the training set, and $g$ an appropriate regularizer,
-typically a norm such as $\ell_1$ or a <a href="http://arxiv.org/pdf/1104.1872.pdf">group sparsity norm</a>.
+depending on if a closed form solution exists for <span class="math">\(x^{(t+1)}\)</span> and <span class="math">\(z^{(t+1)}\)</span>.</p>
+<p>ADMM has been particularly useful in supervised machine learning, where <span class="math">\(A\)</span>,
+<span class="math">\(B\)</span>, and <span class="math">\(c\)</span> are chosen such that <span class="math">\(x = z\)</span>. In this scenario, <span class="math">\(f\)</span> is taken to be
+the prediction loss on the training set, and <span class="math">\(g\)</span> an appropriate regularizer,
+typically a norm such as <span class="math">\(\ell_1\)</span> or a <a href="http://arxiv.org/pdf/1104.1872.pdf">group sparsity norm</a>.
 <a href="http://machinelearning.wustl.edu/mlpapers/paper_files/ICML2011Martins_150.pdf">ADMM also lends</a> itself to inferring the most likely setting for
 settings for latent variables in a factor graph. The primary benefit of ADMM in
 both of these cases is not its rate of convergence but how <a href="http://www.ece.umn.edu/users/alfonso/pubs/jmlr2010.pdf">easily it
@@ -554,7 +554,7 @@ lends itself to distributed computation</a>. <a href="http://arxiv.org/pdf/1009.
 Compressed Sensing</a> see similar benefits.</p>
 <p>All in all, ADMM is <em>not</em> a quick method, but it is a scalable one. ADMM is
 best suited when data is too large to fit on a single machine or when
-$x^{(t+1)}$ and $z^{(t+1)}$ can be solved for in closed form. While very
+<span class="math">\(x^{(t+1)}\)</span> and <span class="math">\(z^{(t+1)}\)</span> can be solved for in closed form. While very
 interesting in its own right, ADMM should rarely your algorithm of choice.</p>
 <h1><a name="extensions" href="#extensions">Extensions</a></h1>
 <p><strong>Accelerated</strong> As ADMM is so closely related to Proximal Gradient-based
@@ -562,24 +562,24 @@ methods, one might ask if there exists an accelerated variant with a better
 convergence rate. The answer is a resounding yes, as shown by <a href="ftp://ftp.math.ucla.edu/pub/camreport/cam12-35.pdf">Goldstein et
 al.</a>, though care must be taken for non-strongly convex
 objectives. In their article, Goldstein et al. show that a convergence rate of
-$O(1/\sqrt{\epsilon})$ can be guaranteed if both $f$ and $g$ are strongly
-convex. If this isn't the case, only a rate of $O(1/\epsilon)$ is shown.</p>
+<span class="math">\(O(1/\sqrt{\epsilon})\)</span> can be guaranteed if both <span class="math">\(f\)</span> and <span class="math">\(g\)</span> are strongly
+convex. If this isn't the case, only a rate of <span class="math">\(O(1/\epsilon)\)</span> is shown.</p>
 <p><strong>Online</strong> In online learning, one is interested in solving a series of
 supervised machine learning instances in sequence with minimal error. At each
-iteration, the algorithm is presented with an input $x_t$, to which it responds
-with a prediction $\hat{y}<em t>t$. The world then presents the algorithm with the
-correct answer $y_t$, and the algorithm suffers loss $l_t(y_t, \hat{y}_t)$. The
-goal of the algorithm is to minimize the sum of errors $\sum</em> l_t(y_t,
-\hat{y}_t)$.</p>
+iteration, the algorithm is presented with an input <span class="math">\(x_t\)</span>, to which it responds
+with a prediction <span class="math">\(\hat{y}_t\)</span>. The world then presents the algorithm with the
+correct answer <span class="math">\(y_t\)</span>, and the algorithm suffers loss <span class="math">\(l_t(y_t, \hat{y}_t)\)</span>. The
+goal of the algorithm is to minimize the sum of errors <span class="math">\(\sum_{t} l_t(y_t,
+\hat{y}_t)\)</span>.</p>
 <p>In this setting, <a href="http://icml.cc/2012/papers/577.pdf">Wang</a> has shown that an online variant to ADMM
-can achieve regret competitive with the best possible ($O(\sqrt{T})$ for
-convex loss functions, $O(\log(T))$ for strongly convex loss functions).</p>
+can achieve regret competitive with the best possible (<span class="math">\(O(\sqrt{T})\)</span> for
+convex loss functions, <span class="math">\(O(\log(T))\)</span> for strongly convex loss functions).</p>
 <p><strong>Stochastic</strong> In a stochastic setting, one is interested in minimizing the
-<em>average</em> value of $f(x)$ via a series of samples. In <a href="http://arxiv.org/pdf/1211.0632.pdf">Ouyang et
+<em>average</em> value of <span class="math">\(f(x)\)</span> via a series of samples. In <a href="http://arxiv.org/pdf/1211.0632.pdf">Ouyang et
 al</a>, convergence rates for a linearized variant of ADMM when
-$f$ can only be accessed through samples.</p>
+<span class="math">\(f\)</span> can only be accessed through samples.</p>
 <p><strong>Multi Component</strong> Traditional ADMM considers an objective with only
-2 components $f(x)$ and $g(z)$. While applying the same logic to 3 or more is
+2 components <span class="math">\(f(x)\)</span> and <span class="math">\(g(z)\)</span>. While applying the same logic to 3 or more is
 straightforward, proving convergence for this scenario is more difficult. This
 was the task taken by <a href="http://www.optimization-online.org/DB_FILE/2010/12/2871.pdf">He et al</a>. In particular, they showed that
 a special variant of ADMM using "Gaussian back substitution" is ensured to
@@ -648,6 +648,63 @@ expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang
 <span class="n">anim</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">animate</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">))</span>
 <span class="n">anim</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="s1">&#39;imagemagick&#39;</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
+
+
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+</script>
 
     <div id="article_meta">
         Category:
