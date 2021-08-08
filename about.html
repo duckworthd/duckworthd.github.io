@@ -63,24 +63,24 @@
 
     <style>
 
-      section#posts .contact-info > ul {
-        display      : table;
-        list-style   : none;
-        margin-left  : auto;
-        margin-right : auto;
-        line-height  : 25px;
+      .contact-info {
+        width: 100%;
       }
 
-      section#posts .contact-info > ul > li > a {
-        display     : inline-block;
-        margin-left : 0.5em;
+      .contact-info table {
+        width: 100%;
       }
 
-      section#posts .jumbotron {
+      .contact-info table .icon {
+        text-align: center;
+      }
+
+      .jumbotron {
         position: relative;
       }
 
-      section#posts .jumbotron img {
+      .jumbotron img {
+        width: 100%;
         max-width  : 100%;
         max-height : 100%;
       }
@@ -101,6 +101,7 @@
 
     </style>
 
+    <!-- TODO: Replace with a better, smaller photo -->
     <div class="jumbotron">
       <div class="img-container">
         <img src="/assets/img/portrait.jpg"></img>
@@ -110,60 +111,50 @@
     <!-- personal message -->
     <div class="message">
       <p>
-        My name is Daniel Duckworth, and I am a software engineer and former
-        natural language processing, optimization, and robotics researcher.
-        My current work revolves around online learning and optimization, but
-        my interests span from probability theory to robotics, computer
-        vision to econometrics, topic modeling [sic] to prediction markets.
+        My name is Daniel Duckworth, and for the last few years I've been
+        researching artificial intelligence as a part of
+        <a href="https://research.google/teams/brain/">Google Brain</a>,
+        a team within <a href="https://research.google/people/DanielDuckworth/">
+        Google Research</a>. You may know me from my recent work on <a href="https://nerf-w.github.io/">3D reconstruction</a>, <a href="http://proceedings.mlr.press/v139/wadia21a.html"> machine learning
+        theory</a>, <a href="https://arxiv.org/abs/1911.00650"> natural language
+        processing</a>, or <a href="https://papers.nips.cc/paper/2019/hash/b1f62fa99de9f27a048344d55c5ef7a6-Abstract.html">
+        generative models</a>.
       </p>
       <p>
-        In my spare time, I write a significant amount of Python code, climb
-        rocks, read "sick papes" (née interesting academic papers), play the
-        guitar, and get lost in foreign countries. My favorite authors are
-        <a href="http://en.wikipedia.org/wiki/One_Hundred_Years_of_Solitude">Marquez</a>,
-        <a href="http://en.wikipedia.org/wiki/The_Lord_of_the_Rings">Tolkien</a>,
-        <a href="http://en.wikipedia.org/wiki/Slaughterhouse-Five">Vonnegut</a>,
-        <a href="http://www.magicbroom.info/Papers/DuchiHaSi10.pdf">Duchi</a>, and
-        <a href="http://web.stanford.edu/~boyd/papers/admm_distr_stats.html">Boyd</a>.
-      </p>
-      <p>
-        I was born, raised, and educated in California, a land of hope and
-        opportunity. The
-        <a href="/assets/img/infinite-city.jpg" data-lightbox="infinite-city" title="Infinite City">
-          Infinite City
-        </a>
-        is where my heart (and presently, my person) still resides.
+        I was born, raised, and educated in California. I now reside in Berlin,
+        Germany.
       </p>
     </div>
 
     <!-- contact -->
     <div class="contact-info">
-      <ul>
-        <li>
-          <i class="fa fa-envelope-o"></i>
-          <a href="#" onclick="return false;">duckworthd [at] gmail [dot] com</a>
-        </li>
+      <table>
+        <tr>
+          <td class="icon"><i class="fa fa-envelope-o"></i></td>
+          <td><a href="#" onclick="return false;">duckworthd [at] gmail [dot] com</a></td>
+        </tr>
+        <tr>
+          <td class="icon"><i class="fa fa-phone"></i></td>
+          <td><a href="#" onclick="return false;">(831) 275-04 six eight</a></td>
+        </tr>
+        <tr>
+          <td class="icon"><i class="fa fa-twitter"></i></td>
+          <td><a href="http://twitter.com/duck">@duck</a></td>
+        </tr>
+        <tr>
+          <td class="icon"><i class="fa fa-linkedin"></i></td>
+          <td><a href="http://www.linkedin.com/in/dduckworth/">dduckworth</a></td>
+        </tr>
+        <tr>
+          <td class="icon"><i class="fa fa-github"></i></td>
+          <td><a href="https://github.com/duckworthd">duckworthd</a></td>
+        </tr>
+        <tr>
+          <td class="icon"><i class="fa fa-graduation-cap"></i></td>
+          <td><a href="https://scholar.google.com/citations?hl=en&amp;user=2fWmq-4AAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Daniel Duckworth</a></td>
+        </tr>
+      </table>
 
-        <li>
-          <i class="fa fa-phone"></i>
-          <a href="#" onclick="return false;">(831) 275-04 six eight</a>
-        </li>
-
-        <li>
-          <i class="fa fa-twitter"></i>
-          <a href="http://twitter.com/duck">@duck</a>
-        </li>
-
-        <li>
-          <i class="fa fa-linkedin"></i>
-          <a href="http://www.linkedin.com/in/dduckworth/">dduckworth</a>
-        </li>
-
-        <li>
-          <i class="fa fa-github"></i>
-          <a href="https://github.com/duckworthd">duckworthd</a>
-        </li>
-      </ul>
     </div>
 
   
