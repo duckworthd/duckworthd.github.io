@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- enable responsive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
-	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
 
-  <!-- RSS/ATOM feeds -->
-	<link href="None/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+  <!-- No RSS/ATOM feeds -->
 
 
-		<title>Strongly Convex</title>
-		<meta charset="utf-8" />
+    <title>Strongly Convex</title>
+    <meta charset="utf-8" />
 </head>
 <body>
-	<section id="sidebar">
-		<figure id="user_logo">
-      <a href=""><div class="logo">&nbsp;</div></a>
-		</figure>
+  <div class="row">
+    <div id="sidebar">
+      <figure id="user_logo">
+        <a href=""><div class="logo">&nbsp;</div></a>
+      </figure>
 
-		<div class="user_meta">
-      <h1 id="user">
-        <a  href="/"
-            class="sitename">
-          Strongly Convex
-        </a>
-      </h1>
-			<h2></h2>
+      <div class="user_meta">
+        <h1 id="user">
+          <a  href="/"
+              class="sitename">
+            Strongly Convex
+          </a>
+        </h1>
+        <h2></h2>
 
-
-			<ul>
-        <hr></hr>
-					<li><a href="/">Words</a></li>
+        <ul>
           <hr></hr>
-					<li><a href="/code.html">Code</a></li>
-          <hr></hr>
-					<li><a href="/about.html">About</a></li>
-          <hr></hr>
-			</ul>
-		</div>
-	</section>
+            <li><a href="/">Blog</a></li>
+            <hr></hr>
+            <li><a href="/about.html">About</a></li>
+            <hr></hr>
+        </ul>
+      </div>
+    </div>
 
-	<section id="posts">
+    <div id="posts">
 	<header>
       <h1 class="title">
 			  <a  href="/blog/admm-revisited.html"
@@ -60,7 +60,7 @@
 		  <abbr class="published">Sun 20 July 2014</abbr>
 	</header>
   <article>
-    <p>When I originally wrote about the <a href="/blog/admm.html">Alternating Direction Method of
+    <p>When I originally wrote about the <a href="http://stronglyconvex.com/blog/admm.html">Alternating Direction Method of
 Multipliers</a> algorithm, the community's understanding of its
 convergence properties was light to say the least. While it has long been
 known (See <a href="http://web.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf">Boyd's excellent article</a>, Appendix A) that ADMM <em>will</em>
@@ -119,7 +119,7 @@ takes a gradient step with respect to <span class="math">\(y\)</span> for fixed 
 </div>
 <p>Intuitively, the extra quadratic term prevents each iteration of the
 algorithm from stepping "too far" from the last iteration, an idea that's also
-at the core of <a href="/blog/proximal-gradient-descent.html">Proximal Gradient Descent</a>.</p>
+at the core of <a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html">Proximal Gradient Descent</a>.</p>
 <div class="img-center">
 <p><img src="/assets/img/admm/convergence.gif"></img>
   <span class="caption">
@@ -586,23 +586,18 @@ a special variant of ADMM using "Gaussian back substitution" is ensured to
 converge.</p>
 <h1><a name="references" href="#references">References</a></h1>
 <p><strong>ADMM</strong> While ADMM has existed for decades, it has only recently been brought
-to light by <a href="/blog/admm.html">Boyd</a>'s article describing its applications for statistical
+to light by <a href="http://stronglyconvex.com/blog/admm.html">Boyd</a>'s article describing its applications for statistical
 machine learning. It is from this work from which I initially learned of ADMM.</p>
 <p><strong>Proof of Convergence</strong> The proof of convergence presented here is a verbose
 expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang</a>'s paper on Online ADMM.</p>
 <!-- internal references -->
-
 <!-- papers -->
-
 <!-- convergence proofs -->
-
 <!-- extensions -->
-
 <!-- uses -->
-
 <h1><a name="reference-impl" href="#reference-impl">Reference Implementation</a></h1>
 <p>Using the <a href="https://github.com/duckworthd/optim"><code>optim</code></a> Python package, we can generate the animation above,</p>
-<div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Example usage of ADMM solver.</span>
 
 <span class="sd">A gif is generated showing the iterates as they converge.</span>
@@ -610,9 +605,9 @@ expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">animation</span>
 <span class="kn">from</span> <span class="nn">optim.admm</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">optim.tests.test_admm</span> <span class="kn">import</span> <span class="n">quadratic1</span>
-<span class="kn">import</span> <span class="nn">itertools</span> <span class="kn">as</span> <span class="nn">it</span>
-<span class="kn">import</span> <span class="nn">numpy</span>     <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="kn">import</span> <span class="nn">numpy</span>     <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 
@@ -634,7 +629,7 @@ expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang
 <span class="n">zs2</span> <span class="o">=</span> <span class="p">[</span><span class="n">prob</span><span class="o">.</span><span class="n">primal</span><span class="p">(</span><span class="n">State</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">v</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">v</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">zs</span><span class="p">]</span>
 
 <span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-  <span class="k">print</span> <span class="s1">&#39;iteration:&#39;</span><span class="p">,</span> <span class="n">i</span>
+  <span class="nb">print</span> <span class="s1">&#39;iteration:&#39;</span><span class="p">,</span> <span class="n">i</span>
   <span class="n">pl</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
   <span class="n">pl</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Iteration #</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
   <span class="n">pl</span><span class="o">.</span><span class="n">plot</span>   <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="p">[</span><span class="n">prob</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="n">prob</span><span class="o">.</span><span class="n">g</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span> <span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;f(x)+g(z)&#39;</span><span class="p">)</span>
@@ -647,8 +642,7 @@ expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang
 
 <span class="n">anim</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">animate</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">iterates</span><span class="p">))</span>
 <span class="n">anim</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="s1">&#39;imagemagick&#39;</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -664,11 +658,14 @@ expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -682,6 +679,8 @@ expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -702,6 +701,8 @@ expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -720,29 +721,14 @@ expansion of that presented in <a href="http://icml.cc/2012/papers/577.pdf">Wang
     <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
   </footer>
 
-  <div id="comments">
-    <h2>Comments</h2>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_identifier = "blog/admm-revisited.html";
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
-  </div>
 
-	</section>
+    </div>
+  </div>
 
 
   <!-- scripts -->
-  <script
-    type= "text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    >
-  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script
     type= "text/javascript"
     src="/theme/mathjax/MathJaxLocal.js"

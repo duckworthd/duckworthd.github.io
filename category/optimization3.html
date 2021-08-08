@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- enable responsive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
-	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
 
-  <!-- RSS/ATOM feeds -->
-	<link href="None/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+  <!-- No RSS/ATOM feeds -->
 
 
-		<title>Strongly Convex</title>
-		<meta charset="utf-8" />
+    <title>Strongly Convex</title>
+    <meta charset="utf-8" />
 </head>
 <body>
-	<section id="sidebar">
-		<figure id="user_logo">
-      <a href=""><div class="logo">&nbsp;</div></a>
-		</figure>
+  <div class="row">
+    <div id="sidebar">
+      <figure id="user_logo">
+        <a href=""><div class="logo">&nbsp;</div></a>
+      </figure>
 
-		<div class="user_meta">
-      <h1 id="user">
-        <a  href="/"
-            class="sitename">
-          Strongly Convex
-        </a>
-      </h1>
-			<h2></h2>
+      <div class="user_meta">
+        <h1 id="user">
+          <a  href="/"
+              class="sitename">
+            Strongly Convex
+          </a>
+        </h1>
+        <h2></h2>
 
-
-			<ul>
-        <hr></hr>
-					<li><a href="/">Words</a></li>
+        <ul>
           <hr></hr>
-					<li><a href="/code.html">Code</a></li>
-          <hr></hr>
-					<li><a href="/about.html">About</a></li>
-          <hr></hr>
-			</ul>
-		</div>
-	</section>
+            <li><a href="/">Blog</a></li>
+            <hr></hr>
+            <li><a href="/about.html">About</a></li>
+            <hr></hr>
+        </ul>
+      </div>
+    </div>
 
-	<section id="posts">
+    <div id="posts">
   <dl>
     <ol>
         <li>
@@ -69,7 +69,7 @@
           </abbr>
 
           <div class="entry-content">
-            <p>Not far from <a href="/blog/gradient-descent.html">Gradient Descent</a> is another first-order
+            <p>Not far from <a href="http://stronglyconvex.com/blog/gradient-descent.html">Gradient Descent</a> is another first-order
 descent algorithm (that is, an algorithm that only relies on the first
 derivative) is Subgradient Descent. In implementation, they are in fact
 identical. The only difference is on the assumptions placed on the objective
@@ -160,15 +160,13 @@ $$</div>
 <p class="paginator">
 			<a href="/category/optimization2.html" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;newer</a>
 </p>
-	</section>
+    </div>
+  </div>
 
 
   <!-- scripts -->
-  <script
-    type= "text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    >
-  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script
     type= "text/javascript"
     src="/theme/mathjax/MathJaxLocal.js"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Strongly Convex - Daniel Duckworth</title><link href="/" rel="alternate"></link><link href="None/feeds/daniel-duckworth.atom.xml" rel="self"></link><id>/</id><updated>2014-08-01T00:00:00-07:00</updated><entry><title>The Big Table of Convergence Rates</title><link href="/blog/big-table-of-convergence-rates.html" rel="alternate"></link><published>2014-08-01T00:00:00-07:00</published><updated>2014-08-01T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2014-08-01:/blog/big-table-of-convergence-rates.html</id><summary type="html">&lt;p&gt;In the past 50+ years of convex optimization research, a great many
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Strongly Convex - Daniel Duckworth</title><link href="http://stronglyconvex.com/" rel="alternate"></link><link href="http://stronglyconvex.com/feeds/daniel-duckworth.atom.xml" rel="self"></link><id>http://stronglyconvex.com/</id><updated>2014-08-01T00:00:00-07:00</updated><entry><title>The Big Table of Convergence Rates</title><link href="http://stronglyconvex.com/blog/big-table-of-convergence-rates.html" rel="alternate"></link><published>2014-08-01T00:00:00-07:00</published><updated>2014-08-01T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2014-08-01:/blog/big-table-of-convergence-rates.html</id><summary type="html">&lt;p&gt;In the past 50+ years of convex optimization research, a great many
 algorithms have been developed, each with slight nuances to their assumptions,
 implementations, and guarantees. In this article, I'll give a shorthand
 comparison of these methods in terms of the number of iterations required
@@ -27,7 +27,7 @@ subgradients for their objective functions. In exchange, however, it is
 assumed that the objective is "simple" in the sense that a subset of variables
 (a "block") can be minimized exactly while holding all other variables fixed.&lt;/p&gt;
 &lt;table class="table table-bordered table-centered"&gt;
-&lt;p&gt;&lt;colgroup&gt;
+&lt;colgroup&gt;
     &lt;col style="width:20%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
@@ -35,7 +35,7 @@ assumed that the objective is "simple" in the sense that a subset of variables
     &lt;col style="width:10%"&gt;
     &lt;col style="width:40%"&gt;
   &lt;/colgroup&gt;
-  &lt;thead&gt;
+&lt;thead&gt;
     &lt;tr&gt;
       &lt;th&gt;Algorithm          &lt;/th&gt;
       &lt;th&gt;Problem Formulation&lt;/th&gt;
@@ -44,26 +44,26 @@ assumed that the objective is "simple" in the sense that a subset of variables
       &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
       &lt;th&gt;Notes              &lt;/th&gt;
     &lt;/tr&gt;
-  &lt;/thead&gt;&lt;/p&gt;
-&lt;p&gt;&lt;tbody&gt;
+  &lt;/thead&gt;
+&lt;tbody&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Randomized Block Coordinate Descent&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^{n}} f(x) + g(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^{n}} f(x) + g(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon)\)&lt;/span&gt;&lt;sup id="fnref-richtarik-2011"&gt;&lt;a class="footnote-ref" href="#fn-richtarik-2011"&gt;8&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon)$[^richtarik-2011]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1 / \epsilon))\)&lt;/span&gt;&lt;sup id="fnref2-richtarik-2011"&gt;&lt;a class="footnote-ref" href="#fn-richtarik-2011"&gt;8&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1 / \epsilon))$[^richtarik-2011]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt; is differentiable and &lt;span class="math"&gt;\(g(x)\)&lt;/span&gt; is separable in
-        each block. &lt;span class="math"&gt;\(g(x)\)&lt;/span&gt; may be a barrier function.
+        Applicable when $f(x)$ is differentiable and $g(x)$ is separable in
+        each block. $g(x)$ may be a barrier function.
       &lt;/td&gt;
     &lt;/tr&gt;
-  &lt;/tbody&gt;&lt;/p&gt;
+  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h1&gt;First Order Methods&lt;/h1&gt;
 &lt;p&gt;First order methods typically require access to an objective function's
@@ -71,15 +71,15 @@ gradient or subgradient. The algorithms typically take the form &lt;span class="
 = x^{(t)} - \alpha^{(t)} g^{(t)}\)&lt;/span&gt; for some step size &lt;span class="math"&gt;\(\alpha^{(t)}\)&lt;/span&gt; and descent
 direction &lt;span class="math"&gt;\(g^{(t)}\)&lt;/span&gt;. As such, each iteration takes approximately &lt;span class="math"&gt;\(O(n)\)&lt;/span&gt; time.&lt;/p&gt;
 &lt;table class="table table-bordered table-centered"&gt;
-&lt;p&gt;&lt;colgroup&gt;
+&lt;colgroup&gt;
     &lt;col style="width:20%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;&lt;/p&gt;
-&lt;p&gt;&lt;thead&gt;
+  &lt;/colgroup&gt;
+&lt;thead&gt;
     &lt;tr&gt;
       &lt;th&gt;Algorithm          &lt;/th&gt;
       &lt;th&gt;Problem Formulation&lt;/th&gt;
@@ -88,19 +88,19 @@ direction &lt;span class="math"&gt;\(g^{(t)}\)&lt;/span&gt;. As such, each itera
       &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
       &lt;th&gt;Notes              &lt;/th&gt;
     &lt;/tr&gt;
-  &lt;/thead&gt;&lt;/p&gt;
-&lt;p&gt;&lt;tbody&gt;
+  &lt;/thead&gt;
+&lt;tbody&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Subgradient Descent&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle  \min_{x \in \mathbb{R}^n} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle  \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon^{2})\)&lt;/span&gt;&lt;sup id="fnref-blog-sd"&gt;&lt;a class="footnote-ref" href="#fn-blog-sd"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon^{2})$[^blog-sd]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
       &lt;td&gt;...&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
         Cannot be improved upon without further assumptions.
@@ -110,13 +110,13 @@ direction &lt;span class="math"&gt;\(g^{(t)}\)&lt;/span&gt;. As such, each itera
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Mirror Descent&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathcal{C}} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon^{2} )\)&lt;/span&gt;&lt;sup id="fnref-ee381-md"&gt;&lt;a class="footnote-ref" href="#fn-ee381-md"&gt;9&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon^{2} )$[^ee381-md]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon )\)&lt;/span&gt;&lt;sup id="fnref-nedich-2013"&gt;&lt;a class="footnote-ref" href="#fn-nedich-2013"&gt;26&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon )$[^nedich-2013]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
         Different parameterizations result in gradient descent and
@@ -127,13 +127,13 @@ direction &lt;span class="math"&gt;\(g^{(t)}\)&lt;/span&gt;. As such, each itera
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Dual Averaging&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle  \min_{x \in \mathcal{C}} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle  \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon^{2})\)&lt;/span&gt;&lt;sup id="fnref-nesterov-2007"&gt;&lt;a class="footnote-ref" href="#fn-nesterov-2007"&gt;25&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon^{2})$[^nesterov-2007]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
       &lt;td&gt;...&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
         Cannot be improved upon without further assumptions.
@@ -143,32 +143,32 @@ direction &lt;span class="math"&gt;\(g^{(t)}\)&lt;/span&gt;. As such, each itera
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Gradient Descent&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon)\)&lt;/span&gt;&lt;sup id="fnref-blog-gd"&gt;&lt;a class="footnote-ref" href="#fn-blog-gd"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon)$[^blog-gd]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1 / \epsilon))\)&lt;/span&gt;&lt;sup id="fnref-ee381-gd"&gt;&lt;a class="footnote-ref" href="#fn-ee381-gd"&gt;10&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1 / \epsilon))$[^ee381-gd]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt; is differentiable.
+        Applicable when $f(x)$ is differentiable.
       &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Accelerated Gradient Descent&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \sqrt{\epsilon})\)&lt;/span&gt;&lt;sup id="fnref-blog-agd"&gt;&lt;a class="footnote-ref" href="#fn-blog-agd"&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \sqrt{\epsilon})$[^blog-agd]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1 / \epsilon))\)&lt;/span&gt;&lt;sup id="fnref-bubeck-agd"&gt;&lt;a class="footnote-ref" href="#fn-bubeck-agd"&gt;11&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1 / \epsilon))$[^bubeck-agd]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt; is differentiable.
+        Applicable when $f(x)$ is differentiable.
         Cannot be improved upon without further assumptions.
         Has better constants than Gradient Descent for "Strongly Convex" case.
       &lt;/td&gt;
@@ -177,34 +177,34 @@ direction &lt;span class="math"&gt;\(g^{(t)}\)&lt;/span&gt;. As such, each itera
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Proximal Gradient Descent&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon)\)&lt;/span&gt;&lt;sup id="fnref-blog-pgd"&gt;&lt;a class="footnote-ref" href="#fn-blog-pgd"&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon)$[^blog-pgd]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1 / \epsilon))\)&lt;/span&gt;&lt;sup id="fnref3-mairal-2013"&gt;&lt;a class="footnote-ref" href="#fn-mairal-2013"&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1 / \epsilon))$[^mairal-2013]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt; is differentiable and
-        &lt;span class="math"&gt;\(\text{prox}_{\tau_t g}(x)\)&lt;/span&gt; is easily computable.
+        Applicable when $f(x)$ is differentiable and
+        $\text{prox}_{\tau_t g}(x)$ is easily computable.
       &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Proximal Accelerated Gradient Descent&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \sqrt{\epsilon})\)&lt;/span&gt;&lt;sup id="fnref-blog-apgd"&gt;&lt;a class="footnote-ref" href="#fn-blog-apgd"&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \sqrt{\epsilon})$[^blog-apgd]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1 / \epsilon))\)&lt;/span&gt;&lt;sup id="fnref4-mairal-2013"&gt;&lt;a class="footnote-ref" href="#fn-mairal-2013"&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1 / \epsilon))$[^mairal-2013]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt; is differentiable and
-        &lt;span class="math"&gt;\(\text{prox}_{\tau_t g}(x)\)&lt;/span&gt; is easily computable.
+        Applicable when $f(x)$ is differentiable and
+        $\text{prox}_{\tau_t g}(x)$ is easily computable.
         Has better constants than Proximal Gradient Descent for "Strongly
         Convex" case.
       &lt;/td&gt;
@@ -213,22 +213,22 @@ direction &lt;span class="math"&gt;\(g^{(t)}\)&lt;/span&gt;. As such, each itera
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Frank-Wolfe Algorithm / Conditional Gradient Algorithm&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathcal{C}} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1/\epsilon)\)&lt;/span&gt;&lt;sup id="fnref-blog-fw"&gt;&lt;a class="footnote-ref" href="#fn-blog-fw"&gt;6&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1/\epsilon)$[^blog-fw]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1/\sqrt{\epsilon})\)&lt;/span&gt;&lt;sup id="fnref-garber-2014"&gt;&lt;a class="footnote-ref" href="#fn-garber-2014"&gt;12&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1/\sqrt{\epsilon})$[^garber-2014]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(\mathcal{C}\)&lt;/span&gt; is bounded and &lt;span class="math"&gt;\(h_{g}(x) = \arg\min_{x \in
-        \mathcal{C}} \langle g, x \rangle\)&lt;/span&gt; is easily computable. Most useful
-        when &lt;span class="math"&gt;\(\mathcal{C}\)&lt;/span&gt; is a polytope in a very high dimensional space with
+        Applicable when $\mathcal{C}$ is bounded and $h_{g}(x) = \arg\min_{x \in
+        \mathcal{C}} \langle g, x \rangle$ is easily computable. Most useful
+        when $\mathcal{C}$ is a polytope in a very high dimensional space with
         sparse extrema.
       &lt;/td&gt;
     &lt;/tr&gt;
-  &lt;/tbody&gt;&lt;/p&gt;
+  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h1&gt;Second Order Methods&lt;/h1&gt;
 &lt;p&gt;Second order methods either use or approximate the hessian (&lt;span class="math"&gt;\(\nabla^2 f(x)\)&lt;/span&gt;)
@@ -236,15 +236,15 @@ of the objective function to result in better-than-linear rates of convergence.
 As such, each iteration typically requires &lt;span class="math"&gt;\(O(n^2)\)&lt;/span&gt; memory and between &lt;span class="math"&gt;\(O(n^2)\)&lt;/span&gt;
 and &lt;span class="math"&gt;\(O(n^3)\)&lt;/span&gt; computation per iteration.&lt;/p&gt;
 &lt;table class="table table-bordered table-centered"&gt;
-&lt;p&gt;&lt;colgroup&gt;
+&lt;colgroup&gt;
     &lt;col style="width:20%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;&lt;/p&gt;
-&lt;p&gt;&lt;thead&gt;
+  &lt;/colgroup&gt;
+&lt;thead&gt;
     &lt;tr&gt;
       &lt;th&gt;Algorithm          &lt;/th&gt;
       &lt;th&gt;Problem Formulation&lt;/th&gt;
@@ -253,22 +253,22 @@ and &lt;span class="math"&gt;\(O(n^3)\)&lt;/span&gt; computation per iteration.&
       &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
       &lt;th&gt;Notes              &lt;/th&gt;
     &lt;/tr&gt;
-  &lt;/thead&gt;&lt;/p&gt;
-&lt;p&gt;&lt;tbody&gt;
+  &lt;/thead&gt;
+&lt;tbody&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Newton's Method&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
       &lt;td&gt;...&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log \log (1/\epsilon))\)&lt;/span&gt;&lt;sup id="fnref-ee364a-unconstrained"&gt;&lt;a class="footnote-ref" href="#fn-ee364a-unconstrained"&gt;14&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log \log (1/\epsilon))$[^ee364a-unconstrained]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n^3)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n^3)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Only applicable when &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt; is twice differentiable. Constraints can be
+        Only applicable when $f(x)$ is twice differentiable. Constraints can be
         incorporated via interior point methods.
       &lt;/td&gt;
     &lt;/tr&gt;
@@ -276,16 +276,16 @@ and &lt;span class="math"&gt;\(O(n^3)\)&lt;/span&gt; computation per iteration.&
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Conjugate Gradient Descent&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
       &lt;td&gt;...&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n^2)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n^2)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Converges in exactly &lt;span class="math"&gt;\(n\)&lt;/span&gt; steps for quadratic &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt;. May fail to
+        Converges in exactly $n$ steps for quadratic $f(x)$. May fail to
         converge for non-quadratic objectives.
       &lt;/td&gt;
     &lt;/tr&gt;
@@ -293,20 +293,20 @@ and &lt;span class="math"&gt;\(O(n^3)\)&lt;/span&gt; computation per iteration.&
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;L-BFGS&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
       &lt;td&gt;...&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;Between &lt;span class="math"&gt;\(O(\log (1/\epsilon))\)&lt;/span&gt; and &lt;span class="math"&gt;\(O(\log \log (1/\epsilon))\)&lt;/span&gt;&lt;sup id="fnref-ee236c-qnewton"&gt;&lt;a class="footnote-ref" href="#fn-ee236c-qnewton"&gt;15&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;Between $O(\log (1/\epsilon))$ and $O(\log \log (1/\epsilon))$[^ee236c-qnewton]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n^2)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n^2)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt; is differentiable, but works best when twice
+        Applicable when $f(x)$ is differentiable, but works best when twice
         differentiable. Convergence rate is not guaranteed.
       &lt;/td&gt;
     &lt;/tr&gt;
-  &lt;/tbody&gt;&lt;/p&gt;
+  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h1&gt;Stochastic Methods&lt;/h1&gt;
 &lt;p&gt;The following algorithms are specifically designed for supervised machine
@@ -324,15 +324,15 @@ Thus, the following algorithms' convergence rates are for the &lt;em&gt;expected
 of convergence (as opposed to the above algorithms which upper bound the &lt;em&gt;true&lt;/em&gt;
 rate of convergence).&lt;/p&gt;
 &lt;table class="table table-bordered table-centered"&gt;
-&lt;p&gt;&lt;colgroup&gt;
+&lt;colgroup&gt;
     &lt;col style="width:20%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;&lt;/p&gt;
-&lt;p&gt;&lt;thead&gt;
+  &lt;/colgroup&gt;
+&lt;thead&gt;
     &lt;tr&gt;
       &lt;th&gt;Algorithm          &lt;/th&gt;
       &lt;th&gt;Problem Formulation&lt;/th&gt;
@@ -341,19 +341,19 @@ rate of convergence).&lt;/p&gt;
       &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
       &lt;th&gt;Notes              &lt;/th&gt;
     &lt;/tr&gt;
-  &lt;/thead&gt;&lt;/p&gt;
-&lt;p&gt;&lt;tbody&gt;
+  &lt;/thead&gt;
+&lt;tbody&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Stochastic Gradient Descent (SGD)&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n/\epsilon^2)\)&lt;/span&gt;&lt;sup id="fnref-bach-2012"&gt;&lt;a class="footnote-ref" href="#fn-bach-2012"&gt;16&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n/\epsilon^2)$[^bach-2012]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n/\epsilon)\)&lt;/span&gt;&lt;sup id="fnref2-bach-2012"&gt;&lt;a class="footnote-ref" href="#fn-bach-2012"&gt;16&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n/\epsilon)$[^bach-2012]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
         Assumes objective is differentiable.
@@ -363,13 +363,13 @@ rate of convergence).&lt;/p&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Stochastic Dual Coordinate Ascent (SDCA)&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \frac{\lambda}{2} \norm{x}_2^2\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \frac{\lambda}{2} \norm{x}_2^2$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\frac{1}{\lambda \epsilon})\)&lt;/span&gt;&lt;sup id="fnref-shalevshwartz-2012"&gt;&lt;a class="footnote-ref" href="#fn-shalevshwartz-2012"&gt;17&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\frac{1}{\lambda \epsilon})$[^shalevshwartz-2012]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(( \frac{1}{\lambda} ) \log ( \frac{1}{\lambda \epsilon} ))\)&lt;/span&gt;&lt;sup id="fnref2-shalevshwartz-2012"&gt;&lt;a class="footnote-ref" href="#fn-shalevshwartz-2012"&gt;17&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(( \frac{1}{\lambda} ) \log ( \frac{1}{\lambda \epsilon} ))$[^shalevshwartz-2012]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
       &lt;/td&gt;
@@ -378,13 +378,13 @@ rate of convergence).&lt;/p&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Accelerated Proximal Stochastic Dual Coordinate Ascent (APSDCA)&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{C}} \sum_{i} f_{i}(x) + \lambda g(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{C}} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\min (\frac{1}{\lambda \epsilon}, \sqrt{\frac{N}{\lambda \epsilon}} ))\)&lt;/span&gt;&lt;sup id="fnref-shalevshwartz-2013"&gt;&lt;a class="footnote-ref" href="#fn-shalevshwartz-2013"&gt;18&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\min (\frac{1}{\lambda \epsilon}, \sqrt{\frac{N}{\lambda \epsilon}} ))$[^shalevshwartz-2013]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\min (\frac{1}{\lambda}, \sqrt{\frac{N}{\lambda}}) \log ( \frac{1}{\epsilon} ))\)&lt;/span&gt;&lt;sup id="fnref2-shalevshwartz-2013"&gt;&lt;a class="footnote-ref" href="#fn-shalevshwartz-2013"&gt;18&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\min (\frac{1}{\lambda}, \sqrt{\frac{N}{\lambda}}) \log ( \frac{1}{\epsilon} ))$[^shalevshwartz-2013]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
       &lt;/td&gt;
@@ -393,52 +393,52 @@ rate of convergence).&lt;/p&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Stochastic Average Gradient (SAG)&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon)\)&lt;/span&gt;&lt;sup id="fnref-schmidt-2013"&gt;&lt;a class="footnote-ref" href="#fn-schmidt-2013"&gt;19&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon)$[^schmidt-2013]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1/\epsilon))\)&lt;/span&gt;&lt;sup id="fnref2-schmidt-2013"&gt;&lt;a class="footnote-ref" href="#fn-schmidt-2013"&gt;19&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1/\epsilon))$[^schmidt-2013]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f_{i}(x)\)&lt;/span&gt; is differentiable.
+        Applicable when $f_{i}(x)$ is differentiable.
       &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Stochastic Variance Reduced Gradient (SVRG)&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon)\)&lt;/span&gt;&lt;sup id="fnref-johnson-2013"&gt;&lt;a class="footnote-ref" href="#fn-johnson-2013"&gt;22&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon)$[^johnson-2013]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1/\epsilon))\)&lt;/span&gt;&lt;sup id="fnref2-johnson-2013"&gt;&lt;a class="footnote-ref" href="#fn-johnson-2013"&gt;22&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1/\epsilon))$[^johnson-2013]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f_{i}(x)\)&lt;/span&gt; is differentiable.
+        Applicable when $f_{i}(x)$ is differentiable.
       &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;MISO&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1 / \epsilon)\)&lt;/span&gt;&lt;sup id="fnref-mairal-2013"&gt;&lt;a class="footnote-ref" href="#fn-mairal-2013"&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1 / \epsilon)$[^mairal-2013]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1/\epsilon))\)&lt;/span&gt;&lt;sup id="fnref2-mairal-2013"&gt;&lt;a class="footnote-ref" href="#fn-mairal-2013"&gt;13&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1/\epsilon))$[^mairal-2013]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(f_{i}(x)\)&lt;/span&gt; is differentiable. &lt;span class="math"&gt;\(g(x)\)&lt;/span&gt; may be used as
+        Applicable when $f_{i}(x)$ is differentiable. $g(x)$ may be used as
         a barrier function.
       &lt;/td&gt;
     &lt;/tr&gt;
-  &lt;/tbody&gt;&lt;/p&gt;
+  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h1&gt;Other Methods&lt;/h1&gt;
 &lt;p&gt;The following methods do not fit well into any of the preceding categories.
@@ -446,15 +446,15 @@ Included are meta-algorithms like ADMM, which are good for distributing
 computation across machines, and methods whose per-iteration complexity depends
 on iteration count &lt;span class="math"&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
 &lt;table class="table table-bordered table-centered"&gt;
-&lt;p&gt;&lt;colgroup&gt;
+&lt;colgroup&gt;
     &lt;col style="width:20%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:10%"&gt;
     &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;&lt;/p&gt;
-&lt;p&gt;&lt;thead&gt;
+  &lt;/colgroup&gt;
+&lt;thead&gt;
     &lt;tr&gt;
       &lt;th&gt;Algorithm          &lt;/th&gt;
       &lt;th&gt;Problem Formulation&lt;/th&gt;
@@ -463,47 +463,47 @@ on iteration count &lt;span class="math"&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
       &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
       &lt;th&gt;Notes              &lt;/th&gt;
     &lt;/tr&gt;
-  &lt;/thead&gt;&lt;/p&gt;
-&lt;p&gt;&lt;tbody&gt;
+  &lt;/thead&gt;
+&lt;tbody&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Alternating Direction Method of Multipliers (ADMM)&lt;/td&gt;
       &lt;!-- Problem            --&gt;
       &lt;td&gt;
-        &lt;div class="math"&gt;$$
+        $$
           \begin{align*}
             \min_{x,z} \quad
               &amp;amp; f(x) + g(z) \\
             \text{s.t.} \quad
               &amp;amp; Ax + Bz = c
           \end{align*}
-        $$&lt;/div&gt;
+        $$
       &lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1/\epsilon)\)&lt;/span&gt;&lt;sup id="fnref-blog-admm"&gt;&lt;a class="footnote-ref" href="#fn-blog-admm"&gt;7&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1/\epsilon)$[^blog-admm]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1/\epsilon))\)&lt;/span&gt;&lt;sup id="fnref-hong-2012"&gt;&lt;a class="footnote-ref" href="#fn-hong-2012"&gt;21&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1/\epsilon))$[^hong-2012]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(n)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(n)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        The stated convergence rate for "Strongly Convex" only requires &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt; to
-        be strongly convex, not &lt;span class="math"&gt;\(g(x)\)&lt;/span&gt;. This same rate can also be applied to
-        the "Convex" case under several non-standard assumptions&lt;sup id="fnref2-hong-2012"&gt;&lt;a class="footnote-ref" href="#fn-hong-2012"&gt;21&lt;/a&gt;&lt;/sup&gt;.
-        Matrices &lt;span class="math"&gt;\(A\)&lt;/span&gt; and &lt;span class="math"&gt;\(B\)&lt;/span&gt; may also need to be full column rank&lt;sup id="fnref-deng-2012"&gt;&lt;a class="footnote-ref" href="#fn-deng-2012"&gt;20&lt;/a&gt;&lt;/sup&gt; .
+        The stated convergence rate for "Strongly Convex" only requires $f(x)$ to
+        be strongly convex, not $g(x)$. This same rate can also be applied to
+        the "Convex" case under several non-standard assumptions[^hong-2012].
+        Matrices $A$ and $B$ may also need to be full column rank[^deng-2012] .
       &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Bundle Method&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathcal{C}} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(1/\epsilon)\)&lt;/span&gt;&lt;sup id="fnref-smola-2007"&gt;&lt;a class="footnote-ref" href="#fn-smola-2007"&gt;23&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(1/\epsilon)$[^smola-2007]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1 / \epsilon))\)&lt;/span&gt;&lt;sup id="fnref2-smola-2007"&gt;&lt;a class="footnote-ref" href="#fn-smola-2007"&gt;23&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1 / \epsilon))$[^smola-2007]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(tn)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$O(tn)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
       &lt;/td&gt;
@@ -512,107 +512,105 @@ on iteration count &lt;span class="math"&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
       &lt;!-- Algorithm          --&gt;
       &lt;td&gt;Center of Gravity Algorithm&lt;/td&gt;
       &lt;!-- Problem            --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(\displaystyle \min_{x \in \mathcal{C}} f(x)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
       &lt;!-- Convex             --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1 / \epsilon))\)&lt;/span&gt;&lt;sup id="fnref-ee236c-localization"&gt;&lt;a class="footnote-ref" href="#fn-ee236c-localization"&gt;24&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1 / \epsilon))$[^ee236c-localization]&lt;/td&gt;
       &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;&lt;span class="math"&gt;\(O(\log (1 / \epsilon))\)&lt;/span&gt;&lt;sup id="fnref2-ee236c-localization"&gt;&lt;a class="footnote-ref" href="#fn-ee236c-localization"&gt;24&lt;/a&gt;&lt;/sup&gt;&lt;/td&gt;
+      &lt;td&gt;$O(\log (1 / \epsilon))$[^ee236c-localization]&lt;/td&gt;
       &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;At least &lt;span class="math"&gt;\(O(tn)\)&lt;/span&gt;&lt;/td&gt;
+      &lt;td&gt;At least $O(tn)$&lt;/td&gt;
       &lt;!-- Notes              --&gt;
       &lt;td&gt;
-        Applicable when &lt;span class="math"&gt;\(\mathcal{C}\)&lt;/span&gt; is bounded. Each iteration requires
+        Applicable when $\mathcal{C}$ is bounded. Each iteration requires
         finding a near-central point in a convex set; this may be
         computationally expensive.
       &lt;/td&gt;
-    &lt;/tr&gt;&lt;/p&gt;
-&lt;/tbody&gt;
+    &lt;/tr&gt;
 
+  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;!-- Footnotes --&gt;
-
 &lt;!-- References --&gt;
-
 &lt;div class="footnote"&gt;
 &lt;hr&gt;
 &lt;ol&gt;
-&lt;li id="fn-blog-gd"&gt;
-&lt;p&gt;&lt;a href="/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-blog-gd" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:blog-gd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-gd" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-blog-sd"&gt;
-&lt;p&gt;&lt;a href="/blog/subgradient-descent.html"&gt;Subgradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-blog-sd" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:blog-sd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/subgradient-descent.html"&gt;Subgradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-sd" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-blog-agd"&gt;
-&lt;p&gt;&lt;a href="/blog/accelerated-gradient-descent.html"&gt;Accelerated Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-blog-agd" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:blog-agd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html"&gt;Accelerated Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-agd" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-blog-pgd"&gt;
-&lt;p&gt;&lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-blog-pgd" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:blog-pgd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-pgd" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-blog-apgd"&gt;
-&lt;p&gt;&lt;a href="/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-blog-apgd" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:blog-apgd"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-apgd" title="Jump back to footnote 5 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-blog-fw"&gt;
-&lt;p&gt;&lt;a href="/blog/frank-wolfe.html"&gt;Franke-Wolfe Algorithm&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-blog-fw" title="Jump back to footnote 6 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:blog-fw"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/frank-wolfe.html"&gt;Franke-Wolfe Algorithm&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-fw" title="Jump back to footnote 6 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-blog-admm"&gt;
-&lt;p&gt;&lt;a href="/blog/admm-revisited.html"&gt;Alternating Direction Method of Multipliers&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-blog-admm" title="Jump back to footnote 7 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:blog-admm"&gt;
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/admm-revisited.html"&gt;Alternating Direction Method of Multipliers&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:blog-admm" title="Jump back to footnote 7 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-richtarik-2011"&gt;
-&lt;p&gt;&lt;a href="http://arxiv.org/abs/1107.2848"&gt;Richtarik and Takac, 2011&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-richtarik-2011" title="Jump back to footnote 8 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-richtarik-2011" title="Jump back to footnote 8 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:richtarik-2011"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1107.2848"&gt;Richtarik and Takac, 2011&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:richtarik-2011" title="Jump back to footnote 8 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-ee381-md"&gt;
-&lt;p&gt;&lt;a href="http://users.ece.utexas.edu/~cmcaram/EE381V_2012F/Lecture_24_Scribe_Notes.final.pdf"&gt;EE381 Slides on Mirror Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-ee381-md" title="Jump back to footnote 9 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:ee381-md"&gt;
+&lt;p&gt;&lt;a href="http://users.ece.utexas.edu/~cmcaram/EE381V_2012F/Lecture_24_Scribe_Notes.final.pdf"&gt;EE381 Slides on Mirror Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee381-md" title="Jump back to footnote 9 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-ee381-gd"&gt;
-&lt;p&gt;&lt;a href="http://users.ece.utexas.edu/~cmcaram/EE381V_2012F/Lecture_4_Scribe_Notes.final.pdf"&gt;EE381 Slides on Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-ee381-gd" title="Jump back to footnote 10 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:ee381-gd"&gt;
+&lt;p&gt;&lt;a href="http://users.ece.utexas.edu/~cmcaram/EE381V_2012F/Lecture_4_Scribe_Notes.final.pdf"&gt;EE381 Slides on Gradient Descent&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee381-gd" title="Jump back to footnote 10 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-bubeck-agd"&gt;
-&lt;p&gt;&lt;a href="https://blogs.princeton.edu/imabandit/2014/03/06/nesterovs-accelerated-gradient-descent-for-smooth-and-strongly-convex-optimization/"&gt;Sebastien Bubeck's article on Accelerated Gradient Descent for Smooth and Strongly Convex objectives&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-bubeck-agd" title="Jump back to footnote 11 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:bubeck-agd"&gt;
+&lt;p&gt;&lt;a href="https://blogs.princeton.edu/imabandit/2014/03/06/nesterovs-accelerated-gradient-descent-for-smooth-and-strongly-convex-optimization/"&gt;Sebastien Bubeck's article on Accelerated Gradient Descent for Smooth and Strongly Convex objectives&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:bubeck-agd" title="Jump back to footnote 11 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-garber-2014"&gt;
-&lt;p&gt;&lt;a href="http://arxiv.org/abs/1406.1305"&gt;Garber and Hazan, 2014&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-garber-2014" title="Jump back to footnote 12 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:garber-2014"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1406.1305"&gt;Garber and Hazan, 2014&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:garber-2014" title="Jump back to footnote 12 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-mairal-2013"&gt;
-&lt;p&gt;&lt;a href="http://arxiv.org/abs/1305.3120"&gt;Mairal, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-mairal-2013" title="Jump back to footnote 13 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-mairal-2013" title="Jump back to footnote 13 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref3-mairal-2013" title="Jump back to footnote 13 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref4-mairal-2013" title="Jump back to footnote 13 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:mairal-2013"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1305.3120"&gt;Mairal, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:mairal-2013" title="Jump back to footnote 13 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-ee364a-unconstrained"&gt;
-&lt;p&gt;&lt;a href="http://web.stanford.edu/class/ee364a/lectures/unconstrained.pdf"&gt;EE364a Slides on Unconstrained Optimization Algorithms&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-ee364a-unconstrained" title="Jump back to footnote 14 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:ee364a-unconstrained"&gt;
+&lt;p&gt;&lt;a href="http://web.stanford.edu/class/ee364a/lectures/unconstrained.pdf"&gt;EE364a Slides on Unconstrained Optimization Algorithms&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee364a-unconstrained" title="Jump back to footnote 14 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-ee236c-qnewton"&gt;
-&lt;p&gt;&lt;a href="http://www.seas.ucla.edu/~vandenbe/236C/lectures/qnewton.pdf"&gt;EE236c Slides on Quasi-Newton Methods&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-ee236c-qnewton" title="Jump back to footnote 15 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:ee236c-qnewton"&gt;
+&lt;p&gt;&lt;a href="http://www.seas.ucla.edu/~vandenbe/236C/lectures/qnewton.pdf"&gt;EE236c Slides on Quasi-Newton Methods&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee236c-qnewton" title="Jump back to footnote 15 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-bach-2012"&gt;
-&lt;p&gt;&lt;a href="http://www.ann.jussieu.fr/~plc/bach2012.pdf"&gt;Bach's slides on Stochastic Methods&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-bach-2012" title="Jump back to footnote 16 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-bach-2012" title="Jump back to footnote 16 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:bach-2012"&gt;
+&lt;p&gt;&lt;a href="http://www.ann.jussieu.fr/~plc/bach2012.pdf"&gt;Bach's slides on Stochastic Methods&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:bach-2012" title="Jump back to footnote 16 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-shalevshwartz-2012"&gt;
-&lt;p&gt;&lt;a href="http://arxiv.org/abs/1209.1873"&gt;Shalev-Shwartz and Zhang, 2012&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-shalevshwartz-2012" title="Jump back to footnote 17 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-shalevshwartz-2012" title="Jump back to footnote 17 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:shalevshwartz-2012"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1209.1873"&gt;Shalev-Shwartz and Zhang, 2012&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:shalevshwartz-2012" title="Jump back to footnote 17 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-shalevshwartz-2013"&gt;
-&lt;p&gt;&lt;a href="http://arxiv.org/abs/1309.2375"&gt;Shalev-Shwartz and Zhang, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-shalevshwartz-2013" title="Jump back to footnote 18 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-shalevshwartz-2013" title="Jump back to footnote 18 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:shalevshwartz-2013"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1309.2375"&gt;Shalev-Shwartz and Zhang, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:shalevshwartz-2013" title="Jump back to footnote 18 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-schmidt-2013"&gt;
-&lt;p&gt;&lt;a href="http://arxiv.org/abs/1309.2388"&gt;Schmidt et al, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-schmidt-2013" title="Jump back to footnote 19 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-schmidt-2013" title="Jump back to footnote 19 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:schmidt-2013"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1309.2388"&gt;Schmidt et al, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:schmidt-2013" title="Jump back to footnote 19 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-deng-2012"&gt;
-&lt;p&gt;&lt;a href="ftp://ftp.math.ucla.edu/pub/camreport/cam12-52.pdf"&gt;Deng and Yin, 2012&lt;/a&gt;, Table 1.1&amp;#160;&lt;a class="footnote-backref" href="#fnref-deng-2012" title="Jump back to footnote 20 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:deng-2012"&gt;
+&lt;p&gt;&lt;a href="ftp://ftp.math.ucla.edu/pub/camreport/cam12-52.pdf"&gt;Deng and Yin, 2012&lt;/a&gt;, Table 1.1&amp;#160;&lt;a class="footnote-backref" href="#fnref:deng-2012" title="Jump back to footnote 20 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-hong-2012"&gt;
-&lt;p&gt;&lt;a href="http://arxiv.org/abs/1208.3922"&gt;Hong and Luo, 2012&lt;/a&gt;, Section 2&amp;#160;&lt;a class="footnote-backref" href="#fnref-hong-2012" title="Jump back to footnote 21 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-hong-2012" title="Jump back to footnote 21 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:hong-2012"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1208.3922"&gt;Hong and Luo, 2012&lt;/a&gt;, Section 2&amp;#160;&lt;a class="footnote-backref" href="#fnref:hong-2012" title="Jump back to footnote 21 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-johnson-2013"&gt;
-&lt;p&gt;&lt;a href="http://papers.nips.cc/paper/4937-accelerating-stochastic-gradient-descent-using-predictive-variance-reduction.pdf"&gt;Johnson and Zhang, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-johnson-2013" title="Jump back to footnote 22 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-johnson-2013" title="Jump back to footnote 22 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:johnson-2013"&gt;
+&lt;p&gt;&lt;a href="http://papers.nips.cc/paper/4937-accelerating-stochastic-gradient-descent-using-predictive-variance-reduction.pdf"&gt;Johnson and Zhang, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:johnson-2013" title="Jump back to footnote 22 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-smola-2007"&gt;
-&lt;p&gt;&lt;a href="http://machinelearning.wustl.edu/mlpapers/paper_files/NIPS2007_470.pdf"&gt;Smola and Zhang, 2007&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-smola-2007" title="Jump back to footnote 23 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-smola-2007" title="Jump back to footnote 23 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:smola-2007"&gt;
+&lt;p&gt;&lt;a href="http://machinelearning.wustl.edu/mlpapers/paper_files/NIPS2007_470.pdf"&gt;Smola and Zhang, 2007&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:smola-2007" title="Jump back to footnote 23 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-ee236c-localization"&gt;
-&lt;p&gt;&lt;a href="http://www.seas.ucla.edu/~vandenbe/236C/lectures/localization.pdf"&gt;EE236c Slides on Cutting Planes&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-ee236c-localization" title="Jump back to footnote 24 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;a class="footnote-backref" href="#fnref2-ee236c-localization" title="Jump back to footnote 24 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:ee236c-localization"&gt;
+&lt;p&gt;&lt;a href="http://www.seas.ucla.edu/~vandenbe/236C/lectures/localization.pdf"&gt;EE236c Slides on Cutting Planes&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:ee236c-localization" title="Jump back to footnote 24 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-nesterov-2007"&gt;
-&lt;p&gt;&lt;a href="http://ium.mccme.ru/postscript/s12/GS-Nesterov%20Primal-dual.pdf"&gt;Nesterov, 2007&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-nesterov-2007" title="Jump back to footnote 25 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:nesterov-2007"&gt;
+&lt;p&gt;&lt;a href="http://ium.mccme.ru/postscript/s12/GS-Nesterov%20Primal-dual.pdf"&gt;Nesterov, 2007&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:nesterov-2007" title="Jump back to footnote 25 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;li id="fn-nedich-2013"&gt;
-&lt;p&gt;&lt;a href="http://arxiv.org/abs/1307.1879"&gt;Nedich and Lee, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref-nedich-2013" title="Jump back to footnote 26 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;li id="fn:nedich-2013"&gt;
+&lt;p&gt;&lt;a href="http://arxiv.org/abs/1307.1879"&gt;Nedich and Lee, 2013&lt;/a&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:nedich-2013" title="Jump back to footnote 26 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
@@ -630,11 +628,14 @@ on iteration count &lt;span class="math"&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -648,6 +649,8 @@ on iteration count &lt;span class="math"&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -668,13 +671,15 @@ on iteration count &lt;span class="math"&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="convergence"></category><category term="reference"></category></entry><entry><title>From ADMM to Proximal Gradient Descent</title><link href="/blog/admm-to-prox-grad.html" rel="alternate"></link><published>2014-07-26T00:00:00-07:00</published><updated>2014-07-26T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2014-07-26:/blog/admm-to-prox-grad.html</id><summary type="html">&lt;p&gt;At first blush, &lt;a href="/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="convergence"></category><category term="reference"></category></entry><entry><title>From ADMM to Proximal Gradient Descent</title><link href="http://stronglyconvex.com/blog/admm-to-prox-grad.html" rel="alternate"></link><published>2014-07-26T00:00:00-07:00</published><updated>2014-07-26T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2014-07-26:/blog/admm-to-prox-grad.html</id><summary type="html">&lt;p&gt;At first blush, &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
 (ProxGrad) appear to have very little in common. The convergence analyses for
 these two methods are unrelated, and the former operates on an Augmented
 Lagrangian while the latter directly minimizes the primal objective. In this
-post, we'll show that after a slight …&lt;/p&gt;</summary><content type="html">&lt;p&gt;At first blush, &lt;a href="/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
+post, we'll show that after a slight …&lt;/p&gt;</summary><content type="html">&lt;p&gt;At first blush, &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;ADMM&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;
 (ProxGrad) appear to have very little in common. The convergence analyses for
 these two methods are unrelated, and the former operates on an Augmented
 Lagrangian while the latter directly minimizes the primal objective. In this
@@ -942,9 +947,7 @@ Descent and FoBoS is taken from &lt;a href="http://www.eecs.berkeley.edu/~elghao
 the relationship between FoBoS and AMA from &lt;a href="ftp://ftp.math.ucla.edu/pub/camreport/cam12-35.pdf"&gt;Goldstein et
 al&lt;/a&gt;'s work on Accelerated ADMM and AMA.&lt;/p&gt;
 &lt;!-- internal references --&gt;
-
 &lt;!-- papers --&gt;
-
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
@@ -959,11 +962,14 @@ al&lt;/a&gt;'s work on Accelerated ADMM and AMA.&lt;/p&gt;
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -977,6 +983,8 @@ al&lt;/a&gt;'s work on Accelerated ADMM and AMA.&lt;/p&gt;
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -997,13 +1005,15 @@ al&lt;/a&gt;'s work on Accelerated ADMM and AMA.&lt;/p&gt;
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="fobos"></category><category term="admm"></category><category term="ama"></category><category term="proximal"></category></entry><entry><title>ADMM revisited</title><link href="/blog/admm-revisited.html" rel="alternate"></link><published>2014-07-20T00:00:00-07:00</published><updated>2014-07-20T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2014-07-20:/blog/admm-revisited.html</id><summary type="html">&lt;p&gt;When I originally wrote about the &lt;a href="/blog/admm.html"&gt;Alternating Direction Method of
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="fobos"></category><category term="admm"></category><category term="ama"></category><category term="proximal"></category></entry><entry><title>ADMM revisited</title><link href="http://stronglyconvex.com/blog/admm-revisited.html" rel="alternate"></link><published>2014-07-20T00:00:00-07:00</published><updated>2014-07-20T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2014-07-20:/blog/admm-revisited.html</id><summary type="html">&lt;p&gt;When I originally wrote about the &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;Alternating Direction Method of
 Multipliers&lt;/a&gt; algorithm, the community's understanding of its
 convergence properties was light to say the least. While it has long been
 known (See &lt;a href="http://web.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf"&gt;Boyd's excellent article&lt;/a&gt;, Appendix A) that ADMM &lt;em&gt;will&lt;/em&gt;
-converge, it is only recently that the community has begun …&lt;/p&gt;</summary><content type="html">&lt;p&gt;When I originally wrote about the &lt;a href="/blog/admm.html"&gt;Alternating Direction Method of
+converge, it is only recently that the community has begun …&lt;/p&gt;</summary><content type="html">&lt;p&gt;When I originally wrote about the &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;Alternating Direction Method of
 Multipliers&lt;/a&gt; algorithm, the community's understanding of its
 convergence properties was light to say the least. While it has long been
 known (See &lt;a href="http://web.stanford.edu/~boyd/papers/pdf/admm_distr_stats.pdf"&gt;Boyd's excellent article&lt;/a&gt;, Appendix A) that ADMM &lt;em&gt;will&lt;/em&gt;
@@ -1062,7 +1072,7 @@ takes a gradient step with respect to &lt;span class="math"&gt;\(y\)&lt;/span&gt
 &lt;/div&gt;
 &lt;p&gt;Intuitively, the extra quadratic term prevents each iteration of the
 algorithm from stepping "too far" from the last iteration, an idea that's also
-at the core of &lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;.&lt;/p&gt;
+at the core of &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal Gradient Descent&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="img-center"&gt;
 &lt;p&gt;&lt;img src="/assets/img/admm/convergence.gif"&gt;&lt;/img&gt;
   &lt;span class="caption"&gt;
@@ -1529,23 +1539,18 @@ a special variant of ADMM using "Gaussian back substitution" is ensured to
 converge.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="references" href="#references"&gt;References&lt;/a&gt;&lt;/h1&gt;
 &lt;p&gt;&lt;strong&gt;ADMM&lt;/strong&gt; While ADMM has existed for decades, it has only recently been brought
-to light by &lt;a href="/blog/admm.html"&gt;Boyd&lt;/a&gt;'s article describing its applications for statistical
+to light by &lt;a href="http://stronglyconvex.com/blog/admm.html"&gt;Boyd&lt;/a&gt;'s article describing its applications for statistical
 machine learning. It is from this work from which I initially learned of ADMM.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Proof of Convergence&lt;/strong&gt; The proof of convergence presented here is a verbose
 expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&gt;Wang&lt;/a&gt;'s paper on Online ADMM.&lt;/p&gt;
 &lt;!-- internal references --&gt;
-
 &lt;!-- papers --&gt;
-
 &lt;!-- convergence proofs --&gt;
-
 &lt;!-- extensions --&gt;
-
 &lt;!-- uses --&gt;
-
 &lt;h1&gt;&lt;a name="reference-impl" href="#reference-impl"&gt;Reference Implementation&lt;/a&gt;&lt;/h1&gt;
 &lt;p&gt;Using the &lt;a href="https://github.com/duckworthd/optim"&gt;&lt;code&gt;optim&lt;/code&gt;&lt;/a&gt; Python package, we can generate the animation above,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;Example usage of ADMM solver.&lt;/span&gt;
 
 &lt;span class="sd"&gt;A gif is generated showing the iterates as they converge.&lt;/span&gt;
@@ -1553,9 +1558,9 @@ expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&g
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;matplotlib&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;animation&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;optim.admm&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;
 &lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;optim.tests.test_admm&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;quadratic1&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;itertools&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;it&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt;     &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pylab&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pl&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;itertools&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;it&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt;     &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pylab&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pl&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
 
 
@@ -1577,7 +1582,7 @@ expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&g
 &lt;span class="n"&gt;zs2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;prob&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;primal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;State&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;zs&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;animate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-  &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;iteration:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
+  &lt;span class="nb"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;iteration:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;
   &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cla&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
   &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Iteration #&lt;/span&gt;&lt;span class="si"&gt;%d&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
   &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;   &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;prob&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;prob&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;v&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;_&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;k-&amp;#39;&lt;/span&gt; &lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;label&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;f(x)+g(z)&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1590,8 +1595,7 @@ expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&g
 
 &lt;span class="n"&gt;anim&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;animation&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;FuncAnimation&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gcf&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;animate&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;frames&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;span class="n"&gt;anim&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;writer&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;imagemagick&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fps&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -1607,11 +1611,14 @@ expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&g
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -1625,6 +1632,8 @@ expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&g
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -1645,22 +1654,24 @@ expansion of that presented in &lt;a href="http://icml.cc/2012/papers/577.pdf"&g
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="distributed"></category><category term="admm"></category></entry><entry><title>Frank-Wolfe Algorithm</title><link href="/blog/frank-wolfe.html" rel="alternate"></link><published>2013-05-04T00:00:00-07:00</published><updated>2013-05-04T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-05-04:/blog/frank-wolfe.html</id><summary type="html">&lt;p&gt;In this post, we'll take a look at the &lt;a href="http://en.wikipedia.org/wiki/Frank%E2%80%93Wolfe_algorithm"&gt;Frank-Wolfe Algorithm&lt;/a&gt;
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="distributed"></category><category term="admm"></category></entry><entry><title>Frank-Wolfe Algorithm</title><link href="http://stronglyconvex.com/blog/frank-wolfe.html" rel="alternate"></link><published>2013-05-04T00:00:00-07:00</published><updated>2013-05-04T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-05-04:/blog/frank-wolfe.html</id><summary type="html">&lt;p&gt;In this post, we'll take a look at the &lt;a href="http://en.wikipedia.org/wiki/Frank%E2%80%93Wolfe_algorithm"&gt;Frank-Wolfe Algorithm&lt;/a&gt;
 also known as the Conditional Gradient Method, an algorithm particularly suited
-for solving problems with compact domains. Like the &lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal
-Gradient&lt;/a&gt; and &lt;a href="/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal
+for solving problems with compact domains. Like the &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal
+Gradient&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal
 Gradient&lt;/a&gt; algorithms, Frank-Wolfe requires we
 exploit problem structure to quickly solve a mini-optimization problem. Our …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In this post, we'll take a look at the &lt;a href="http://en.wikipedia.org/wiki/Frank%E2%80%93Wolfe_algorithm"&gt;Frank-Wolfe Algorithm&lt;/a&gt;
 also known as the Conditional Gradient Method, an algorithm particularly suited
-for solving problems with compact domains. Like the &lt;a href="/blog/proximal-gradient-descent.html"&gt;Proximal
-Gradient&lt;/a&gt; and &lt;a href="/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal
+for solving problems with compact domains. Like the &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;Proximal
+Gradient&lt;/a&gt; and &lt;a href="http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html"&gt;Accelerated Proximal
 Gradient&lt;/a&gt; algorithms, Frank-Wolfe requires we
 exploit problem structure to quickly solve a mini-optimization problem. Our
 reward for doing so is a converge rate of &lt;span class="math"&gt;\(O(1/\epsilon)\)&lt;/span&gt; and the potential for
 &lt;em&gt;extremely sparse solutions&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;Returning to my &lt;a href="/blog/gradient-descent.html"&gt;valley-finding metaphor&lt;/a&gt;, Frank-Wolfe is a
+&lt;p&gt;Returning to my &lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;valley-finding metaphor&lt;/a&gt;, Frank-Wolfe is a
 bit like this,&lt;/p&gt;
 &lt;div class="pseudocode"&gt;
 &lt;ol&gt;
@@ -1934,7 +1945,7 @@ sparse, you can do it with no penalty!&lt;/p&gt;
 article comes from &lt;a href="http://jmlr.csail.mit.edu/proceedings/papers/v28/jaggi13-supp.pdf"&gt;Jaggi's&lt;/a&gt; fantastic article on Frank-Wolfe for
 machine learning.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="reference-impl" href="#reference-impl"&gt;Reference Implementation&lt;/a&gt;&lt;/h1&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;frank_wolfe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;minisolver&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1e-2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;frank_wolfe&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;minisolver&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;epsilon&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;1e-2&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
   &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Frank-Wolfe Algorithm&lt;/span&gt;
 
 &lt;span class="sd"&gt;  Parameters&lt;/span&gt;
@@ -1952,7 +1963,7 @@ machine learning.&lt;/p&gt;
 &lt;span class="sd"&gt;  &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
   &lt;span class="n"&gt;xs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
   &lt;span class="n"&gt;iteration&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
-  &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
     &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="n"&gt;g&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;s_next&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;minisolver&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1972,9 +1983,9 @@ machine learning.&lt;/p&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
   &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
 
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pylab&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pl&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pylab&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pl&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
 
   &lt;span class="c1"&gt;### FRANK WOLFE ALGORITHM ###&lt;/span&gt;
 
@@ -2028,8 +2039,7 @@ machine learning.&lt;/p&gt;
 
     &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;savefig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/animation/&lt;/span&gt;&lt;span class="si"&gt;%02d&lt;/span&gt;&lt;span class="s1"&gt;.png&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -2045,11 +2055,14 @@ machine learning.&lt;/p&gt;
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -2063,6 +2076,8 @@ machine learning.&lt;/p&gt;
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -2083,9 +2098,11 @@ machine learning.&lt;/p&gt;
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="first-order"></category><category term="sparsity"></category></entry><entry><title>Variational Inference</title><link href="/blog/variational-inference.html" rel="alternate"></link><published>2013-04-28T00:00:00-07:00</published><updated>2013-04-28T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-04-28:/blog/variational-inference.html</id><summary type="html">&lt;p&gt;&lt;a href="http://www.orchid.ac.uk/eprints/40/1/fox_vbtut.pdf"&gt;Variational Inference&lt;/a&gt; and Monte Carlo Sampling are
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="first-order"></category><category term="sparsity"></category></entry><entry><title>Variational Inference</title><link href="http://stronglyconvex.com/blog/variational-inference.html" rel="alternate"></link><published>2013-04-28T00:00:00-07:00</published><updated>2013-04-28T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-28:/blog/variational-inference.html</id><summary type="html">&lt;p&gt;&lt;a href="http://www.orchid.ac.uk/eprints/40/1/fox_vbtut.pdf"&gt;Variational Inference&lt;/a&gt; and Monte Carlo Sampling are
 currently the two chief ways of doing approximate Bayesian inference. In the
 Bayesian setting, we typically have some observed variables &lt;span class="math"&gt;\(x\)&lt;/span&gt; and
 unobserved variables &lt;span class="math"&gt;\(z\)&lt;/span&gt;, and our goal is to calculate &lt;span class="math"&gt;\(P(z|x)\)&lt;/span&gt;. In all but
@@ -2615,11 +2632,14 @@ Hoffman et al.'s &lt;a href="http://arxiv.org/abs/1206.7051"&gt;"Stochastic Vari
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -2633,6 +2653,8 @@ Hoffman et al.'s &lt;a href="http://arxiv.org/abs/1206.7051"&gt;"Stochastic Vari
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -2653,14 +2675,16 @@ Hoffman et al.'s &lt;a href="http://arxiv.org/abs/1206.7051"&gt;"Stochastic Vari
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="inference"></category><category term="bayesian"></category></entry><entry><title>Accelerated Proximal Gradient Descent</title><link href="/blog/accelerated-proximal-gradient-descent.html" rel="alternate"></link><published>2013-04-25T00:00:00-07:00</published><updated>2013-04-25T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-04-25:/blog/accelerated-proximal-gradient-descent.html</id><summary type="html">&lt;p&gt;&lt;span class="math"&gt;\(\def\prox{\text{prox}}\)&lt;/span&gt;
-  In a &lt;a href="/blog/proximal-gradient-descent.html"&gt;previous post&lt;/a&gt;, I presented Proximal Gradient, a
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="inference"></category><category term="bayesian"></category></entry><entry><title>Accelerated Proximal Gradient Descent</title><link href="http://stronglyconvex.com/blog/accelerated-proximal-gradient-descent.html" rel="alternate"></link><published>2013-04-25T00:00:00-07:00</published><updated>2013-04-25T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-25:/blog/accelerated-proximal-gradient-descent.html</id><summary type="html">&lt;p&gt;&lt;span class="math"&gt;\(\def\prox{\text{prox}}\)&lt;/span&gt;
+  In a &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;previous post&lt;/a&gt;, I presented Proximal Gradient, a
 method for bypassing the &lt;span class="math"&gt;\(O(1 / \epsilon^2)\)&lt;/span&gt; convergence rate of Subgradient
 Descent.  This method relied on assuming that the objective function could be
 expressed as the sum of 2 functions, &lt;span class="math"&gt;\(g(x)\)&lt;/span&gt; and &lt;span class="math"&gt;\(h(x)\)&lt;/span&gt;, with …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;span class="math"&gt;\(\def\prox{\text{prox}}\)&lt;/span&gt;
-  In a &lt;a href="/blog/proximal-gradient-descent.html"&gt;previous post&lt;/a&gt;, I presented Proximal Gradient, a
+  In a &lt;a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html"&gt;previous post&lt;/a&gt;, I presented Proximal Gradient, a
 method for bypassing the &lt;span class="math"&gt;\(O(1 / \epsilon^2)\)&lt;/span&gt; convergence rate of Subgradient
 Descent.  This method relied on assuming that the objective function could be
 expressed as the sum of 2 functions, &lt;span class="math"&gt;\(g(x)\)&lt;/span&gt; and &lt;span class="math"&gt;\(h(x)\)&lt;/span&gt;, with &lt;span class="math"&gt;\(g\)&lt;/span&gt; being
@@ -2669,7 +2693,7 @@ function&lt;/a&gt;,&lt;/p&gt;
 &lt;div class="math"&gt;$$
   \prox_{\alpha h}(x) = \arg\min_{y} \alpha h(y) + \frac{1}{2}||y - x||_2^2
 $$&lt;/div&gt;
-&lt;p&gt;In the &lt;a href="/blog/accelerated-gradient-descent.html"&gt;post before that&lt;/a&gt;, I presented Accelerated
+&lt;p&gt;In the &lt;a href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html"&gt;post before that&lt;/a&gt;, I presented Accelerated
 Gradient Descent, a method that outperforms Gradient Descent while making the
 exact same assumptions. It is then natural to ask, "Can we combine Accelerated
 Gradient Descent and Proximal Gradient to obtain a new algorithm?"  Well if we
@@ -2901,7 +2925,7 @@ Gradient&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Proof of convergence&lt;/strong&gt; The proof of convergence is taken from Lieven
 Vandenberghe's fantastic &lt;a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures/fgrad.pdf"&gt;EE236c slides&lt;/a&gt;.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="reference-impl" href="#reference-impl"&gt;Reference Implementation&lt;/a&gt;&lt;/h1&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;accelerated_proximal_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g_gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;h_prox&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;accelerated_proximal_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g_gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;h_prox&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                   &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
   &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Proximal Gradient Descent&lt;/span&gt;
 
@@ -2940,7 +2964,7 @@ Vandenberghe's fantastic &lt;a href="http://www.ee.ucla.edu/~vandenbe/236C/lectu
   &lt;span class="n"&gt;beta&lt;/span&gt;    &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.9&lt;/span&gt;
   &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;alpha_0&lt;/span&gt;
-    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
       &lt;span class="n"&gt;x_plus&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;h_prox&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;g_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
       &lt;span class="n"&gt;G&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;x_plus&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
       &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x_plus&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x_plus&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -2953,8 +2977,8 @@ Vandenberghe's fantastic &lt;a href="http://www.ee.ucla.edu/~vandenbe/236C/lectu
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
   &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
 
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
 
   &lt;span class="c1"&gt;### ACCELERATED PROXIMAL GRADIENT ###&lt;/span&gt;
 
@@ -2982,8 +3006,7 @@ Vandenberghe's fantastic &lt;a href="http://www.ee.ucla.edu/~vandenbe/236C/lectu
   &lt;span class="n"&gt;plotting&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot_iteration_vs_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/convergence.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.69314718055994529&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -2999,11 +3022,14 @@ Vandenberghe's fantastic &lt;a href="http://www.ee.ucla.edu/~vandenbe/236C/lectu
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -3017,6 +3043,8 @@ Vandenberghe's fantastic &lt;a href="http://www.ee.ucla.edu/~vandenbe/236C/lectu
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -3037,9 +3065,11 @@ Vandenberghe's fantastic &lt;a href="http://www.ee.ucla.edu/~vandenbe/236C/lectu
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="first-order"></category><category term="accelerated"></category><category term="proximal"></category></entry><entry><title>Coordinate Ascent for Convex Clustering</title><link href="/blog/coordinate-ascent-convex-clustering.html" rel="alternate"></link><published>2013-04-23T00:00:00-07:00</published><updated>2013-04-23T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-04-23:/blog/coordinate-ascent-convex-clustering.html</id><summary type="html">&lt;p&gt;Convex clustering is the reformulation of k-means clustering as a convex
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="first-order"></category><category term="accelerated"></category><category term="proximal"></category></entry><entry><title>Coordinate Ascent for Convex Clustering</title><link href="http://stronglyconvex.com/blog/coordinate-ascent-convex-clustering.html" rel="alternate"></link><published>2013-04-23T00:00:00-07:00</published><updated>2013-04-23T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-23:/blog/coordinate-ascent-convex-clustering.html</id><summary type="html">&lt;p&gt;Convex clustering is the reformulation of k-means clustering as a convex
 problem. While the two problems are not equivalent, the former can be seen as a
 relaxation of the latter that allows us to easily find globally optimal
 solutions (as opposed to only locally optimal ones).&lt;/p&gt;
@@ -3300,11 +3330,14 @@ ADMM and AMA-based algorithms specifically designed for convex clustering.&lt;/p
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -3318,6 +3351,8 @@ ADMM and AMA-based algorithms specifically designed for convex clustering.&lt;/p
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -3338,9 +3373,11 @@ ADMM and AMA-based algorithms specifically designed for convex clustering.&lt;/p
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="coordinate-descent"></category><category term="clustering"></category></entry><entry><title>Why does L1 produce sparse solutions?</title><link href="/blog/l1-sparsity.html" rel="alternate"></link><published>2013-04-22T00:00:00-07:00</published><updated>2013-04-22T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-04-22:/blog/l1-sparsity.html</id><summary type="html">&lt;p&gt;Supervised machine learning problems are typically of the form "minimize your
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="coordinate-descent"></category><category term="clustering"></category></entry><entry><title>Why does L1 produce sparse solutions?</title><link href="http://stronglyconvex.com/blog/l1-sparsity.html" rel="alternate"></link><published>2013-04-22T00:00:00-07:00</published><updated>2013-04-22T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-22:/blog/l1-sparsity.html</id><summary type="html">&lt;p&gt;Supervised machine learning problems are typically of the form "minimize your
 error while regularizing your parameters." The idea is that while many choices
 of parameters may make your training error low, the goal isn't low training
 error -- it's low test-time error. Thus, parameters should be minimize training
@@ -3518,11 +3555,14 @@ MetaOptimize king, &lt;a href="https://twitter.com/atpassos"&gt;Alexandre Passos
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -3536,6 +3576,8 @@ MetaOptimize king, &lt;a href="https://twitter.com/atpassos"&gt;Alexandre Passos
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -3556,9 +3598,11 @@ MetaOptimize king, &lt;a href="https://twitter.com/atpassos"&gt;Alexandre Passos
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="sparsity"></category></entry><entry><title>Proximal Gradient Descent</title><link href="/blog/proximal-gradient-descent.html" rel="alternate"></link><published>2013-04-19T00:00:00-07:00</published><updated>2013-04-19T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-04-19:/blog/proximal-gradient-descent.html</id><summary type="html">&lt;p&gt;&lt;span class="math"&gt;\( \def\prox{\text{prox}} $
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="sparsity"></category></entry><entry><title>Proximal Gradient Descent</title><link href="http://stronglyconvex.com/blog/proximal-gradient-descent.html" rel="alternate"></link><published>2013-04-19T00:00:00-07:00</published><updated>2013-04-19T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-19:/blog/proximal-gradient-descent.html</id><summary type="html">&lt;p&gt;&lt;span class="math"&gt;\( \def\prox{\text{prox}} $
   In a [previous post][subgradient_descent_usage], I mentioned that one cannot
 hope to asymptotically outperform the $O(\frac{1}{\epsilon^2})\)&lt;/span&gt; convergence
 rate of Subgradient Descent when dealing with a non-differentiable objective
@@ -3914,7 +3958,7 @@ Laurent El Ghaoui's &lt;a href="http://www.eecs.berkeley.edu/~elghaoui/Teaching/
 &lt;p&gt;&lt;strong&gt;List of Proximal Functions&lt;/strong&gt;The list of proximal functions is taken from
 John Duchi's article on &lt;a href="http://www.cs.berkeley.edu/~jduchi/projects/DuchiSi09c.pdf"&gt;Forward-Backward Splitting (FOBOS)&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;&lt;a name="reference-impl" href="#reference-impl"&gt;Reference Implementation&lt;/a&gt;&lt;/h1&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;proximal_gradient_descent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g_gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;h_prox&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;proximal_gradient_descent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;g_gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;h_prox&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                               &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
   &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Proximal Gradient Descent&lt;/span&gt;
 
@@ -3950,7 +3994,7 @@ John Duchi's article on &lt;a href="http://www.cs.berkeley.edu/~jduchi/projects/
   &lt;span class="n"&gt;beta&lt;/span&gt;    &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;0.9&lt;/span&gt;
   &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;search&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;alpha_0&lt;/span&gt;
-    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
       &lt;span class="n"&gt;x_plus&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;h_prox&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;g_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
       &lt;span class="n"&gt;G&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;x_plus&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
       &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x_plus&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x_plus&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;=&lt;/span&gt; &lt;span class="n"&gt;g&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mf"&gt;0.5&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -3963,8 +4007,8 @@ John Duchi's article on &lt;a href="http://www.cs.berkeley.edu/~jduchi/projects/
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
   &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
 
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
 
   &lt;span class="c1"&gt;### PROXIMAL GRADIENT DESCENT ###&lt;/span&gt;
 
@@ -3992,8 +4036,7 @@ John Duchi's article on &lt;a href="http://www.cs.berkeley.edu/~jduchi/projects/
   &lt;span class="n"&gt;plotting&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot_iteration_vs_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/convergence.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.69314718055994529&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -4009,11 +4052,14 @@ John Duchi's article on &lt;a href="http://www.cs.berkeley.edu/~jduchi/projects/
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -4027,6 +4073,8 @@ John Duchi's article on &lt;a href="http://www.cs.berkeley.edu/~jduchi/projects/
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -4047,9 +4095,11 @@ John Duchi's article on &lt;a href="http://www.cs.berkeley.edu/~jduchi/projects/
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="first-order"></category><category term="proximal"></category></entry><entry><title>Accelerated Gradient Descent</title><link href="/blog/accelerated-gradient-descent.html" rel="alternate"></link><published>2013-04-12T00:00:00-07:00</published><updated>2013-04-12T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-04-12:/blog/accelerated-gradient-descent.html</id><summary type="html">&lt;p&gt;In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="first-order"></category><category term="proximal"></category></entry><entry><title>Accelerated Gradient Descent</title><link href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html" rel="alternate"></link><published>2013-04-12T00:00:00-07:00</published><updated>2013-04-12T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-12:/blog/accelerated-gradient-descent.html</id><summary type="html">&lt;p&gt;In the mid-1980s, Yurii Nesterov hit the equivalent of an academic home run.
 At the same time, he established the Accelerated Gradient Method, proved that
 its convergence rate superior to Gradient Descent (&lt;span class="math"&gt;\(O(1/\sqrt{\epsilon})\)&lt;/span&gt;
 iterations instead of &lt;span class="math"&gt;\(O(1/\epsilon)\)&lt;/span&gt;), and then proved that no other
@@ -4059,7 +4109,7 @@ its convergence rate superior to Gradient Descent (&lt;span class="math"&gt;\(O(
 iterations instead of &lt;span class="math"&gt;\(O(1/\epsilon)\)&lt;/span&gt;), and then proved that no other
 first-order (that is, gradient-based) algorithm could ever hope to beat it.
 What a boss.&lt;/p&gt;
-&lt;p&gt;&lt;a href="/blog/gradient-descent.html"&gt;Continuing&lt;/a&gt; &lt;a href="/blog/subgradient-descent.html"&gt;my analogy&lt;/a&gt;, imagine
+&lt;p&gt;&lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Continuing&lt;/a&gt; &lt;a href="http://stronglyconvex.com/blog/subgradient-descent.html"&gt;my analogy&lt;/a&gt;, imagine
 that you are standing on the side of a mountain and want to reach the bottom.
 If you were to follow the Accelerated Gradient Method, you'd do something like
 this,&lt;/p&gt;
@@ -4127,7 +4177,7 @@ Descent's. In particular, we assume,&lt;/p&gt;
 &lt;div class="math"&gt;$$
   || \nabla f(x) - \nabla f(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
 $$&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;Assumptions&lt;/strong&gt; As explained in my post on &lt;a href="/blog/gradient-descent.html"&gt;Gradient
+&lt;p&gt;&lt;strong&gt;Assumptions&lt;/strong&gt; As explained in my post on &lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Gradient
 Descent&lt;/a&gt;, these assumptions give us 2 things. Assumption 1
 gives us a linear lower bound on &lt;span class="math"&gt;\(f\)&lt;/span&gt;,&lt;/p&gt;
 &lt;div class="math"&gt;$$
@@ -4308,7 +4358,7 @@ fixed number of iterations or when &lt;span class="math"&gt;\(||\nabla f(x^{(t)}
 &lt;p&gt;&lt;strong&gt;Proof of Convergence&lt;/strong&gt; The proof of convergence is thanks to Lieven
 Vandenberghe's &lt;a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gradient.pdf"&gt;EE236c slides&lt;/a&gt; hosted by Zaiwen Wen.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="reference-impl" href="#reference-impl"&gt;Reference Implementation&lt;/a&gt;&lt;/h1&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;accelerated_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;accelerated_gradient&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
   &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Accelerated Gradient Method&lt;/span&gt;
 
 &lt;span class="sd"&gt;  Parameters&lt;/span&gt;
@@ -4355,8 +4405,8 @@ Vandenberghe's &lt;a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
   &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
 
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
 
   &lt;span class="c1"&gt;### ACCELERATED GRADIENT ###&lt;/span&gt;
 
@@ -4376,8 +4426,7 @@ Vandenberghe's &lt;a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-
                                      &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/iterates.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
   &lt;span class="n"&gt;plotting&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot_iteration_vs_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/convergence.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -4393,11 +4442,14 @@ Vandenberghe's &lt;a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -4411,6 +4463,8 @@ Vandenberghe's &lt;a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -4431,13 +4485,15 @@ Vandenberghe's &lt;a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="first-order"></category><category term="accelerated"></category></entry><entry><title>Subgradient Descent</title><link href="/blog/subgradient-descent.html" rel="alternate"></link><published>2013-04-11T00:00:00-07:00</published><updated>2013-04-11T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-04-11:/blog/subgradient-descent.html</id><summary type="html">&lt;p&gt;Not far from &lt;a href="/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt; is another first-order
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="first-order"></category><category term="accelerated"></category></entry><entry><title>Subgradient Descent</title><link href="http://stronglyconvex.com/blog/subgradient-descent.html" rel="alternate"></link><published>2013-04-11T00:00:00-07:00</published><updated>2013-04-11T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-11:/blog/subgradient-descent.html</id><summary type="html">&lt;p&gt;Not far from &lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt; is another first-order
 descent algorithm (that is, an algorithm that only relies on the first
 derivative) is Subgradient Descent. In implementation, they are in fact
 identical. The only difference is on the assumptions placed on the objective
-function we wish to minimize, &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt;.  If …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Not far from &lt;a href="/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt; is another first-order
+function we wish to minimize, &lt;span class="math"&gt;\(f(x)\)&lt;/span&gt;.  If …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Not far from &lt;a href="http://stronglyconvex.com/blog/gradient-descent.html"&gt;Gradient Descent&lt;/a&gt; is another first-order
 descent algorithm (that is, an algorithm that only relies on the first
 derivative) is Subgradient Descent. In implementation, they are in fact
 identical. The only difference is on the assumptions placed on the objective
@@ -4697,7 +4753,7 @@ EE392o&lt;/a&gt; course in 2003.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Polyak Step Size&lt;/strong&gt; The algorithm for the Polyak step size was taken from
 page 23 of Stephen Boyd's &lt;a href="http://www.stanford.edu/class/ee364b/lectures/subgrad_method_slides.pdf"&gt;lecture slides for EE364b&lt;/a&gt;.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="reference-impl" href="#reference-impl"&gt;Reference Implementation&lt;/a&gt;&lt;/h1&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;subgradient_descent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subgradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;subgradient_descent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;subgradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
   &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Subgradient Descent&lt;/span&gt;
 
 &lt;span class="sd"&gt;  Parameters&lt;/span&gt;
@@ -4740,9 +4796,9 @@ page 23 of Stephen Boyd's &lt;a href="http://www.stanford.edu/class/ee364b/lectu
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
   &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
 
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pylab&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pl&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pylab&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pl&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
 
   &lt;span class="c1"&gt;### SUBGRADIENT DESCENT ###&lt;/span&gt;
 
@@ -4760,8 +4816,7 @@ page 23 of Stephen Boyd's &lt;a href="http://www.stanford.edu/class/ee364b/lectu
                                      &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/iterates.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
   &lt;span class="n"&gt;plotting&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot_iteration_vs_function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterates&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;function&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                       &lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/convergence.png&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y_star&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;0.0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -4777,11 +4832,14 @@ page 23 of Stephen Boyd's &lt;a href="http://www.stanford.edu/class/ee364b/lectu
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -4795,6 +4853,8 @@ page 23 of Stephen Boyd's &lt;a href="http://www.stanford.edu/class/ee364b/lectu
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -4815,9 +4875,11 @@ page 23 of Stephen Boyd's &lt;a href="http://www.stanford.edu/class/ee364b/lectu
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="first-order"></category><category term="subgradient"></category></entry><entry><title>Gradient Descent</title><link href="/blog/gradient-descent.html" rel="alternate"></link><published>2013-04-10T00:00:00-07:00</published><updated>2013-04-10T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-04-10:/blog/gradient-descent.html</id><summary type="html">&lt;p&gt;Gradient Descent is perhaps the most intuitive of all optimization
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="first-order"></category><category term="subgradient"></category></entry><entry><title>Gradient Descent</title><link href="http://stronglyconvex.com/blog/gradient-descent.html" rel="alternate"></link><published>2013-04-10T00:00:00-07:00</published><updated>2013-04-10T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-10:/blog/gradient-descent.html</id><summary type="html">&lt;p&gt;Gradient Descent is perhaps the most intuitive of all optimization
 algorithms. Imagine you're standing on the side of a mountain and want to reach
 the bottom. You'd probably do something like this,&lt;/p&gt;
 &lt;div class="pseudocode"&gt;
@@ -4848,19 +4910,19 @@ $$&lt;/div&gt;
   \end{pmatrix}
 $$&lt;/div&gt;
 &lt;p&gt;Given this, Gradient Descent is simply the following,&lt;/p&gt;
-&lt;p&gt;&lt;!-- TODO Replace well with something more contextually meaningful --&gt;
-&lt;div class="pseudocode" markdown&gt;
-  &lt;strong&gt;Input&lt;/strong&gt;: initial iterate &lt;span class="math"&gt;\(x^{(0)}\)&lt;/span&gt;&lt;/p&gt;
+&lt;!-- TODO Replace well with something more contextually meaningful --&gt;
+&lt;div class="pseudocode"&gt;
+&lt;p&gt;&lt;strong&gt;Input&lt;/strong&gt;: initial iterate &lt;span class="math"&gt;\(x^{(0)}\)&lt;/span&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;For &lt;span class="math"&gt;\(t = 0, 1, \ldots\)&lt;/span&gt;&lt;ol&gt;
 &lt;li&gt;if converged, return &lt;span class="math"&gt;\(x^{(t)}\)&lt;/span&gt;&lt;/li&gt;
 &lt;li&gt;Compute the &lt;a href="http://en.wikipedia.org/wiki/Gradient"&gt;gradient&lt;/a&gt; of &lt;span class="math"&gt;\(f\)&lt;/span&gt; at &lt;span class="math"&gt;\(x^{(t)}\)&lt;/span&gt;, &lt;span class="math"&gt;\(g^{(t)}
    \triangleq \nabla f(x^{(t)})\)&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;span class="math"&gt;\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}\)&lt;/span&gt;
-&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span class="math"&gt;\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}\)&lt;/span&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
+&lt;/div&gt;
 &lt;p&gt;The initial iterate &lt;span class="math"&gt;\(x^{(0)}\)&lt;/span&gt; can be selected arbitrarily, and step size
 &lt;span class="math"&gt;\(\alpha^{(t)}\)&lt;/span&gt; can be selected by &lt;a href="#line_search"&gt;Line Search&lt;/a&gt;, a small constant, or
 simply &lt;span class="math"&gt;\(\frac{1}{t}\)&lt;/span&gt;.&lt;/p&gt;
@@ -5019,7 +5081,7 @@ for choosing step sizes, can be found on slide 10-6 of UCLA's &lt;a href="http:/
 on unconstrained optimization&lt;/a&gt;.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="reference-impl" href="#reference-impl"&gt;Reference Implementation&lt;/a&gt;&lt;/h1&gt;
 &lt;p&gt;Here's a quick implementation of gradient descent,&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;gradient_descent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;gradient_descent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;gradient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;x0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;alpha&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n_iterations&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
   &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;Gradient Descent&lt;/span&gt;
 
 &lt;span class="sd"&gt;  Parameters&lt;/span&gt;
@@ -5050,9 +5112,9 @@ on unconstrained optimization&lt;/a&gt;.&lt;/p&gt;
 &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
   &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
 
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pylab&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pl&lt;/span&gt;
-  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pylab&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pl&lt;/span&gt;
+  &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;yannopt.plotting&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plotting&lt;/span&gt;
 
   &lt;span class="c1"&gt;### GRADIENT DESCENT ###&lt;/span&gt;
 
@@ -5102,8 +5164,7 @@ on unconstrained optimization&lt;/a&gt;.&lt;/p&gt;
 
     &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;savefig&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;figures/animation/&lt;/span&gt;&lt;span class="si"&gt;%02d&lt;/span&gt;&lt;span class="s1"&gt;.png&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;pl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -5119,11 +5180,14 @@ on unconstrained optimization&lt;/a&gt;.&lt;/p&gt;
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -5137,6 +5201,8 @@ on unconstrained optimization&lt;/a&gt;.&lt;/p&gt;
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -5157,9 +5223,11 @@ on unconstrained optimization&lt;/a&gt;.&lt;/p&gt;
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="gradient"></category><category term="descent"></category><category term="first-order"></category><category term="optimization"></category></entry><entry><title>Topic Models aren't hard</title><link href="/blog/topic-models-arent-hard.html" rel="alternate"></link><published>2013-01-21T00:00:00-08:00</published><updated>2013-01-21T00:00:00-08:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2013-01-21:/blog/topic-models-arent-hard.html</id><summary type="html">&lt;p&gt;In 2002, &lt;a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf"&gt;Latent Dirichlet Allocation&lt;/a&gt; (LDA) was published at NIPS, one
+&lt;/script&gt;</content><category term="optimization"></category><category term="gradient"></category><category term="descent"></category><category term="first-order"></category><category term="optimization"></category></entry><entry><title>Topic Models aren't hard</title><link href="http://stronglyconvex.com/blog/topic-models-arent-hard.html" rel="alternate"></link><published>2013-01-21T00:00:00-08:00</published><updated>2013-01-21T00:00:00-08:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-01-21:/blog/topic-models-arent-hard.html</id><summary type="html">&lt;p&gt;In 2002, &lt;a href="http://www.cs.princeton.edu/~blei/papers/BleiNgJordan2003.pdf"&gt;Latent Dirichlet Allocation&lt;/a&gt; (LDA) was published at NIPS, one
 of the most highly regarded conferences for research loosely labeled as
 "Artificial Intelligence". The next 5 or so years led to a flurry of
 incremental model extensions and alternative inference methods, though none
@@ -5205,13 +5273,12 @@ generate data from a Mixture Model.&lt;/p&gt;
 &lt;p&gt;In a mixture model, each data point is sampled independently. The algorithm
 for generating a sample given the model's parameters is given by the following
 python snippet.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;sample_mixture_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_data_points&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cluster_weights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cluster_parameters&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;sample_mixture_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_data_points&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cluster_weights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cluster_parameters&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_data_points&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;cluster&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sample_categorical&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cluster_weights&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;variance&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cluster_parameters&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;cluster&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="k"&gt;yield&lt;/span&gt; &lt;span class="n"&gt;sample_normal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mean&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;variance&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Simple, right?  First, a cluster is chosen for this data point. Each cluster
 has some probability of being chosen, given by &lt;code&gt;cluster_weights[i]&lt;/code&gt;.  Once a
@@ -5226,7 +5293,7 @@ documents that we only see a few samples from.  Furthermore, each document has
 its own version of &lt;code&gt;cluster_weights&lt;/code&gt; -- our only boon is that all documents
 share the same &lt;code&gt;cluster_parameters&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;To make that concrete, let's look at how we would generate samples from LDA.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;sample_lda&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_data_points_per_document&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;all_cluster_weights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cluster_parameters&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;sample_lda&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_data_points_per_document&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;all_cluster_weights&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cluster_parameters&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
   &lt;span class="n"&gt;n_documents&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;all_cluster_weights&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;  &lt;span class="c1"&gt;# number of documents&lt;/span&gt;
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_documents&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;sample&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;sample_mixture_model&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_data_points_per_document&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
@@ -5236,8 +5303,7 @@ share the same &lt;code&gt;cluster_parameters&lt;/code&gt;.&lt;/p&gt;
         &lt;span class="s1"&gt;&amp;#39;document_number&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
         &lt;span class="s1"&gt;&amp;#39;data_point&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;sample&lt;/span&gt;
       &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Notice that here we don't just return the data point by itself.  In LDA, we
 know which "document" each data point comes from, which is just a little bit
@@ -5253,47 +5319,47 @@ now understand Latent Dirichlet Allocation, the core of nearly every Topic
 Model in existence.&lt;/p&gt;
 &lt;h1&gt;&lt;a name="appendix" href="#appendix"&gt;Appendix&lt;/a&gt;&lt;/h1&gt;
 &lt;p&gt;Here's the MATLAB code for generating the two plots above.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;%% parameters&lt;/span&gt;
-&lt;span class="n"&gt;n_samples&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="n"&gt;n_clusters&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="n"&gt;n_documents&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="c"&gt;%% parameters&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;n_samples&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;200&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;n_clusters&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;n_documents&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-&lt;span class="c"&gt;%% reset ye olde random seed&lt;/span&gt;
-&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;RandStream&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;mcg16807&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Seed&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="n"&gt;RandStream&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setDefaultStream&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="c"&gt;%% reset ye olde random seed&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;RandStream&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;mcg16807&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Seed&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nb"&gt;RandStream&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setDefaultStream&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-&lt;span class="c"&gt;%% generate parameters for each cluster&lt;/span&gt;
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;i&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;n_clusters&lt;/span&gt;
-  &lt;span class="n"&gt;mu&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-  &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nb"&gt;eye&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-  &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-  &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;250&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="c"&gt;%% generate parameters for each cluster&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;n_clusters&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;mu&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;eye&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;250&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="n"&gt;hold&lt;/span&gt; &lt;span class="n"&gt;on&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nb"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="n"&gt;hold&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s"&gt;on&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;n_documents&lt;/span&gt;
-  &lt;span class="c"&gt;%% generate document-specific weights&lt;/span&gt;
-  &lt;span class="n"&gt;w&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_clusters&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-  &lt;span class="n"&gt;w&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;w&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="n"&gt;n_documents&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c"&gt;%% generate document-specific weights&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n_clusters&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;sum&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-  &lt;span class="c"&gt;%% generate samples for this document&lt;/span&gt;
-  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="nb"&gt;i&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="n"&gt;n_samples&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nb"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
-    &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mnrnd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-    &lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
-    &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;mvnrnd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mu&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt; &lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)));&lt;/span&gt;
-  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c"&gt;%% generate samples for this document&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:(&lt;/span&gt;&lt;span class="n"&gt;n_samples&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;mnrnd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;w&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nb"&gt;find&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;mvnrnd&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mu&lt;/span&gt;&lt;span class="p"&gt;(:,&lt;/span&gt;&lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;sigma&lt;/span&gt;&lt;span class="p"&gt;(:,:,&lt;/span&gt;&lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)));&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="k"&gt;end&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-  &lt;span class="c"&gt;%% plotting! yay!&lt;/span&gt;
-  &lt;span class="n"&gt;subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c"&gt;%% plotting! yay!&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
 
-  &lt;span class="c"&gt;% without color&lt;/span&gt;
-  &lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,:),&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,:));&lt;/span&gt;
-  &lt;span class="c"&gt;% with color&lt;/span&gt;
-  &lt;span class="c"&gt;% scatter(x(1,:), x(2,:), &amp;#39;CData&amp;#39;, c&amp;#39;);&lt;/span&gt;
-&lt;span class="k"&gt;end&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</content><category term="topic-models"></category><category term="bayesian"></category><category term="lda"></category></entry><entry><title>ADMM: parallelizing convex optimization</title><link href="/blog/admm.html" rel="alternate"></link><published>2012-06-24T00:00:00-07:00</published><updated>2012-06-24T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2012-06-24:/blog/admm.html</id><summary type="html">&lt;p&gt;In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing "separable" functions (that is, functions that are purely sums of other functions) in a large, distributed environment. However, Stochastic Gradient Descent is not the only algorithm out there.&lt;/p&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c"&gt;% without color&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="nb"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,:),&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,:));&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c"&gt;% with color&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="w"&gt;  &lt;/span&gt;&lt;span class="c"&gt;% scatter(x(1,:), x(2,:), &amp;#39;CData&amp;#39;, c&amp;#39;);&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content><category term="topic-models"></category><category term="topic-models"></category><category term="bayesian"></category><category term="lda"></category></entry><entry><title>ADMM: parallelizing convex optimization</title><link href="http://stronglyconvex.com/blog/admm.html" rel="alternate"></link><published>2012-06-24T00:00:00-07:00</published><updated>2012-06-24T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2012-06-24:/blog/admm.html</id><summary type="html">&lt;p&gt;In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing "separable" functions (that is, functions that are purely sums of other functions) in a large, distributed environment. However, Stochastic Gradient Descent is not the only algorithm out there.&lt;/p&gt;
 &lt;p&gt;So why consider anything else? First of all …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In the previous post, we considered Stochastic Gradient Descent, a popular method for optimizing "separable" functions (that is, functions that are purely sums of other functions) in a large, distributed environment. However, Stochastic Gradient Descent is not the only algorithm out there.&lt;/p&gt;
 &lt;p&gt;So why consider anything else? First of all, we have to choose step sizes &lt;span class="math"&gt;\(\alpha_{t,i}\)&lt;/span&gt;. While there are theoretical constraints on how it must behave (e.g. &lt;span class="math"&gt;\(\alpha_t = \frac{1}{t^k}\)&lt;/span&gt; is guaranteed to converge), there is a lot of freedom in the constants, and finding just the right one can be painful. It often ends up that even though Stochastic Gradient Descent guarantees an asymptotic convergence rate, you only have enough time to make a handful of passes over the dataset, far too little time for the asymptotics to kick in.&lt;/p&gt;
 &lt;p&gt;Secondly, Stochastic Gradient Descent is naturally &lt;em&gt;sequential&lt;/em&gt;. You have to update &lt;span class="math"&gt;\(w_{t,i}\)&lt;/span&gt; before you can update &lt;span class="math"&gt;\(w_{t,i+1}\)&lt;/span&gt; (well, not quite. See &lt;a href="http://arxiv.org/abs/1106.5730"&gt;HOGWILD!&lt;/a&gt;). This means that Stochastic Gradient Descent is great for data streaming in one-by-one, but isn't of much help in MapReduce-style frameworks.&lt;/p&gt;
@@ -5419,11 +5485,14 @@ $$&lt;/div&gt;
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -5437,6 +5506,8 @@ $$&lt;/div&gt;
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -5457,9 +5528,11 @@ $$&lt;/div&gt;
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="admm"></category><category term="optimization"></category><category term="distributed"></category></entry><entry><title>Stochastic Gradient Descent and Sparse $L_2$ regularization</title><link href="/blog/sparse-l2.html" rel="alternate"></link><published>2012-05-10T00:00:00-07:00</published><updated>2012-05-10T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:None,2012-05-10:/blog/sparse-l2.html</id><summary type="html">&lt;p&gt;Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter &lt;span class="math"&gt;\(w\)&lt;/span&gt; is simply the sum of the losses of each sample &lt;span class="math"&gt;\(i\)&lt;/span&gt;, i.e.,&lt;/p&gt;
+&lt;/script&gt;</content><category term="optimization"></category><category term="admm"></category><category term="optimization"></category><category term="distributed"></category></entry><entry><title>Stochastic Gradient Descent and Sparse $L_2$ regularization</title><link href="http://stronglyconvex.com/blog/sparse-l2.html" rel="alternate"></link><published>2012-05-10T00:00:00-07:00</published><updated>2012-05-10T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2012-05-10:/blog/sparse-l2.html</id><summary type="html">&lt;p&gt;Suppose you’re doing some typical supervised learning on a gigantic dataset where the total loss over all samples for parameter &lt;span class="math"&gt;\(w\)&lt;/span&gt; is simply the sum of the losses of each sample &lt;span class="math"&gt;\(i\)&lt;/span&gt;, i.e.,&lt;/p&gt;
 &lt;div class="math"&gt;$$
   L(w) = \sum_{i} l(x_i, y_i, w)
 $$&lt;/div&gt;
@@ -5523,11 +5596,14 @@ $$&lt;/div&gt;
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -5541,6 +5617,8 @@ $$&lt;/div&gt;
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -5561,6 +5639,8 @@ $$&lt;/div&gt;
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="regularization"></category><category term="sparsity"></category></entry></feed>
+&lt;/script&gt;</content><category term="optimization"></category><category term="regularization"></category><category term="sparsity"></category></entry></feed>

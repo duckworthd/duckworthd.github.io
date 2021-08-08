@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- enable responsive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
-	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
 
-  <!-- RSS/ATOM feeds -->
-	<link href="None/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+  <!-- No RSS/ATOM feeds -->
 
 
-		<title>Strongly Convex</title>
-		<meta charset="utf-8" />
+    <title>Strongly Convex</title>
+    <meta charset="utf-8" />
 </head>
 <body>
-	<section id="sidebar">
-		<figure id="user_logo">
-      <a href=""><div class="logo">&nbsp;</div></a>
-		</figure>
+  <div class="row">
+    <div id="sidebar">
+      <figure id="user_logo">
+        <a href=""><div class="logo">&nbsp;</div></a>
+      </figure>
 
-		<div class="user_meta">
-      <h1 id="user">
-        <a  href="/"
-            class="sitename">
-          Strongly Convex
-        </a>
-      </h1>
-			<h2></h2>
+      <div class="user_meta">
+        <h1 id="user">
+          <a  href="/"
+              class="sitename">
+            Strongly Convex
+          </a>
+        </h1>
+        <h2></h2>
 
-
-			<ul>
-        <hr></hr>
-					<li><a href="/">Words</a></li>
+        <ul>
           <hr></hr>
-					<li><a href="/code.html">Code</a></li>
-          <hr></hr>
-					<li><a href="/about.html">About</a></li>
-          <hr></hr>
-			</ul>
-		</div>
-	</section>
+            <li><a href="/">Blog</a></li>
+            <hr></hr>
+            <li><a href="/about.html">About</a></li>
+            <hr></hr>
+        </ul>
+      </div>
+    </div>
 
-	<section id="posts">
+    <div id="posts">
 	<header>
       <h1 class="title">
 			  <a  href="/blog/accelerated-proximal-gradient-descent.html"
@@ -61,7 +61,7 @@
 	</header>
   <article>
     <p><span class="math">\(\def\prox{\text{prox}}\)</span>
-  In a <a href="/blog/proximal-gradient-descent.html">previous post</a>, I presented Proximal Gradient, a
+  In a <a href="http://stronglyconvex.com/blog/proximal-gradient-descent.html">previous post</a>, I presented Proximal Gradient, a
 method for bypassing the <span class="math">\(O(1 / \epsilon^2)\)</span> convergence rate of Subgradient
 Descent.  This method relied on assuming that the objective function could be
 expressed as the sum of 2 functions, <span class="math">\(g(x)\)</span> and <span class="math">\(h(x)\)</span>, with <span class="math">\(g\)</span> being
@@ -70,7 +70,7 @@ function</a>,</p>
 <div class="math">$$
   \prox_{\alpha h}(x) = \arg\min_{y} \alpha h(y) + \frac{1}{2}||y - x||_2^2
 $$</div>
-<p>In the <a href="/blog/accelerated-gradient-descent.html">post before that</a>, I presented Accelerated
+<p>In the <a href="http://stronglyconvex.com/blog/accelerated-gradient-descent.html">post before that</a>, I presented Accelerated
 Gradient Descent, a method that outperforms Gradient Descent while making the
 exact same assumptions. It is then natural to ask, "Can we combine Accelerated
 Gradient Descent and Proximal Gradient to obtain a new algorithm?"  Well if we
@@ -302,7 +302,7 @@ Gradient</a>.</p>
 <p><strong>Proof of convergence</strong> The proof of convergence is taken from Lieven
 Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures/fgrad.pdf">EE236c slides</a>.</p>
 <h1><a name="reference-impl" href="#reference-impl">Reference Implementation</a></h1>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">accelerated_proximal_gradient</span><span class="p">(</span><span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">accelerated_proximal_gradient</span><span class="p">(</span><span class="n">g_gradient</span><span class="p">,</span> <span class="n">h_prox</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span>
                                   <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;Proximal Gradient Descent</span>
 
@@ -341,7 +341,7 @@ Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures
   <span class="n">beta</span>    <span class="o">=</span> <span class="mf">0.9</span>
   <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_0</span>
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
       <span class="n">x_plus</span> <span class="o">=</span> <span class="n">h_prox</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">g_gradient</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">alpha</span><span class="p">)</span>
       <span class="n">G</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">x_plus</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">g</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span> <span class="o">+</span> <span class="n">h</span><span class="p">(</span><span class="n">x_plus</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">g</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">h</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">G</span><span class="o">*</span><span class="n">G</span><span class="p">):</span>
@@ -354,8 +354,8 @@ Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="kn">import</span> <span class="nn">os</span>
 
-  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="k">as</span> <span class="nn">plotting</span>
 
   <span class="c1">### ACCELERATED PROXIMAL GRADIENT ###</span>
 
@@ -383,8 +383,7 @@ Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
                                       <span class="n">path</span><span class="o">=</span><span class="s1">&#39;figures/convergence.png&#39;</span><span class="p">,</span>
                                       <span class="n">y_star</span><span class="o">=</span><span class="mf">0.69314718055994529</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -400,11 +399,14 @@ Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -418,6 +420,8 @@ Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -438,6 +442,8 @@ Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -457,29 +463,14 @@ Vandenberghe's fantastic <a href="http://www.ee.ucla.edu/~vandenbe/236C/lectures
     <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
   </footer>
 
-  <div id="comments">
-    <h2>Comments</h2>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_identifier = "blog/accelerated-proximal-gradient-descent.html";
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
-  </div>
 
-	</section>
+    </div>
+  </div>
 
 
   <!-- scripts -->
-  <script
-    type= "text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    >
-  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script
     type= "text/javascript"
     src="/theme/mathjax/MathJaxLocal.js"

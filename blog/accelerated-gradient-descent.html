@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- enable responsive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
-	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
 
-  <!-- RSS/ATOM feeds -->
-	<link href="None/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+  <!-- No RSS/ATOM feeds -->
 
 
-		<title>Strongly Convex</title>
-		<meta charset="utf-8" />
+    <title>Strongly Convex</title>
+    <meta charset="utf-8" />
 </head>
 <body>
-	<section id="sidebar">
-		<figure id="user_logo">
-      <a href=""><div class="logo">&nbsp;</div></a>
-		</figure>
+  <div class="row">
+    <div id="sidebar">
+      <figure id="user_logo">
+        <a href=""><div class="logo">&nbsp;</div></a>
+      </figure>
 
-		<div class="user_meta">
-      <h1 id="user">
-        <a  href="/"
-            class="sitename">
-          Strongly Convex
-        </a>
-      </h1>
-			<h2></h2>
+      <div class="user_meta">
+        <h1 id="user">
+          <a  href="/"
+              class="sitename">
+            Strongly Convex
+          </a>
+        </h1>
+        <h2></h2>
 
-
-			<ul>
-        <hr></hr>
-					<li><a href="/">Words</a></li>
+        <ul>
           <hr></hr>
-					<li><a href="/code.html">Code</a></li>
-          <hr></hr>
-					<li><a href="/about.html">About</a></li>
-          <hr></hr>
-			</ul>
-		</div>
-	</section>
+            <li><a href="/">Blog</a></li>
+            <hr></hr>
+            <li><a href="/about.html">About</a></li>
+            <hr></hr>
+        </ul>
+      </div>
+    </div>
 
-	<section id="posts">
+    <div id="posts">
 	<header>
       <h1 class="title">
 			  <a  href="/blog/accelerated-gradient-descent.html"
@@ -66,7 +66,7 @@ its convergence rate superior to Gradient Descent (<span class="math">\(O(1/\sqr
 iterations instead of <span class="math">\(O(1/\epsilon)\)</span>), and then proved that no other
 first-order (that is, gradient-based) algorithm could ever hope to beat it.
 What a boss.</p>
-<p><a href="/blog/gradient-descent.html">Continuing</a> <a href="/blog/subgradient-descent.html">my analogy</a>, imagine
+<p><a href="http://stronglyconvex.com/blog/gradient-descent.html">Continuing</a> <a href="http://stronglyconvex.com/blog/subgradient-descent.html">my analogy</a>, imagine
 that you are standing on the side of a mountain and want to reach the bottom.
 If you were to follow the Accelerated Gradient Method, you'd do something like
 this,</p>
@@ -134,7 +134,7 @@ Descent's. In particular, we assume,</p>
 <div class="math">$$
   || \nabla f(x) - \nabla f(y) ||_2 \le L || x - y ||_2 \qquad \forall x,y
 $$</div>
-<p><strong>Assumptions</strong> As explained in my post on <a href="/blog/gradient-descent.html">Gradient
+<p><strong>Assumptions</strong> As explained in my post on <a href="http://stronglyconvex.com/blog/gradient-descent.html">Gradient
 Descent</a>, these assumptions give us 2 things. Assumption 1
 gives us a linear lower bound on <span class="math">\(f\)</span>,</p>
 <div class="math">$$
@@ -315,7 +315,7 @@ fixed number of iterations or when <span class="math">\(||\nabla f(x^{(t)})||_2\
 <p><strong>Proof of Convergence</strong> The proof of convergence is thanks to Lieven
 Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gradient.pdf">EE236c slides</a> hosted by Zaiwen Wen.</p>
 <h1><a name="reference-impl" href="#reference-impl">Reference Implementation</a></h1>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">accelerated_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">accelerated_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;Accelerated Gradient Method</span>
 
 <span class="sd">  Parameters</span>
@@ -362,8 +362,8 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="kn">import</span> <span class="nn">os</span>
 
-  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="k">as</span> <span class="nn">plotting</span>
 
   <span class="c1">### ACCELERATED GRADIENT ###</span>
 
@@ -383,8 +383,7 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
                                      <span class="n">path</span><span class="o">=</span><span class="s1">&#39;figures/iterates.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
   <span class="n">plotting</span><span class="o">.</span><span class="n">plot_iteration_vs_function</span><span class="p">(</span><span class="n">iterates</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span>
                                       <span class="n">path</span><span class="o">=</span><span class="s1">&#39;figures/convergence.png&#39;</span><span class="p">,</span> <span class="n">y_star</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -400,11 +399,14 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -418,6 +420,8 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -438,6 +442,8 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -456,29 +462,14 @@ Vandenberghe's <a href="http://math.sjtu.edu.cn/faculty/zw2109/course/sp04-2-gra
     <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
   </footer>
 
-  <div id="comments">
-    <h2>Comments</h2>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_identifier = "blog/accelerated-gradient-descent.html";
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
-  </div>
 
-	</section>
+    </div>
+  </div>
 
 
   <!-- scripts -->
-  <script
-    type= "text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    >
-  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script
     type= "text/javascript"
     src="/theme/mathjax/MathJaxLocal.js"

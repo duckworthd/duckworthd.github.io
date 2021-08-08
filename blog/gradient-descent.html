@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- enable responsive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
-	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
 
-  <!-- RSS/ATOM feeds -->
-	<link href="None/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+  <!-- No RSS/ATOM feeds -->
 
 
-		<title>Strongly Convex</title>
-		<meta charset="utf-8" />
+    <title>Strongly Convex</title>
+    <meta charset="utf-8" />
 </head>
 <body>
-	<section id="sidebar">
-		<figure id="user_logo">
-      <a href=""><div class="logo">&nbsp;</div></a>
-		</figure>
+  <div class="row">
+    <div id="sidebar">
+      <figure id="user_logo">
+        <a href=""><div class="logo">&nbsp;</div></a>
+      </figure>
 
-		<div class="user_meta">
-      <h1 id="user">
-        <a  href="/"
-            class="sitename">
-          Strongly Convex
-        </a>
-      </h1>
-			<h2></h2>
+      <div class="user_meta">
+        <h1 id="user">
+          <a  href="/"
+              class="sitename">
+            Strongly Convex
+          </a>
+        </h1>
+        <h2></h2>
 
-
-			<ul>
-        <hr></hr>
-					<li><a href="/">Words</a></li>
+        <ul>
           <hr></hr>
-					<li><a href="/code.html">Code</a></li>
-          <hr></hr>
-					<li><a href="/about.html">About</a></li>
-          <hr></hr>
-			</ul>
-		</div>
-	</section>
+            <li><a href="/">Blog</a></li>
+            <hr></hr>
+            <li><a href="/about.html">About</a></li>
+            <hr></hr>
+        </ul>
+      </div>
+    </div>
 
-	<section id="posts">
+    <div id="posts">
 	<header>
       <h1 class="title">
 			  <a  href="/blog/gradient-descent.html"
@@ -85,19 +85,19 @@ $$</div>
   \end{pmatrix}
 $$</div>
 <p>Given this, Gradient Descent is simply the following,</p>
-<p><!-- TODO Replace well with something more contextually meaningful -->
-<div class="pseudocode" markdown>
-  <strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
+<!-- TODO Replace well with something more contextually meaningful -->
+<div class="pseudocode">
+<p><strong>Input</strong>: initial iterate <span class="math">\(x^{(0)}\)</span></p>
 <ol>
 <li>For <span class="math">\(t = 0, 1, \ldots\)</span><ol>
 <li>if converged, return <span class="math">\(x^{(t)}\)</span></li>
 <li>Compute the <a href="http://en.wikipedia.org/wiki/Gradient">gradient</a> of <span class="math">\(f\)</span> at <span class="math">\(x^{(t)}\)</span>, <span class="math">\(g^{(t)}
    \triangleq \nabla f(x^{(t)})\)</span></li>
-<li><span class="math">\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}\)</span>
-</div></li>
+<li><span class="math">\(x^{(t+1)} = x^{(t)} - \alpha^{(t)} g^{(t)}\)</span></li>
 </ol>
 </li>
 </ol>
+</div>
 <p>The initial iterate <span class="math">\(x^{(0)}\)</span> can be selected arbitrarily, and step size
 <span class="math">\(\alpha^{(t)}\)</span> can be selected by <a href="#line_search">Line Search</a>, a small constant, or
 simply <span class="math">\(\frac{1}{t}\)</span>.</p>
@@ -256,7 +256,7 @@ for choosing step sizes, can be found on slide 10-6 of UCLA's <a href="http://ww
 on unconstrained optimization</a>.</p>
 <h1><a name="reference-impl" href="#reference-impl">Reference Implementation</a></h1>
 <p>Here's a quick implementation of gradient descent,</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">gradient_descent</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">n_iterations</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;Gradient Descent</span>
 
 <span class="sd">  Parameters</span>
@@ -287,9 +287,9 @@ on unconstrained optimization</a>.</p>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
   <span class="kn">import</span> <span class="nn">os</span>
 
-  <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-  <span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
-  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="kn">as</span> <span class="nn">plotting</span>
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">pl</span>
+  <span class="kn">import</span> <span class="nn">yannopt.plotting</span> <span class="k">as</span> <span class="nn">plotting</span>
 
   <span class="c1">### GRADIENT DESCENT ###</span>
 
@@ -339,8 +339,7 @@ on unconstrained optimization</a>.</p>
 
     <span class="n">pl</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;figures/animation/</span><span class="si">%02d</span><span class="s1">.png&#39;</span> <span class="o">%</span> <span class="n">t</span><span class="p">)</span>
     <span class="n">pl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-
+</code></pre></div>
 
 <script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
@@ -356,11 +355,14 @@ on unconstrained optimization</a>.</p>
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
         "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -374,6 +376,8 @@ on unconstrained optimization</a>.</p>
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
+        "        availableFonts: ['STIX', 'TeX']," +
+        "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
         "    }, " +
@@ -394,6 +398,8 @@ on unconstrained optimization</a>.</p>
                 "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
             "});" +
         "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 </script>
@@ -413,29 +419,14 @@ on unconstrained optimization</a>.</p>
     <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
   </footer>
 
-  <div id="comments">
-    <h2>Comments</h2>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_identifier = "blog/gradient-descent.html";
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
-  </div>
 
-	</section>
+    </div>
+  </div>
 
 
   <!-- scripts -->
-  <script
-    type= "text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    >
-  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script
     type= "text/javascript"
     src="/theme/mathjax/MathJaxLocal.js"

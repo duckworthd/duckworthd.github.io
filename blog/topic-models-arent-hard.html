@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- enable responsive design -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- stylesheets -->
-	<link rel="stylesheet" type="text/css" href="/theme/css/style.css">
-	<link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
-	<link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
-	<link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="/theme/lightbox/css/lightbox.css">
+  <link rel="stylesheet" type="text/css" href="/theme/font-awesome-4.3.0/css/font-awesome.min.css">
 
   <!-- fonts -->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:800,400,300|Inconsolata' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:700,900' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Lora:700' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
 
-  <!-- RSS/ATOM feeds -->
-	<link href="None/" type="application/atom+xml" rel="alternate" title="Strongly Convex ATOM Feed" />
+  <!-- No RSS/ATOM feeds -->
 
 
-		<title>Strongly Convex</title>
-		<meta charset="utf-8" />
+    <title>Strongly Convex</title>
+    <meta charset="utf-8" />
 </head>
 <body>
-	<section id="sidebar">
-		<figure id="user_logo">
-      <a href=""><div class="logo">&nbsp;</div></a>
-		</figure>
+  <div class="row">
+    <div id="sidebar">
+      <figure id="user_logo">
+        <a href=""><div class="logo">&nbsp;</div></a>
+      </figure>
 
-		<div class="user_meta">
-      <h1 id="user">
-        <a  href="/"
-            class="sitename">
-          Strongly Convex
-        </a>
-      </h1>
-			<h2></h2>
+      <div class="user_meta">
+        <h1 id="user">
+          <a  href="/"
+              class="sitename">
+            Strongly Convex
+          </a>
+        </h1>
+        <h2></h2>
 
-
-			<ul>
-        <hr></hr>
-					<li><a href="/">Words</a></li>
+        <ul>
           <hr></hr>
-					<li><a href="/code.html">Code</a></li>
-          <hr></hr>
-					<li><a href="/about.html">About</a></li>
-          <hr></hr>
-			</ul>
-		</div>
-	</section>
+            <li><a href="/">Blog</a></li>
+            <hr></hr>
+            <li><a href="/about.html">About</a></li>
+            <hr></hr>
+        </ul>
+      </div>
+    </div>
 
-	<section id="posts">
+    <div id="posts">
 	<header>
       <h1 class="title">
 			  <a  href="/blog/topic-models-arent-hard.html"
@@ -102,13 +102,12 @@ generate data from a Mixture Model.</p>
 <p>In a mixture model, each data point is sampled independently. The algorithm
 for generating a sample given the model's parameters is given by the following
 python snippet.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sample_mixture_model</span><span class="p">(</span><span class="n">n_data_points</span><span class="p">,</span> <span class="n">cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">sample_mixture_model</span><span class="p">(</span><span class="n">n_data_points</span><span class="p">,</span> <span class="n">cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_data_points</span><span class="p">):</span>
     <span class="n">cluster</span> <span class="o">=</span> <span class="n">sample_categorical</span><span class="p">(</span><span class="n">cluster_weights</span><span class="p">)</span>
     <span class="n">mean</span><span class="p">,</span> <span class="n">variance</span> <span class="o">=</span> <span class="n">cluster_parameters</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span>
     <span class="k">yield</span> <span class="n">sample_normal</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">variance</span><span class="p">)</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Simple, right?  First, a cluster is chosen for this data point. Each cluster
 has some probability of being chosen, given by <code>cluster_weights[i]</code>.  Once a
@@ -123,7 +122,7 @@ documents that we only see a few samples from.  Furthermore, each document has
 its own version of <code>cluster_weights</code> -- our only boon is that all documents
 share the same <code>cluster_parameters</code>.</p>
 <p>To make that concrete, let's look at how we would generate samples from LDA.</p>
-<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sample_lda</span><span class="p">(</span><span class="n">n_data_points_per_document</span><span class="p">,</span> <span class="n">all_cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">sample_lda</span><span class="p">(</span><span class="n">n_data_points_per_document</span><span class="p">,</span> <span class="n">all_cluster_weights</span><span class="p">,</span> <span class="n">cluster_parameters</span><span class="p">):</span>
   <span class="n">n_documents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_cluster_weights</span><span class="p">)</span>  <span class="c1"># number of documents</span>
   <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_documents</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">sample_mixture_model</span><span class="p">(</span><span class="n">n_data_points_per_document</span><span class="p">,</span>
@@ -133,8 +132,7 @@ share the same <code>cluster_parameters</code>.</p>
         <span class="s1">&#39;document_number&#39;</span><span class="p">:</span> <span class="n">d</span><span class="p">,</span>
         <span class="s1">&#39;data_point&#39;</span><span class="p">:</span> <span class="n">sample</span>
       <span class="p">}</span>
-</pre></div>
-
+</code></pre></div>
 
 <p>Notice that here we don't just return the data point by itself.  In LDA, we
 know which "document" each data point comes from, which is just a little bit
@@ -150,47 +148,47 @@ now understand Latent Dirichlet Allocation, the core of nearly every Topic
 Model in existence.</p>
 <h1><a name="appendix" href="#appendix">Appendix</a></h1>
 <p>Here's the MATLAB code for generating the two plots above.</p>
-<div class="highlight"><pre><span></span><span class="c">%% parameters</span>
-<span class="n">n_samples</span> <span class="p">=</span> <span class="mi">200</span><span class="p">;</span>
-<span class="n">n_clusters</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>
-<span class="n">n_documents</span> <span class="p">=</span> <span class="mi">4</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="c">%% parameters</span><span class="w"></span>
+<span class="n">n_samples</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">200</span><span class="p">;</span><span class="w"></span>
+<span class="n">n_clusters</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
+<span class="n">n_documents</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"></span>
 
-<span class="c">%% reset ye olde random seed</span>
-<span class="n">s</span> <span class="p">=</span> <span class="n">RandStream</span><span class="p">(</span><span class="s">&#39;mcg16807&#39;</span><span class="p">,</span><span class="s">&#39;Seed&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
-<span class="n">RandStream</span><span class="p">.</span><span class="n">setDefaultStream</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<span class="c">%% reset ye olde random seed</span><span class="w"></span>
+<span class="n">s</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">RandStream</span><span class="p">(</span><span class="s">&#39;mcg16807&#39;</span><span class="p">,</span><span class="s">&#39;Seed&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<span class="nb">RandStream</span><span class="p">.</span><span class="n">setDefaultStream</span><span class="p">(</span><span class="n">s</span><span class="p">);</span><span class="w"></span>
 
-<span class="c">%% generate parameters for each cluster</span>
-<span class="k">for</span> <span class="nb">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_clusters</span>
-  <span class="n">mu</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
-  <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-  <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span><span class="o">&#39;</span><span class="p">;</span>
-  <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span> <span class="o">/</span> <span class="mi">250</span><span class="p">;</span>
-<span class="k">end</span>
+<span class="c">%% generate parameters for each cluster</span><span class="w"></span>
+<span class="k">for</span><span class="w"> </span><span class="nb">i</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="n">n_clusters</span><span class="w"></span>
+<span class="w">  </span><span class="n">mu</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span><span class="o">&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="w">  </span><span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">sigma</span><span class="p">(:,:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">250</span><span class="p">;</span><span class="w"></span>
+<span class="k">end</span><span class="w"></span>
 
-<span class="n">figure</span><span class="p">;</span>
-<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="nb">figure</span><span class="p">;</span><span class="w"></span>
+<span class="n">hold</span><span class="w"> </span><span class="s">on</span><span class="p">;</span><span class="w"></span>
 
-<span class="k">for</span> <span class="n">d</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">n_documents</span>
-  <span class="c">%% generate document-specific weights</span>
-  <span class="n">w</span> <span class="p">=</span> <span class="nb">rand</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
-  <span class="n">w</span> <span class="p">=</span> <span class="n">w</span> <span class="o">/</span> <span class="n">sum</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="k">for</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="n">n_documents</span><span class="w"></span>
+<span class="w">  </span><span class="c">%% generate document-specific weights</span><span class="w"></span>
+<span class="w">  </span><span class="n">w</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">rand</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="n">w</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">sum</span><span class="p">(</span><span class="n">w</span><span class="p">);</span><span class="w"></span>
 
-  <span class="c">%% generate samples for this document</span>
-  <span class="k">for</span> <span class="nb">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="nb">rand</span><span class="p">())</span>
-    <span class="n">c</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">mnrnd</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">w</span><span class="p">);</span>
-    <span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="nb">find</span><span class="p">(</span><span class="n">c</span><span class="p">(:,</span><span class="nb">i</span><span class="p">));</span>
-    <span class="n">x</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span> <span class="p">=</span> <span class="n">mvnrnd</span><span class="p">(</span><span class="n">mu</span><span class="p">(:,</span><span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)),</span> <span class="n">sigma</span><span class="p">(:,:,</span><span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)));</span>
-  <span class="k">end</span>
+<span class="w">  </span><span class="c">%% generate samples for this document</span><span class="w"></span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="nb">i</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:(</span><span class="n">n_samples</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">rand</span><span class="p">())</span><span class="w"></span>
+<span class="w">    </span><span class="n">c</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">mnrnd</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">(</span><span class="n">c</span><span class="p">(:,</span><span class="nb">i</span><span class="p">));</span><span class="w"></span>
+<span class="w">    </span><span class="n">x</span><span class="p">(:,</span><span class="nb">i</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">mvnrnd</span><span class="p">(</span><span class="n">mu</span><span class="p">(:,</span><span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)),</span><span class="w"> </span><span class="n">sigma</span><span class="p">(:,:,</span><span class="n">z</span><span class="p">(</span><span class="nb">i</span><span class="p">)));</span><span class="w"></span>
+<span class="w">  </span><span class="k">end</span><span class="w"></span>
 
-  <span class="c">%% plotting! yay!</span>
-  <span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">d</span><span class="p">);</span>
+<span class="w">  </span><span class="c">%% plotting! yay!</span><span class="w"></span>
+<span class="w">  </span><span class="nb">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">d</span><span class="p">);</span><span class="w"></span>
 
-  <span class="c">% without color</span>
-  <span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">,:),</span> <span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">,:));</span>
-  <span class="c">% with color</span>
-  <span class="c">% scatter(x(1,:), x(2,:), &#39;CData&#39;, c&#39;);</span>
-<span class="k">end</span>
-</pre></div>
+<span class="w">  </span><span class="c">% without color</span><span class="w"></span>
+<span class="w">  </span><span class="nb">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">,:),</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">,:));</span><span class="w"></span>
+<span class="w">  </span><span class="c">% with color</span><span class="w"></span>
+<span class="w">  </span><span class="c">% scatter(x(1,:), x(2,:), &#39;CData&#39;, c&#39;);</span><span class="w"></span>
+<span class="k">end</span><span class="w"></span>
+</code></pre></div>
 
     <div id="article_meta">
         Category:
@@ -206,29 +204,14 @@ Model in existence.</p>
     <a href="/" class="button_accent">&larr;&nbsp;&nbsp;&nbsp;Back to blog</a>
   </footer>
 
-  <div id="comments">
-    <h2>Comments</h2>
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_identifier = "blog/topic-models-arent-hard.html";
-      (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = 'http://duckworthd-blog.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-      })();
-    </script>
-    <noscript>Please enable JavaScript to view <a href="http://disqus.com/?ref_noscript">comments</a>.</noscript>
-  </div>
 
-	</section>
+    </div>
+  </div>
 
 
   <!-- scripts -->
-  <script
-    type= "text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
-    >
-  </script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
   <script
     type= "text/javascript"
     src="/theme/mathjax/MathJaxLocal.js"
