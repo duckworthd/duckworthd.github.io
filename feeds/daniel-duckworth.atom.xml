@@ -26,288 +26,302 @@ variable being optimized is &lt;span class="math"&gt;\(x \in \mathbb{R}^n\)&lt;/
 subgradients for their objective functions. In exchange, however, it is
 assumed that the objective is "simple" in the sense that a subset of variables
 (a "block") can be minimized exactly while holding all other variables fixed.&lt;/p&gt;
-&lt;table class="table table-bordered table-centered"&gt;
-&lt;colgroup&gt;
-    &lt;col style="width:20%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;
-&lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Algorithm          &lt;/th&gt;
-      &lt;th&gt;Problem Formulation&lt;/th&gt;
-      &lt;th&gt;Convex             &lt;/th&gt;
-      &lt;th&gt;Strongly Convex    &lt;/th&gt;
-      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
-      &lt;th&gt;Notes              &lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-&lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Randomized Block Coordinate Descent&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^{n}} f(x) + g(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon)$[^richtarik-2011]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1 / \epsilon))$[^richtarik-2011]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(1)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f(x)$ is differentiable and $g(x)$ is separable in
-        each block. $g(x)$ may be a barrier function.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;div style="overflow-x: auto"&gt;
+  &lt;table markdown class="table table-bordered table-centered"&gt;
+    &lt;colgroup&gt;
+      &lt;col style="width:20%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:40%"&gt;
+    &lt;/colgroup&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Algorithm          &lt;/th&gt;
+        &lt;th&gt;Problem Formulation&lt;/th&gt;
+        &lt;th&gt;Convex             &lt;/th&gt;
+        &lt;th&gt;Strongly Convex    &lt;/th&gt;
+        &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+        &lt;th&gt;Notes              &lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Randomized Block Coordinate Descent&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^{n}} f(x) + g(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon)$[^richtarik-2011]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1 / \epsilon))$[^richtarik-2011]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(1)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f(x)$ is differentiable and $g(x)$ is separable in
+          each block. $g(x)$ may be a barrier function.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
 &lt;h1&gt;First Order Methods&lt;/h1&gt;
 &lt;p&gt;First order methods typically require access to an objective function's
 gradient or subgradient. The algorithms typically take the form &lt;span class="math"&gt;\(x^{(t+1)}
 = x^{(t)} - \alpha^{(t)} g^{(t)}\)&lt;/span&gt; for some step size &lt;span class="math"&gt;\(\alpha^{(t)}\)&lt;/span&gt; and descent
 direction &lt;span class="math"&gt;\(g^{(t)}\)&lt;/span&gt;. As such, each iteration takes approximately &lt;span class="math"&gt;\(O(n)\)&lt;/span&gt; time.&lt;/p&gt;
-&lt;table class="table table-bordered table-centered"&gt;
-&lt;colgroup&gt;
-    &lt;col style="width:20%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;
-&lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Algorithm          &lt;/th&gt;
-      &lt;th&gt;Problem Formulation&lt;/th&gt;
-      &lt;th&gt;Convex             &lt;/th&gt;
-      &lt;th&gt;Strongly Convex    &lt;/th&gt;
-      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
-      &lt;th&gt;Notes              &lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-&lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Subgradient Descent&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle  \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon^{2})$[^blog-sd]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;...&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Cannot be improved upon without further assumptions.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Mirror Descent&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon^{2} )$[^ee381-md]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(1 / \epsilon )$[^nedich-2013]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Different parameterizations result in gradient descent and
-        exponentiated gradient descent.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Dual Averaging&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle  \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon^{2})$[^nesterov-2007]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;...&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Cannot be improved upon without further assumptions.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Gradient Descent&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon)$[^blog-gd]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1 / \epsilon))$[^ee381-gd]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f(x)$ is differentiable.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Accelerated Gradient Descent&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \sqrt{\epsilon})$[^blog-agd]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1 / \epsilon))$[^bubeck-agd]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f(x)$ is differentiable.
-        Cannot be improved upon without further assumptions.
-        Has better constants than Gradient Descent for "Strongly Convex" case.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Proximal Gradient Descent&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon)$[^blog-pgd]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1 / \epsilon))$[^mairal-2013]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f(x)$ is differentiable and
-        $\text{prox}_{\tau_t g}(x)$ is easily computable.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Proximal Accelerated Gradient Descent&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \sqrt{\epsilon})$[^blog-apgd]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1 / \epsilon))$[^mairal-2013]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f(x)$ is differentiable and
-        $\text{prox}_{\tau_t g}(x)$ is easily computable.
-        Has better constants than Proximal Gradient Descent for "Strongly
-        Convex" case.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Frank-Wolfe Algorithm / Conditional Gradient Algorithm&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1/\epsilon)$[^blog-fw]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(1/\sqrt{\epsilon})$[^garber-2014]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $\mathcal{C}$ is bounded and $h_{g}(x) = \arg\min_{x \in
-        \mathcal{C}} \langle g, x \rangle$ is easily computable. Most useful
-        when $\mathcal{C}$ is a polytope in a very high dimensional space with
-        sparse extrema.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;div style="overflow-x: auto"&gt;
+  &lt;table markdown class="table table-bordered table-centered"&gt;
+    &lt;colgroup&gt;
+      &lt;col style="width:20%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:40%"&gt;
+    &lt;/colgroup&gt;
+
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Algorithm          &lt;/th&gt;
+        &lt;th&gt;Problem Formulation&lt;/th&gt;
+        &lt;th&gt;Convex             &lt;/th&gt;
+        &lt;th&gt;Strongly Convex    &lt;/th&gt;
+        &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+        &lt;th&gt;Notes              &lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Subgradient Descent&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle  \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon^{2})$[^blog-sd]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;...&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Cannot be improved upon without further assumptions.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Mirror Descent&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon^{2} )$[^ee381-md]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(1 / \epsilon )$[^nedich-2013]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Different parameterizations result in gradient descent and
+          exponentiated gradient descent.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Dual Averaging&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle  \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon^{2})$[^nesterov-2007]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;...&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Cannot be improved upon without further assumptions.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Gradient Descent&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon)$[^blog-gd]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1 / \epsilon))$[^ee381-gd]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f(x)$ is differentiable.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Accelerated Gradient Descent&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \sqrt{\epsilon})$[^blog-agd]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1 / \epsilon))$[^bubeck-agd]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f(x)$ is differentiable.
+          Cannot be improved upon without further assumptions.
+          Has better constants than Gradient Descent for "Strongly Convex" case.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Proximal Gradient Descent&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon)$[^blog-pgd]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1 / \epsilon))$[^mairal-2013]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f(x)$ is differentiable and
+          $\text{prox}_{\tau_t g}(x)$ is easily computable.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Proximal Accelerated Gradient Descent&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x) + g(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \sqrt{\epsilon})$[^blog-apgd]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1 / \epsilon))$[^mairal-2013]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f(x)$ is differentiable and
+          $\text{prox}_{\tau_t g}(x)$ is easily computable.
+          Has better constants than Proximal Gradient Descent for "Strongly
+          Convex" case.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Frank-Wolfe Algorithm / Conditional Gradient Algorithm&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1/\epsilon)$[^blog-fw]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(1/\sqrt{\epsilon})$[^garber-2014]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $\mathcal{C}$ is bounded and $h_{g}(x) = \arg\min_{x \in
+          \mathcal{C}} \langle g, x \rangle$ is easily computable. Most useful
+          when $\mathcal{C}$ is a polytope in a very high dimensional space with
+          sparse extrema.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
 &lt;h1&gt;Second Order Methods&lt;/h1&gt;
 &lt;p&gt;Second order methods either use or approximate the hessian (&lt;span class="math"&gt;\(\nabla^2 f(x)\)&lt;/span&gt;)
 of the objective function to result in better-than-linear rates of convergence.
 As such, each iteration typically requires &lt;span class="math"&gt;\(O(n^2)\)&lt;/span&gt; memory and between &lt;span class="math"&gt;\(O(n^2)\)&lt;/span&gt;
 and &lt;span class="math"&gt;\(O(n^3)\)&lt;/span&gt; computation per iteration.&lt;/p&gt;
-&lt;table class="table table-bordered table-centered"&gt;
-&lt;colgroup&gt;
-    &lt;col style="width:20%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;
-&lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Algorithm          &lt;/th&gt;
-      &lt;th&gt;Problem Formulation&lt;/th&gt;
-      &lt;th&gt;Convex             &lt;/th&gt;
-      &lt;th&gt;Strongly Convex    &lt;/th&gt;
-      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
-      &lt;th&gt;Notes              &lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-&lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Newton's Method&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;...&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log \log (1/\epsilon))$[^ee364a-unconstrained]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n^3)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Only applicable when $f(x)$ is twice differentiable. Constraints can be
-        incorporated via interior point methods.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Conjugate Gradient Descent&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;...&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n^2)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Converges in exactly $n$ steps for quadratic $f(x)$. May fail to
-        converge for non-quadratic objectives.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;L-BFGS&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;...&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;Between $O(\log (1/\epsilon))$ and $O(\log \log (1/\epsilon))$[^ee236c-qnewton]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n^2)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f(x)$ is differentiable, but works best when twice
-        differentiable. Convergence rate is not guaranteed.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;div style="overflow-x: auto"&gt;
+  &lt;table markdown class="table table-bordered table-centered"&gt;
+    &lt;colgroup&gt;
+      &lt;col style="width:20%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:40%"&gt;
+    &lt;/colgroup&gt;
+
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Algorithm          &lt;/th&gt;
+        &lt;th&gt;Problem Formulation&lt;/th&gt;
+        &lt;th&gt;Convex             &lt;/th&gt;
+        &lt;th&gt;Strongly Convex    &lt;/th&gt;
+        &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+        &lt;th&gt;Notes              &lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Newton's Method&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;...&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log \log (1/\epsilon))$[^ee364a-unconstrained]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n^3)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Only applicable when $f(x)$ is twice differentiable. Constraints can be
+          incorporated via interior point methods.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Conjugate Gradient Descent&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;...&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n^2)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Converges in exactly $n$ steps for quadratic $f(x)$. May fail to
+          converge for non-quadratic objectives.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;L-BFGS&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;...&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;Between $O(\log (1/\epsilon))$ and $O(\log \log (1/\epsilon))$[^ee236c-qnewton]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n^2)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f(x)$ is differentiable, but works best when twice
+          differentiable. Convergence rate is not guaranteed.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
 &lt;h1&gt;Stochastic Methods&lt;/h1&gt;
 &lt;p&gt;The following algorithms are specifically designed for supervised machine
 learning where the objective can be decomposed into independent "loss"
@@ -323,212 +337,222 @@ a set of &lt;em&gt;samples&lt;/em&gt; from the true distribution of potential lo
 Thus, the following algorithms' convergence rates are for the &lt;em&gt;expected&lt;/em&gt; rate
 of convergence (as opposed to the above algorithms which upper bound the &lt;em&gt;true&lt;/em&gt;
 rate of convergence).&lt;/p&gt;
-&lt;table class="table table-bordered table-centered"&gt;
-&lt;colgroup&gt;
-    &lt;col style="width:20%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;
-&lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Algorithm          &lt;/th&gt;
-      &lt;th&gt;Problem Formulation&lt;/th&gt;
-      &lt;th&gt;Convex             &lt;/th&gt;
-      &lt;th&gt;Strongly Convex    &lt;/th&gt;
-      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
-      &lt;th&gt;Notes              &lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-&lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Stochastic Gradient Descent (SGD)&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(n/\epsilon^2)$[^bach-2012]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(n/\epsilon)$[^bach-2012]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Assumes objective is differentiable.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Stochastic Dual Coordinate Ascent (SDCA)&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \frac{\lambda}{2} \norm{x}_2^2$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(\frac{1}{\lambda \epsilon})$[^shalevshwartz-2012]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(( \frac{1}{\lambda} ) \log ( \frac{1}{\lambda \epsilon} ))$[^shalevshwartz-2012]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Accelerated Proximal Stochastic Dual Coordinate Ascent (APSDCA)&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{C}} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(\min (\frac{1}{\lambda \epsilon}, \sqrt{\frac{N}{\lambda \epsilon}} ))$[^shalevshwartz-2013]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\min (\frac{1}{\lambda}, \sqrt{\frac{N}{\lambda}}) \log ( \frac{1}{\epsilon} ))$[^shalevshwartz-2013]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Stochastic Average Gradient (SAG)&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon)$[^schmidt-2013]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1/\epsilon))$[^schmidt-2013]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f_{i}(x)$ is differentiable.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Stochastic Variance Reduced Gradient (SVRG)&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon)$[^johnson-2013]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1/\epsilon))$[^johnson-2013]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f_{i}(x)$ is differentiable.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;MISO&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1 / \epsilon)$[^mairal-2013]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1/\epsilon))$[^mairal-2013]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $f_{i}(x)$ is differentiable. $g(x)$ may be used as
-        a barrier function.
-      &lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;div style="overflow-x: auto"&gt;
+  &lt;table markdown class="table table-bordered table-centered"&gt;
+    &lt;colgroup&gt;
+      &lt;col style="width:20%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:40%"&gt;
+    &lt;/colgroup&gt;
+
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Algorithm          &lt;/th&gt;
+        &lt;th&gt;Problem Formulation&lt;/th&gt;
+        &lt;th&gt;Convex             &lt;/th&gt;
+        &lt;th&gt;Strongly Convex    &lt;/th&gt;
+        &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+        &lt;th&gt;Notes              &lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Stochastic Gradient Descent (SGD)&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(n/\epsilon^2)$[^bach-2012]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(n/\epsilon)$[^bach-2012]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Assumes objective is differentiable.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Stochastic Dual Coordinate Ascent (SDCA)&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \frac{\lambda}{2} \norm{x}_2^2$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(\frac{1}{\lambda \epsilon})$[^shalevshwartz-2012]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(( \frac{1}{\lambda} ) \log ( \frac{1}{\lambda \epsilon} ))$[^shalevshwartz-2012]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Accelerated Proximal Stochastic Dual Coordinate Ascent (APSDCA)&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{C}} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(\min (\frac{1}{\lambda \epsilon}, \sqrt{\frac{N}{\lambda \epsilon}} ))$[^shalevshwartz-2013]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\min (\frac{1}{\lambda}, \sqrt{\frac{N}{\lambda}}) \log ( \frac{1}{\epsilon} ))$[^shalevshwartz-2013]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Stochastic Average Gradient (SAG)&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon)$[^schmidt-2013]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1/\epsilon))$[^schmidt-2013]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f_{i}(x)$ is differentiable.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Stochastic Variance Reduced Gradient (SVRG)&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon)$[^johnson-2013]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1/\epsilon))$[^johnson-2013]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f_{i}(x)$ is differentiable.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;MISO&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathbb{R}^n} \sum_{i} f_{i}(x) + \lambda g(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1 / \epsilon)$[^mairal-2013]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1/\epsilon))$[^mairal-2013]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $f_{i}(x)$ is differentiable. $g(x)$ may be used as
+          a barrier function.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
 &lt;h1&gt;Other Methods&lt;/h1&gt;
 &lt;p&gt;The following methods do not fit well into any of the preceding categories.
 Included are meta-algorithms like ADMM, which are good for distributing
 computation across machines, and methods whose per-iteration complexity depends
 on iteration count &lt;span class="math"&gt;\(t\)&lt;/span&gt;.&lt;/p&gt;
-&lt;table class="table table-bordered table-centered"&gt;
-&lt;colgroup&gt;
-    &lt;col style="width:20%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:10%"&gt;
-    &lt;col style="width:40%"&gt;
-  &lt;/colgroup&gt;
-&lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Algorithm          &lt;/th&gt;
-      &lt;th&gt;Problem Formulation&lt;/th&gt;
-      &lt;th&gt;Convex             &lt;/th&gt;
-      &lt;th&gt;Strongly Convex    &lt;/th&gt;
-      &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
-      &lt;th&gt;Notes              &lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-&lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Alternating Direction Method of Multipliers (ADMM)&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;
-        $$
-          \begin{align*}
-            \min_{x,z} \quad
-              &amp;amp; f(x) + g(z) \\
-            \text{s.t.} \quad
-              &amp;amp; Ax + Bz = c
-          \end{align*}
-        $$
-      &lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1/\epsilon)$[^blog-admm]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1/\epsilon))$[^hong-2012]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(n)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        The stated convergence rate for "Strongly Convex" only requires $f(x)$ to
-        be strongly convex, not $g(x)$. This same rate can also be applied to
-        the "Convex" case under several non-standard assumptions[^hong-2012].
-        Matrices $A$ and $B$ may also need to be full column rank[^deng-2012] .
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Bundle Method&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(1/\epsilon)$[^smola-2007]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1 / \epsilon))$[^smola-2007]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;$O(tn)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-      &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;!-- Algorithm          --&gt;
-      &lt;td&gt;Center of Gravity Algorithm&lt;/td&gt;
-      &lt;!-- Problem            --&gt;
-      &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
-      &lt;!-- Convex             --&gt;
-      &lt;td&gt;$O(\log (1 / \epsilon))$[^ee236c-localization]&lt;/td&gt;
-      &lt;!-- Strongly Convex    --&gt;
-      &lt;td&gt;$O(\log (1 / \epsilon))$[^ee236c-localization]&lt;/td&gt;
-      &lt;!-- Per-Iteration Cost --&gt;
-      &lt;td&gt;At least $O(tn)$&lt;/td&gt;
-      &lt;!-- Notes              --&gt;
-      &lt;td&gt;
-        Applicable when $\mathcal{C}$ is bounded. Each iteration requires
-        finding a near-central point in a convex set; this may be
-        computationally expensive.
-      &lt;/td&gt;
-    &lt;/tr&gt;
+&lt;div style="overflow-x: auto"&gt;
+  &lt;table markdown class="table table-bordered table-centered"&gt;
+    &lt;colgroup&gt;
+      &lt;col style="width:20%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:10%"&gt;
+      &lt;col style="width:40%"&gt;
+    &lt;/colgroup&gt;
 
-  &lt;/tbody&gt;
-&lt;/table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Algorithm          &lt;/th&gt;
+        &lt;th&gt;Problem Formulation&lt;/th&gt;
+        &lt;th&gt;Convex             &lt;/th&gt;
+        &lt;th&gt;Strongly Convex    &lt;/th&gt;
+        &lt;th&gt;Per-Iteration Cost &lt;/th&gt;
+        &lt;th&gt;Notes              &lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Alternating Direction Method of Multipliers (ADMM)&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;
+          $$
+            \begin{align*}
+              \min_{x,z} \quad
+                &amp; f(x) + g(z) \\
+              \text{s.t.} \quad
+                &amp; Ax + Bz = c
+            \end{align*}
+          $$
+        &lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1/\epsilon)$[^blog-admm]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1/\epsilon))$[^hong-2012]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(n)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          The stated convergence rate for "Strongly Convex" only requires $f(x)$ to
+          be strongly convex, not $g(x)$. This same rate can also be applied to
+          the "Convex" case under several non-standard assumptions[^hong-2012].
+          Matrices $A$ and $B$ may also need to be full column rank[^deng-2012] .
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Bundle Method&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(1/\epsilon)$[^smola-2007]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1 / \epsilon))$[^smola-2007]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;$O(tn)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;!-- Algorithm          --&gt;
+        &lt;td&gt;Center of Gravity Algorithm&lt;/td&gt;
+        &lt;!-- Problem            --&gt;
+        &lt;td&gt;$\displaystyle \min_{x \in \mathcal{C}} f(x)$&lt;/td&gt;
+        &lt;!-- Convex             --&gt;
+        &lt;td&gt;$O(\log (1 / \epsilon))$[^ee236c-localization]&lt;/td&gt;
+        &lt;!-- Strongly Convex    --&gt;
+        &lt;td&gt;$O(\log (1 / \epsilon))$[^ee236c-localization]&lt;/td&gt;
+        &lt;!-- Per-Iteration Cost --&gt;
+        &lt;td&gt;At least $O(tn)$&lt;/td&gt;
+        &lt;!-- Notes              --&gt;
+        &lt;td&gt;
+          Applicable when $\mathcal{C}$ is bounded. Each iteration requires
+          finding a near-central point in a convex set; this may be
+          computationally expensive.
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;
+
 &lt;!-- Footnotes --&gt;
 &lt;!-- References --&gt;
 &lt;div class="footnote"&gt;
