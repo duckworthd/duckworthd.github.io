@@ -163,7 +163,7 @@ div#posts {
   }
 }
 div#posts h1 {
-  margin: 24px 0 16px;
+  margin: 0;
   color: #000000;
   font-size: 24px;
   line-height: 32px;
@@ -405,12 +405,11 @@ div#posts dl ol {
   list-style-type: none;
 }
 div#posts dl ol li {
-  margin: 0 0 0px;
-  padding: 0 0 50px 50px;
+  margin: 0;
+  padding: 24px;
   border-bottom: #dddddd 1px solid;
 }
 div#posts dl ol .title {
-  margin: 76px 0 0;
   padding: 0;
   color: #000000;
 }

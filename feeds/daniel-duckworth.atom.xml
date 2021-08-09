@@ -3626,14 +3626,12 @@ MetaOptimize king, &lt;a href="https://twitter.com/atpassos"&gt;Alexandre Passos
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
-&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="sparsity"></category></entry><entry><title>Proximal Gradient Descent</title><link href="https://stronglyconvex.com/blog/proximal-gradient-descent.html" rel="alternate"></link><published>2013-04-19T00:00:00-07:00</published><updated>2013-04-19T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-19:/blog/proximal-gradient-descent.html</id><summary type="html">&lt;p&gt;&lt;span class="math"&gt;\( \def\prox{\text{prox}} $
-  In a [previous post][subgradient_descent_usage], I mentioned that one cannot
-hope to asymptotically outperform the $O(\frac{1}{\epsilon^2})\)&lt;/span&gt; convergence
+&lt;/script&gt;</content><category term="optimization"></category><category term="optimization"></category><category term="sparsity"></category></entry><entry><title>Proximal Gradient Descent</title><link href="https://stronglyconvex.com/blog/proximal-gradient-descent.html" rel="alternate"></link><published>2013-04-19T00:00:00-07:00</published><updated>2013-04-19T00:00:00-07:00</updated><author><name>Daniel Duckworth</name></author><id>tag:stronglyconvex.com,2013-04-19:/blog/proximal-gradient-descent.html</id><summary type="html">&lt;p&gt;In a &lt;a href="/blog/subgradient-descent.html#usage"&gt;previous post&lt;/a&gt;, I mentioned that one cannot
+hope to asymptotically outperform the &lt;span class="math"&gt;\(O(\frac{1}{\epsilon^2})\)&lt;/span&gt; convergence
 rate of Subgradient Descent when dealing with a non-differentiable objective
 function. This is in fact only half-true; Subgradient Descent cannot be beat
-&lt;em&gt;using only first-order …&lt;/em&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;span class="math"&gt;\( \def\prox{\text{prox}} $
-  In a [previous post][subgradient_descent_usage], I mentioned that one cannot
-hope to asymptotically outperform the $O(\frac{1}{\epsilon^2})\)&lt;/span&gt; convergence
+&lt;em&gt;using only first-order information&lt;/em&gt; (that is, gradients and …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In a &lt;a href="/blog/subgradient-descent.html#usage"&gt;previous post&lt;/a&gt;, I mentioned that one cannot
+hope to asymptotically outperform the &lt;span class="math"&gt;\(O(\frac{1}{\epsilon^2})\)&lt;/span&gt; convergence
 rate of Subgradient Descent when dealing with a non-differentiable objective
 function. This is in fact only half-true; Subgradient Descent cannot be beat
 &lt;em&gt;using only first-order information&lt;/em&gt; (that is, gradients and subgradients).
@@ -3641,6 +3639,7 @@ In this article, I'll describe Proximal Gradient Descent, an algorithm that
 exploits problem structure to obtain a rate of &lt;span class="math"&gt;\(O(\frac{1}{\epsilon})\)&lt;/span&gt;. In
 particular, Proximal Gradient is useful if the following 2 assumptions hold.
 First, the objective function must be of the form,&lt;/p&gt;
+&lt;p&gt;$ \def\prox{\text{prox}} $&lt;/p&gt;
 &lt;div class="math"&gt;$$
   \min_{x} \, g(x) + h(x)
 $$&lt;/div&gt;

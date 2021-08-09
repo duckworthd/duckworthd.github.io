@@ -59,9 +59,8 @@
 		  <abbr class="published">Fri 19 April 2013</abbr>
 	</header>
   <article>
-    <p><span class="math">\( \def\prox{\text{prox}} $
-  In a [previous post][subgradient_descent_usage], I mentioned that one cannot
-hope to asymptotically outperform the $O(\frac{1}{\epsilon^2})\)</span> convergence
+    <p>In a <a href="/blog/subgradient-descent.html#usage">previous post</a>, I mentioned that one cannot
+hope to asymptotically outperform the <span class="math">\(O(\frac{1}{\epsilon^2})\)</span> convergence
 rate of Subgradient Descent when dealing with a non-differentiable objective
 function. This is in fact only half-true; Subgradient Descent cannot be beat
 <em>using only first-order information</em> (that is, gradients and subgradients).
@@ -69,6 +68,7 @@ In this article, I'll describe Proximal Gradient Descent, an algorithm that
 exploits problem structure to obtain a rate of <span class="math">\(O(\frac{1}{\epsilon})\)</span>. In
 particular, Proximal Gradient is useful if the following 2 assumptions hold.
 First, the objective function must be of the form,</p>
+<p>$ \def\prox{\text{prox}} $</p>
 <div class="math">$$
   \min_{x} \, g(x) + h(x)
 $$</div>
